@@ -13,7 +13,7 @@ from models import AnitaPreTaskSurveyForm, AnitaPostTask0SurveyForm, AnitaPostTa
 from models import AnitaDemographicsSurveyForm, AnitaExit1SurveyForm, AnitaExit2SurveyForm, \
     AnitaExit3SurveyForm
 from models import AnitaConsentForm
-from models import MickeyPostTaskSurveyForm, SnippetDemographicsSurveyForm
+from models import MickeyPostTaskSurveyForm, SnippetDemographicsSurveyForm, SnippetExitSurveyForm
 from treconomics.models import TaskDescription
 
 
@@ -101,6 +101,12 @@ def view_alt_demographic_survey(request):
     name = 'demographics'
     return handle_survey(request, SnippetDemographicsSurveyForm, name, reverse(name),
                          'survey/demographics_survey.html')
+
+
+@login_required
+def view_snippet_exit_survey(request):
+    return handle_survey(request, SnippetExitSurveyForm, 'SNIPPET_EXIT', '/treconomics/snippetexitsurvey/',
+                         'survey/anita_exit1_survey.html')
 
 
 @login_required

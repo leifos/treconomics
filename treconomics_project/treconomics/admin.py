@@ -8,7 +8,10 @@ from models import DocumentsExamined, UserProfile
 from models import TaskDescription, TopicQuerySuggestion
 from snippets.models import AnitaPreTaskSurvey, AnitaPreTaskResource
 from snippets.models import MickeyPostTaskSurvey, MickeyPostTaskResource
-from snippets.models import AnitaDemographicsSurvey
+from snippets.models import AnitaDemographicsSurvey, SnippetExitSurvey, SnippetDemographicsSurvey, SystemSnippetPostTaskSurvey,SnippetPostTaskSurvey
+
+
+
 
 
 class AnitaPreTaskAdmin(ImportExportModelAdmin):
@@ -102,9 +105,13 @@ admin.site.register(AnitaDemographicsSurvey, UserSurveyAdmin)
 
 # Important
 admin.site.register(DocumentsExamined)
-# admin.site.register(UKDemographicsSurvey, UserSurveyAdmin)
-admin.site.register(AnitaPreTaskSurvey, AnitaPreTaskAdmin)
-admin.site.register(MickeyPostTaskSurvey, MickeyPostTaskAdmin)
+admin.site.register(SnippetExitSurvey)
+admin.site.register(SnippetDemographicsSurvey)
+admin.site.register(SnippetPostTaskSurvey)
+admin.site.register(SystemSnippetPostTaskSurvey)
+
+
+
 
 
 

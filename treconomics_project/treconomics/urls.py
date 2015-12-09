@@ -66,6 +66,7 @@ urlpatterns = \
              url(r'^snippetposttask/(?P<taskid>\d+)/$', snippet.view_snippet_posttask),
              url(r'^systemsnippetposttask/(?P<taskid>\d+)/$', snippet.view_system_snippet_posttask),
              url(r'^demographicssurvey/$', snippet.view_alt_demographic_survey, name='demographics'),
+             url(r'^snippetexitsurvey/$', snippet.view_snippet_exit_survey, name='snippet-exit-survey'),
 
              (r'^anitapretasksurvey/(?P<taskid>\d+)/$', snippet.view_alt_pretask_survey),
              (r'^anitaposttask0survey/(?P<taskid>\d+)/$', snippet.view_alt_posttask0_survey),

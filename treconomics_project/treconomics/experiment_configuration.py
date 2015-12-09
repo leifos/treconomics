@@ -84,7 +84,8 @@ snippet_flow = [
         'taskspacer',
     'pretaskquestions/2/', 'search/2/', 'snippetposttask/2/','systemsnippetposttask/1/',
         'taskspacer',
-    'pretaskquestions/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/1/','performance/',
+    'pretaskquestions/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/1/',
+    'taskspacer','snippetexitsurvey/','performance/',
     'logout/'
 ]
 

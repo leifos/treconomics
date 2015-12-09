@@ -882,3 +882,47 @@ class SnippetDemographicsSurveyForm(ModelForm):
         exclude = ('user',)
 
 
+SNIP_CHOICES = ((1, 'Very Short (1 line)'),
+                (2,'Short (2-3 lines)'), (3,'Long (4-6 lines)'))
+
+
+
+
+class SnippetExitSurvey(models.Model):
+    user = models.ForeignKey(User)
+    snip_info = models.IntegerField(default=0)
+    snip_easy = models.IntegerField(default=0)
+    snip_help = models.IntegerField(default=0)
+    snip_useful = models.IntegerField(default=0)
+    snip_prefer = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.user.username
+
+
+class SnippetExitSurveyForm(ModelForm):
+    snip_info = forms.ChoiceField(
+        widget=RadioSelect, choices=SNIP_CHOICES,
+        label="The most informative snippets were:", required=False)
+    snip_easy = forms.ChoiceField(
+        widget=RadioSelect, choices=SNIP_CHOICES,
+        label="The unhelpful snippets were:", required=False)
+    snip_help = forms.ChoiceField(
+        widget=RadioSelect, choices=SNIP_CHOICES,
+        label="The easiest snippets to use were:", required=False)
+    snip_useful = forms.ChoiceField(
+        widget=RadioSelect, choices=SNIP_CHOICES,
+        label="The least useful snippets were:",
+        required=False)
+    snip_prefer = forms.ChoiceField(
+        widget=RadioSelect, choices=SNIP_CHOICES,
+        label="The most preferable type of snippet for such tasks were:",
+        required=False)
+
+    def clean(self):
+        return clean_to_zero(self)
+
+    class Meta:
+        model = SnippetExitSurvey
+        exclude = ('user',)
+
