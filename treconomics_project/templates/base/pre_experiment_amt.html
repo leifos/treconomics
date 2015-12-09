@@ -1,0 +1,118 @@
+{% extends 'base/base.html' %}
+
+{% block exp_info_block %}
+    <p> <!-- a href="/treconomics/logout">Logout</a> --> </p>
+{% endblock %}
+
+
+{% block exp_block %}
+    <script>
+        $(document).ready(function () {
+            $('.surveySubmitButton').click(function () {
+                $(this).hide()
+            });
+        })
+    </script>
+
+    <p> <h1> Search Interface Design Study </h1></p>
+
+    <p>
+        <strong>Thank you</strong> for agreeing to participate in this study related on Search Interface Design.<br/>
+    </p>
+
+    <p>
+    <h2><b>Important Notes</b></h2>
+    <ul>
+        <li>Please do not use the "Previous Page" or "Next Page" functions of your web browser to navigate yourself through the process.</li>
+        <li> At the end of the experiment you will be redirected back to MTurk to submit the HIT.</li>
+        <li> In order to conduct this experiment you need to use Safari, Firefox or Chrome.
+            If you use any other browser, your HIT may not be accepted.</li>
+        <li>Your screen resolution should be at least 1024x720 or above, otherwise your HIT will not be accepted.</li>
+        <li>Please read instructions throughout this experiment carefully. You will not be able to return to previous pages or resubmit your answers.</li>
+    </ul>
+
+
+    <h2><b>Your Role</b></h2>
+    <ul>
+        <li>For this study, imagine that you are a newspaper reporter, where you will need to write a story on
+            three topics. In order to accomplish this you will need to search for related information.
+        </li>
+    </ul>
+
+    <h2><b>The Search System</b></h2>
+    <ul>
+        <li>The search system that you will use connects to a database of about 1 million newspaper articles from the
+            <em>New York Times</em>, <em>The Associated Press</em> and <em>Xinhua</em> news agencies. The articles
+            within the database were published in 1998 to 2000. The search system you will be using looks similar to a web search
+            engine, though there might be some slight differences to the search interface.
+        </li>
+    </ul>
+
+    <h2><b>The Search Tasks</b></h2>
+    <ul>
+        <li>For each search task, you'll be given a short description of a topic and
+            what information would be relevant to this topic. </li>
+        <li> This can be viewed by the <b>Show Task</b> button at the top right-hand corner of the screen.</li>
+        <li>You need to pose queries and examine results, just like you would in a web search engine.</li>
+        <li> When viewing documents, you will be able to select the <b>Mark as Relevant</b> button when you find a document relevant to
+            the topic. </li>
+        <li>
+        There are <b>over 100 relevant documents</b> in the database for each topic.
+        </li>
+
+    </ul>
+
+    <h2><b>Goal and Incentive</b></h2>
+    <ul>
+        <li><b>Your goal is to find as many relevant documents as possible during the time
+            allocated (approximately 10 minutes per task).</b>
+        </li>
+        <li>As an additional incentive if you identified many relevant documents with high accuracy you will earn more. </li>
+
+        <li>From previous studies, we have a GOLD standard of relevant documents, and the past performance of other searchers:</li>
+        <ul>
+            <li>If you are in the top 50&#37; of searchers, you will earn an extra $1</li>
+            <li>If you are in the top 25&#37; of searchers, you will earn an extra $2.50</li>
+            <li> To do so, you need to identify many relevant documents, but also with high accuracy i.e. the documents that you mark as relevant are also relevant with respect to our GOLD standard. </li>
+
+        </ul>
+
+        <li><strong>The experiment will take approximately 45-55 minutes of your time. </strong></li>
+    </ul>
+    </p>
+
+    <hr/>
+
+    <h2><b>Experiment Outline</b></h2>
+    <p> Before you start searching, we will ask you a few questions about you.</p>
+
+    <p>We will then give you a few minutes to get comfortable with the search interface by undertaking a <b>practice
+        task.</b></p>
+
+    <p>You'll then move onto the <b>three main search tasks</b>.
+
+        Before each task, you will complete a
+        <b>pre-task questionnaire</b>
+        about your knowledge of the search topic.
+
+        After you complete the task, you will complete a
+        <b>post-task questionnaire</b> about the search interface.</p>
+
+
+    <hr/>
+    <h2><b>Confirmation of Participation and Commitment</b></h2>
+
+    <p><strong> If you are happy to undertake this study and committed to doing your best on the
+        search tasks, then please click the <em>Next</em> button below.</strong></p>
+
+    <div class="surveySubmitButton">
+        <a href="{% url 'next' %}">
+            <button class="largebutton" type="next">Next</button>
+        </a>
+    </div>
+{% endblock %}
+
+
+{% block exp_footer_block %}
+    Participant: {{ participant }}  - Condition: {{ condition }}
+{% endblock %}

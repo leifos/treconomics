@@ -66,8 +66,8 @@ div#wait-box p {
 	position: fixed;
 	top: 0px;
 	width: 100%;
-	background-color: #f1f1f1;
-	color: #222;
+	background-color: royalblue;
+	color: white;
 	padding: 10px 20px;
 	z-index: 2;
     border-bottom: 1px solid #666;
@@ -79,7 +79,7 @@ div#wait-box p {
 .header a, .header a:visited {
 	font-size: 25px;
 	text-decoration: none;
-	color: #222;
+	color: white;
 	}
 
 .header a:hover {
@@ -87,7 +87,7 @@ div#wait-box p {
 	}
 
 .header h1 {
-	color: #222;
+	color: white;
 }
 
 /** INFO BLOCK **/
@@ -96,14 +96,14 @@ div#wait-box p {
 	position: absolute;
 	top: 0px;
 	right: 60px;
-	color: #222222;
+	color: white;
 	font-size: 12px;
 }
 
 .info_block a {
 	font-weight: bold;
 	font-size: 12px;
-	color: #222222;
+	color: white;
 	text-decoration: none;
 	}
 
@@ -496,11 +496,16 @@ p.summary {
 ul {
 	padding: 0;
 	margin: 0;
+    margin-left: 30px;
 }
 
 li {
 	list-style: none;
+    list-style-type: circle;
+
 	font-weight: normal;
+    padding-top:5px;
+    padding-bottom:5px;
 }
 
 

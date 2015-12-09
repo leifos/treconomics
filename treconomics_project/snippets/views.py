@@ -9,11 +9,11 @@ from treconomics.experiment_functions import get_experiment_context
 from treconomics.experiment_functions import log_event
 from survey.views import handle_survey
 from models import AnitaPreTaskSurveyForm, AnitaPostTask0SurveyForm, AnitaPostTask1SurveyForm, \
-    AnitaPostTask2SurveyForm, AnitaPostTask3SurveyForm
+    AnitaPostTask2SurveyForm, AnitaPostTask3SurveyForm, SnippetPostTaskSurveyForm, SystemSnippetPostTaskSurveyForm
 from models import AnitaDemographicsSurveyForm, AnitaExit1SurveyForm, AnitaExit2SurveyForm, \
     AnitaExit3SurveyForm
 from models import AnitaConsentForm
-from models import MickeyPostTaskSurveyForm
+from models import MickeyPostTaskSurveyForm, SnippetDemographicsSurveyForm
 from treconomics.models import TaskDescription
 
 
@@ -99,8 +99,8 @@ def view_alt_posttask3_survey(request, taskid):
 @login_required
 def view_alt_demographic_survey(request):
     name = 'demographics'
-    return handle_survey(request, AnitaDemographicsSurveyForm, name, reverse(name),
-                         'survey/anita_demographics_survey.html')
+    return handle_survey(request, SnippetDemographicsSurveyForm, name, reverse(name),
+                         'survey/demographics_survey.html')
 
 
 @login_required
@@ -156,7 +156,19 @@ def view_consent(request):
                     'errors': errors}
     return render(request, 'survey/anita_consent_form.html', context_dict)
 
+#@login_required
+#def view_snippet_posttask(request, taskid):
+#    return handle_task_and_questions_survey(request, taskid, MickeyPostTaskSurveyForm, 'MICKEY_POSTTASK',
+#                                            '/treconomics/mickeyposttask/', 'survey/mickey_posttask_survey.html')
+
+
 @login_required
 def view_snippet_posttask(request, taskid):
-    return handle_task_and_questions_survey(request, taskid, MickeyPostTaskSurveyForm, 'MICKEY_POSTTASK',
-                                            '/treconomics/mickeyposttask/', 'survey/mickey_posttask_survey.html')
+    return handle_task_and_questions_survey(request, taskid, SnippetPostTaskSurveyForm, 'SNIPPET_POSTTASK',
+                                            '/treconomics/snippetposttask/', 'survey/snippet_posttask_survey.html')
+
+
+@login_required
+def view_system_snippet_posttask(request, taskid):
+    return handle_task_and_questions_survey(request, taskid, SystemSnippetPostTaskSurveyForm, 'SYSTEM_SNIPPET_POSTTASK',
+                                            '/treconomics/systemsnippetposttask/', 'survey/system_snippet_posttask_survey.html')

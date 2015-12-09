@@ -5,7 +5,7 @@ import logging
 import logging.config
 import logging.handlers
 
-from ifind.common.autocomplete_trie import AutocompleteTrie
+from autocomplete_trie import AutocompleteTrie
 from ifind.search.engines.whooshtrec import Whooshtrec
 from experiment_setup import ExperimentSetup
 
@@ -76,15 +76,15 @@ exp_work_flows = [
      'anitademographicssurvey/', 'logout/'],
 ]
 
-mickeys_flow = [
+snippet_flow = [
     'startexperiment/', 'preexperiment/UK/',
     'demographicssurvey/',
     'prepracticetask/0/', 'search/0/', 'postpracticetask/0/',
-    'anitapretasksurvey/1/', 'search/1/', 'mickeyposttask/1/',
+    'pretaskquestions/1/', 'search/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
         'taskspacer',
-    'anitapretasksurvey/2/', 'search/2/', 'mickeyposttask/2/',
+    'pretaskquestions/2/', 'search/2/', 'snippetposttask/2/','systemsnippetposttask/1/',
         'taskspacer',
-    'anitapretasksurvey/3/', 'search/3/', 'mickeyposttask/3/',
+    'pretaskquestions/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/1/','performance/',
     'logout/'
 ]
 
@@ -96,7 +96,7 @@ test_flow = [
     'startexperiment/',
     'pretask/1/', 'search/1/','taskspacer',
     'pretask/2/', 'search/2/','taskspacer',
-    'pretask/3/', 'search/3/',
+    'pretask/3/', 'search/3/','endexperiment/',
     'logout/'
 ]
 
@@ -104,29 +104,28 @@ suggestion_trie = AutocompleteTrie(
     min_occurrences=3,
     suggestion_count=8,
     include_stopwords=False,
-    index_path=my_whoosh_doc_index_dir,
     stopwords_path=os.path.join(work_dir, "data/stopwords.txt"),
     vocab_path=os.path.join(work_dir, "data/vocab.txt"),
     vocab_trie_path=os.path.join(work_dir, "data/vocab_trie.dat"))
 
-bm25 = Whooshtrec(
+search_engine = Whooshtrec(
     whoosh_index_dir=my_whoosh_doc_index_dir,
     stopwords_file=stopword_file,
-    model=1,
+    model=2,
     newschema=True)
 
-bm25.key_name = 'bm25'
+search_engine.key_name = 'pl2'
 
 exp_test = ExperimentSetup(
-    workflow=test_flow,
-    engine=bm25,
+    workflow=snippet_flow,
+    engine=search_engine,
     practice_topic='341',
     topics=['347', '367', '354'],
     rpp=10,
     practice_interface=1,
     interface=[1, 2, 3],
     rotation_type=1,
-    description='standard condition bm25 test',
+    description='standard condition pl2 test',
     trie=suggestion_trie,
     autocomplete=True,
     timeout=600)  # 300s = 5min; 600s = 10min; 1200s = 20min

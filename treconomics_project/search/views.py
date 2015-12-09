@@ -213,6 +213,9 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
     :return:
     """
     # Stops an AWFUL lot of problems when people get up to mischief
+
+    log_event(event="QUERY_START", request=request, query=query_terms)
+
     if page < 1:
         page = 1
 
@@ -220,23 +223,14 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
     query.skip = page
     query.top = page_len
     result_dict['query'] = query_terms
+
     search_engine = experiment_setups[condition].get_engine()
 
-    if interface == 1:
-        search_engine.snippet_size = 4
-    else:
-        search_engine.snippet_size = 8
+    snippet_sizes = [2,4,8]
+    pos = interface - 1
+    search_engine.snippet_size = snippet_sizes[pos]
 
-
-    log_event(event="QUERY_START", request=request, query=query_terms)
     response = search_engine.search(query)
-    """
-    Now that we have the response, we can iterate through it, and modify the snippets
-    based on the interface.
-    """
-
-    if interface == 3:
-        response = entity_snippet(response)
 
     log_event(event="QUERY_END", request=request, query=query_terms)
     num_pages = response.total_pages
@@ -251,8 +245,8 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
     if num_pages > 0:
         result_dict['trec_search'] = True
         result_dict['trec_results'] = response.results
-
         result_dict['curr_page'] = response.actual_page
+        print response.actual_page
         if page > 1:
             result_dict['prev_page'] = page - 1
             result_dict['prev_page_show'] = True

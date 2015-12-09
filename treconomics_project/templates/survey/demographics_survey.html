@@ -43,8 +43,6 @@
     var frmvalidator = new Validator("survey_form");
     frmvalidator.addValidation("id_age", "req", "Please provide your age (in years).");
     frmvalidator.addValidation("id_sex", "req", "Please indicate your sex.");
-    frmvalidator.addValidation("id_education_undergrad", "req", "Are you undertaking or have you obtained an undergraduate degree?");
-
     frmvalidator.EnableOnPageErrorDisplaySingleBox();
     frmvalidator.EnableMsgsTogether();
     frmvalidator.EnableFocusOnError(true);

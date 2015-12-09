@@ -1,6 +1,13 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*.seg
+*.toc
+MAIN_WRITELOCK
+*.out
+*.dat
+*.db
+
 
 # C extensions
 *.so

@@ -297,7 +297,7 @@ def pre_task_with_questions(request, taskid):
             obj.topic_num = ec["topicnum"]
             obj.save()
             log_event(event="PRE_TASK_SURVEY_COMPLETED", request=request)
-            return reverse('next')
+            return redirect('next')
         else:
             print form.errors
             errors = form.errors
@@ -477,7 +477,7 @@ class ExperimentContextMixin(LoginRequiredMixin, ContextMixin):
 
 
 class PreExperimentView(ExperimentContextMixin, TemplateView):
-    template_name = 'base/pre_experiment.html'
+    template_name = 'base/pre_experiment_amt.html'
 
 
 class PostExperimentView(ExperimentContextMixin, TemplateView):
@@ -489,7 +489,7 @@ class TaskSpacerView(ExperimentContextMixin, TemplateView):
 
 
 class EndExperimentView(ExperimentContextMixin, TemplateView):
-    template_name = 'base/end_experiment.html'
+    template_name = 'base/end_experiment_amt.html'
 
 
 class SessionCompletedView(ExperimentContextMixin, TemplateView):

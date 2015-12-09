@@ -23,6 +23,13 @@ def count_bigrams(bigrams_dict, word_list):
             bigrams_dict[bigram] = 1
 
 
+def count_unigrams(unigrams_dict, word_list):
+    for w in word_list:
+        if w in unigrams_dict:
+            unigrams_dict[w] += 1
+        else:
+            unigrams_dict[w] = 1
+
 def main():
 
     whoosh_index_dir='fullindex/'
@@ -32,23 +39,34 @@ def main():
     id_list = ixr.all_doc_ids()
 
     i = 0
-    bigrams = dict()
+    grams = dict()
 
     for id in id_list:
 
         fields = ixr.stored_fields(int(id))
         title = fields["title"]
+        content = fields["content"]
 
         words = tokenize_text(title)
+        count_bigrams(grams,words)
 
-        count_bigrams(bigrams,words)
+        count_unigrams(grams,words)
+
+        words = tokenize_text(content)
+        count_bigrams(grams,words)
+
+
+
         i+=1
 
         if i==0:
             break
 
-    for bigram in bigrams:
-        print '{0} {1}'.format(bigram, bigrams[bigram])
+
+    for words in grams:
+        if grams[words] > 50:
+            print '{0}, {1}'.format(words, grams[words])
+
 
 if __name__ == "__main__":
     main()

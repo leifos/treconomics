@@ -12,7 +12,7 @@ from survey.forms import clean_to_zero
 SEX_CHOICES = \
     (
         ('N', 'Not Indicated'),
-        ('M', 'Male'), ('F', 'Female')
+        ('M', 'Male'), ('F', 'Female'), ('O', 'Other')
     )
 
 YES_CHOICES = \
@@ -640,3 +640,245 @@ class MickeyPostTaskResource(resources.ModelResource):
     class Meta:
         model = MickeyPostTaskSurvey
         exclude = ('id',)
+
+
+
+class SnippetPostTaskSurvey(models.Model):
+    user = models.ForeignKey(User)
+    task_id = models.IntegerField(default=0)
+    topic_num = models.IntegerField(default=0)
+    snip_helpfulness = models.IntegerField(default=0)
+    serp_simplicity = models.IntegerField(default=0)
+    snip_distracting = models.IntegerField(default=0)
+    snip_informativeness = models.IntegerField(default=0)
+    serp_confusion = models.IntegerField(default=0)
+    snip_clarity = models.IntegerField(default=0)
+    snip_usefulness = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.user.username
+
+
+class SnippetPostTaskSurveyForm(ModelForm):
+    snip_helpfulness = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The result snippets(title, link and description) were unhelpful.",
+        required=False)
+
+    serp_simplicity = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The search engine result page was easy and simple to use.",
+        required=False)
+
+    snip_distracting = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The result snippets were distracting.",
+        required=False)
+
+
+    snip_informativeness = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The result snippets were informative.",
+        required=False)
+
+    serp_confusion = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The search engine result page was confusing.",
+        required=False)
+
+    snip_clarity = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The result snippets were clear and concise.",
+        required=False)
+
+    snip_usefulness = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The result snippets were helped identify relevant documents.",
+        required=False)
+
+
+
+
+    def clean(self):
+        return clean_to_zero(self)
+
+    class Meta:
+        model = SnippetPostTaskSurvey
+        exclude = ('user', 'task_id', 'topic_num')
+
+
+class SnippetPostTaskResource(resources.ModelResource):
+
+    class Meta:
+        model = SnippetPostTaskSurvey
+        exclude = ('id',)
+
+
+
+
+
+class SystemSnippetPostTaskSurvey(models.Model):
+    user = models.ForeignKey(User)
+    task_id = models.IntegerField(default=0)
+    topic_num = models.IntegerField(default=0)
+    apt_accurate = models.IntegerField(default=0)
+    apt_quick_results = models.IntegerField(default=0)
+    apt_search_diff = models.IntegerField(default=0)
+    apt_hurried = models.IntegerField(default=0)
+    apt_satisfied_systems = models.IntegerField(default=0)
+    ae_cumbersome = models.IntegerField(default=0)
+    ae_confident = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.user.username
+
+
+class SystemSnippetPostTaskSurveyForm(ModelForm):
+
+    apt_accurate = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="It was important to me to complete this task accurately.",
+        required=False)
+
+    apt_quick_results = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The system retrieved and displayed search results pages quickly.",
+        required=False)
+
+    apt_search_diff = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I thought it was difficult to search for information on this topic.",
+        required=False)
+
+    apt_hurried = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I felt hurried or rushed when completing this task.", required=False)
+
+    apt_satisfied_systems = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I am satisfied with how the system performed for this task.",
+        required=False)
+
+    ae_cumbersome = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I found the system very cumbersome to use.", required=False)
+
+    ae_confident = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I felt very confident using the system.", required=False)
+
+
+
+    def clean(self):
+        return clean_to_zero(self)
+
+    class Meta:
+        model = SystemSnippetPostTaskSurvey
+        exclude = ('user', 'task_id', 'topic_num')
+
+
+class SystemSnippetPostTaskResource(resources.ModelResource):
+
+    class Meta:
+        model = SystemSnippetPostTaskSurvey
+        exclude = ('id',)
+
+
+SEARCH_FREQ = ((-1,'Not Specified'), (6, 'Many times a day'),
+                (5,'1-2 times a day'), (4,'A many times a week'), (3,'A few times a week'),
+                (2,'Sometimes'), (1,'Rarely'), (0,'Never'), )
+
+
+DEVICES = (('','Not Specified'),('MS','Mouse with Scroll Wheel/Gesture'),('M','Mouse'),('TS','Trackpad with Scroll/Gesture'), ('T','Trackpad'), ('O','Other') )
+
+ENGINES = ( ('','Not Specified'),('AOL','AOL'),('BAI','Baidu'),('BIN','Bing'), ('GOO','Google'), ('YAH','Yahoo!'), ('OTH','Other') )
+
+
+
+class SnippetDemographicsSurvey(models.Model):
+    user = models.ForeignKey(User)
+    age = models.IntegerField(
+        default=0,
+        help_text="Please provide your age (in years).")
+
+    sex = models.CharField(max_length=1, choices = SEX_CHOICES, help_text="Please indicate your sex.")
+    work = models.CharField(max_length=100, default="")
+    level = models.CharField(max_length=3, default="")
+    search_freq = models.IntegerField(
+        default=-1,
+        help_text="How often do you search the web?")
+
+    news_search_freq = models.IntegerField(
+        default=-1,
+        help_text="How often do you search the web for news articles?")
+
+    input_device = models.CharField(default="", max_length=2)
+
+    search_engine = models.CharField(default="", max_length=3)
+
+    def __unicode__(self):
+        return self.user.username
+
+class SnippetDemographicsSurveyForm(ModelForm):
+    age = forms.IntegerField(
+        label="Please provide your age (in years).",
+        max_value=100,
+        min_value=0,
+        required=False)
+
+    sex = forms.CharField(
+     max_length=1,
+         widget=forms.Select(
+             choices=SEX_CHOICES),
+                label="Please indicate your gender.",
+                required=False)
+
+    work = forms.CharField(
+        widget=forms.TextInput(attrs={'size': '60', 'class': 'inputText'}),
+        label="Please provide your occupation:", required=False)
+
+    level = forms.CharField(
+        max_length=3, widget=forms.Select(choices=ED_CHOICES),
+        label="Please indicate the highest degree you've been awarded:", required=False)
+
+    search_freq = forms.IntegerField( widget=forms.Select(choices=SEARCH_FREQ),
+        label="How often do you search the web?",
+        max_value=7, min_value=-1, required=False)
+
+    news_search_freq = forms.IntegerField( widget=forms.Select(choices=SEARCH_FREQ),
+        label="How often do you search the web for news articles?",
+        max_value=7, min_value=-1, required=False)
+
+
+    search_engine = forms.CharField( widget=forms.Select(choices=ENGINES),
+        label="What search engine do you typically use?",
+        max_length=3, required=False)
+
+    input_device = forms.CharField( widget=forms.Select(choices=DEVICES),
+        label="What kinds of pointing device are you using?",
+        max_length=2, required=False)
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        if not cleaned_data.get("age"):
+            cleaned_data["age"] = 0
+
+        if not cleaned_data.get("search_freq"):
+            cleaned_data["search_freq"] = 0
+
+        return cleaned_data
+
+    class Meta:
+        model = SnippetDemographicsSurvey
+        exclude = ('user',)
+
+

@@ -1,26 +1,50 @@
 {% extends 'base/base.html' %}
 
 {% block exp_block %}
-    <script type="text/javascript">$(function () {
-        $('#username').focus()
-    });</script>
+
     <div class="topmargin">
 
         {% if invalid %}
-            <div style="margin-bottom: 20px; text-align: center; color: red; font-size: 14pt; font-weight: bold;">
-                Invalid participant details supplied.
+            <div>
+                <b>Invalid participant details supplied.</b>
             </div>
         {% endif %}
 
+         <p> <h1> Search Interface Design Study </h1></p>
 
         <p>
-            Register by entering your MTurk worker ID.
+        This HIT involves performing three 10 minutes search tasks using a Newspaper based search engine to find relevant information on given topics, and to complete a number of short surveys.
         </p>
-
         <p>
-            Ensure the following.
+
+        The HIT will take approximately 45-55 minutes.
 
         </p>
+
+    <p>
+    <h2><b>Important Notes</b></h2>
+    <ul>
+        <li>All the collected data will be treated as confidential and it will not be possible to
+            identify you as a person with the data after the experiment as ended.
+        </li>
+        <li>This study must be completed in a <b>single sitting</b>.</li>
+        <li>Do not exit the process unless you intend to decline the HIT.</li>
+        <li>You can only participate in this study once.</li>
+        <li> You may return to MTurk at anytime if you decide to decline the HIT.</li>
+        <li> In order to conduct this experiment you need to use <b>Safari, Firefox or Chrome, only</b>.
+            If you use any other browser, your HIT may not be accepted.</li>
+
+        <li>Your screen resolution should be at least 1024x720 or above, otherwise your HIT will not be accepted.</li>
+        <li>The study will appear in a pop-up so you will need to enable/allow the popup in your browser.</li>
+
+    </ul>
+
+
+<h2><b>Register</b></h2>
+        <p>
+            Register to undertake this HIT by entering your MTurk worker ID below:
+        </p>
+
 
         <form action="{% url 'register-amt-user' %}" method="post">
             {% csrf_token %}

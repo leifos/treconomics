@@ -63,14 +63,16 @@ urlpatterns = \
              # (r'^shortstresssurvey/$', survey_views.view_short_stress_survey),
              # (r'^modifiedstresssurvey/$', survey_views.view_modified_stress_survey),
 
-             url(r'^mickeyposttask/(?P<taskid>\d+)/$', snippet.view_snippet_posttask),
+             url(r'^snippetposttask/(?P<taskid>\d+)/$', snippet.view_snippet_posttask),
+             url(r'^systemsnippetposttask/(?P<taskid>\d+)/$', snippet.view_system_snippet_posttask),
+             url(r'^demographicssurvey/$', snippet.view_alt_demographic_survey, name='demographics'),
 
              (r'^anitapretasksurvey/(?P<taskid>\d+)/$', snippet.view_alt_pretask_survey),
              (r'^anitaposttask0survey/(?P<taskid>\d+)/$', snippet.view_alt_posttask0_survey),
              (r'^anitaposttask1survey/(?P<taskid>\d+)/$', snippet.view_alt_posttask1_survey),
              (r'^anitaposttask2survey/(?P<taskid>\d+)/$', snippet.view_anita_posttask2_survey),
              (r'^anitaposttask3survey/(?P<taskid>\d+)/$', snippet.view_alt_posttask3_survey),
-             url(r'^demographicssurvey/$', snippet.view_alt_demographic_survey, name='demographics'),
+
              (r'^anitaexit1survey/$', snippet.view_alt_exit1_survey),
              (r'^anitaexit2survey/$', snippet.view_alt_exit2_survey),
              (r'^anitaexit3survey/$', snippet.view_alt_exit3_survey),
