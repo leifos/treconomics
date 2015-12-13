@@ -3,7 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
-from django.forms.widgets import RadioSelect
+
+from django.forms.widgets import RadioSelect, Textarea
 from import_export import resources
 
 from survey.forms import clean_to_zero
@@ -645,15 +646,15 @@ class MickeyPostTaskResource(resources.ModelResource):
 
 class SnippetPostTaskSurvey(models.Model):
     user = models.ForeignKey(User)
-    task_id = models.IntegerField(default=0)
-    topic_num = models.IntegerField(default=0)
-    snip_helpfulness = models.IntegerField(default=0)
-    serp_simplicity = models.IntegerField(default=0)
-    snip_distracting = models.IntegerField(default=0)
-    snip_informativeness = models.IntegerField(default=0)
-    serp_confusion = models.IntegerField(default=0)
-    snip_clarity = models.IntegerField(default=0)
-    snip_usefulness = models.IntegerField(default=0)
+    task_id = models.IntegerField()
+    topic_num = models.IntegerField()
+    snip_helpfulness = models.IntegerField()
+    serp_simplicity = models.IntegerField()
+    snip_distracting = models.IntegerField()
+    snip_informativeness = models.IntegerField()
+    serp_confusion = models.IntegerField()
+    snip_clarity = models.IntegerField()
+    snip_usefulness = models.IntegerField()
 
     def __unicode__(self):
         return self.user.username
@@ -663,45 +664,45 @@ class SnippetPostTaskSurveyForm(ModelForm):
     snip_helpfulness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets(title, link and description) were unhelpful.",
-        required=False)
+        label="The result snippets (title, link and description) were unhelpful.",
+        required=True)
 
     serp_simplicity = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="The search engine result page was easy and simple to use.",
-        required=False)
+        required=True)
 
     snip_distracting = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="The result snippets were distracting.",
-        required=False)
+        required=True)
 
 
     snip_informativeness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="The result snippets were informative.",
-        required=False)
+        required=True)
 
     serp_confusion = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="The search engine result page was confusing.",
-        required=False)
+        required=True)
 
     snip_clarity = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets were clear and concise.",
-        required=False)
+        label="The result snippets gave a clear indication of what documents were about.",
+        required=True)
 
     snip_usefulness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets were helped identify relevant documents.",
-        required=False)
+        label="The result snippets were useful to identify relevant documents.",
+        required=True)
 
 
 
@@ -726,15 +727,15 @@ class SnippetPostTaskResource(resources.ModelResource):
 
 class SystemSnippetPostTaskSurvey(models.Model):
     user = models.ForeignKey(User)
-    task_id = models.IntegerField(default=0)
-    topic_num = models.IntegerField(default=0)
-    apt_accurate = models.IntegerField(default=0)
-    apt_quick_results = models.IntegerField(default=0)
-    apt_search_diff = models.IntegerField(default=0)
-    apt_hurried = models.IntegerField(default=0)
-    apt_satisfied_systems = models.IntegerField(default=0)
-    ae_cumbersome = models.IntegerField(default=0)
-    ae_confident = models.IntegerField(default=0)
+    task_id = models.IntegerField()
+    topic_num = models.IntegerField()
+    apt_accurate = models.IntegerField()
+    apt_quick_results = models.IntegerField()
+    apt_search_diff = models.IntegerField()
+    apt_hurried = models.IntegerField()
+    apt_satisfied_systems = models.IntegerField()
+    ae_cumbersome = models.IntegerField()
+    ae_confident = models.IntegerField()
 
     def __unicode__(self):
         return self.user.username
@@ -746,35 +747,35 @@ class SystemSnippetPostTaskSurveyForm(ModelForm):
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="It was important to me to complete this task accurately.",
-        required=False)
+        required=True)
 
     apt_quick_results = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="The system retrieved and displayed search results pages quickly.",
-        required=False)
+        required=True)
 
     apt_search_diff = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
         label="I thought it was difficult to search for information on this topic.",
-        required=False)
+        required=True)
 
     apt_hurried = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I felt hurried or rushed when completing this task.", required=False)
+        label="I felt rushed when completing this task.", required=True)
 
     apt_satisfied_systems = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
         label="I am satisfied with how the system performed for this task.",
-        required=False)
+        required=True)
 
     ae_cumbersome = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I found the system very cumbersome to use.", required=False)
+        label="I found the system very cumbersome to use.", required=True)
 
     ae_confident = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I felt very confident using the system.", required=False)
+        label="I felt very confident using the system.", required=True)
 
 
 
@@ -807,23 +808,21 @@ ENGINES = ( ('','Not Specified'),('AOL','AOL'),('BAI','Baidu'),('BIN','Bing'), (
 class SnippetDemographicsSurvey(models.Model):
     user = models.ForeignKey(User)
     age = models.IntegerField(
-        default=0,
         help_text="Please provide your age (in years).")
 
     sex = models.CharField(max_length=1, choices = SEX_CHOICES, help_text="Please indicate your sex.")
-    work = models.CharField(max_length=100, default="")
-    level = models.CharField(max_length=3, default="")
+    work = models.CharField(max_length=100)
+    level = models.CharField(max_length=3)
+
     search_freq = models.IntegerField(
-        default=-1,
         help_text="How often do you search the web?")
 
     news_search_freq = models.IntegerField(
-        default=-1,
         help_text="How often do you search the web for news articles?")
 
-    input_device = models.CharField(default="", max_length=2)
+    input_device = models.CharField(max_length=2)
 
-    search_engine = models.CharField(default="", max_length=3)
+    search_engine = models.CharField(max_length=3)
 
     def __unicode__(self):
         return self.user.username
@@ -840,40 +839,43 @@ class SnippetDemographicsSurveyForm(ModelForm):
          widget=forms.Select(
              choices=SEX_CHOICES),
                 label="Please indicate your gender.",
-                required=False)
+                required=True)
 
     work = forms.CharField(
         widget=forms.TextInput(attrs={'size': '60', 'class': 'inputText'}),
-        label="Please provide your occupation:", required=False)
+        label="Please provide your occupation:", required=True)
 
     level = forms.CharField(
         max_length=3, widget=forms.Select(choices=ED_CHOICES),
-        label="Please indicate the highest degree you've been awarded:", required=False)
+        label="Please indicate the highest degree you've been awarded:", required=True)
 
     search_freq = forms.IntegerField( widget=forms.Select(choices=SEARCH_FREQ),
         label="How often do you search the web?",
-        max_value=7, min_value=-1, required=False)
+        max_value=7, min_value=-1, required=True)
 
     news_search_freq = forms.IntegerField( widget=forms.Select(choices=SEARCH_FREQ),
         label="How often do you search the web for news articles?",
-        max_value=7, min_value=-1, required=False)
+        max_value=7, min_value=-1, required=True)
 
+    #search_freq = forms.IntegerField( widget=forms.Select(choices=SEARCH_FREQ),
+    #    label="How often do you search the web for news articles?",
+    #    max_value=7, min_value=-1, required=False)
 
     search_engine = forms.CharField( widget=forms.Select(choices=ENGINES),
         label="What search engine do you typically use?",
-        max_length=3, required=False)
+        max_length=3, required=True)
 
     input_device = forms.CharField( widget=forms.Select(choices=DEVICES),
         label="What kinds of pointing device are you using?",
-        max_length=2, required=False)
+        max_length=2, required=True)
 
     def clean(self):
         cleaned_data = self.cleaned_data
         if not cleaned_data.get("age"):
             cleaned_data["age"] = 0
 
-        if not cleaned_data.get("search_freq"):
-            cleaned_data["search_freq"] = 0
+        #if not cleaned_data.get("search_freq"):
+        #    cleaned_data["search_freq"] = 0
 
         return cleaned_data
 
@@ -882,19 +884,22 @@ class SnippetDemographicsSurveyForm(ModelForm):
         exclude = ('user',)
 
 
-SNIP_CHOICES = ((1, 'Very Short (1 line)'),
-                (2,'Short (2-3 lines)'), (3,'Long (4-6 lines)'))
+SNIP_CHOICES = ((1, 'Very Short (title + 1 line)'),
+                (2,'Short (title + 2-3 lines)'), (3,'Long (title + 4-6 lines)'))
 
 
 
 
 class SnippetExitSurvey(models.Model):
     user = models.ForeignKey(User)
-    snip_info = models.IntegerField(default=0)
-    snip_easy = models.IntegerField(default=0)
-    snip_help = models.IntegerField(default=0)
-    snip_useful = models.IntegerField(default=0)
-    snip_prefer = models.IntegerField(default=0)
+    snip_info = models.IntegerField()
+    snip_easy = models.IntegerField()
+    snip_help = models.IntegerField()
+    snip_useful = models.IntegerField()
+    snip_prefer = models.IntegerField()
+    snip_why = models.TextField()
+    snip_improve = models.TextField()
+
 
     def __unicode__(self):
         return self.user.username
@@ -903,21 +908,30 @@ class SnippetExitSurvey(models.Model):
 class SnippetExitSurveyForm(ModelForm):
     snip_info = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The most informative snippets were:", required=False)
+        label="The most informative snippets were:", required=True)
     snip_easy = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The unhelpful snippets were:", required=False)
+        label="The unhelpful snippets were:", required=True)
     snip_help = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The easiest snippets to use were:", required=False)
+        label="The easiest snippets to use were:", required=True)
     snip_useful = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
         label="The least useful snippets were:",
-        required=False)
+        required=True)
     snip_prefer = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
         label="The most preferable type of snippet for such tasks were:",
-        required=False)
+        required=True)
+
+    snip_why = forms.CharField(widget=Textarea,
+                               label="Given your last answer, explain why you prefer snippets of this length.",
+                               required=True)
+    snip_improve = forms.CharField(widget=Textarea,
+                                label="Please provide suggestions on how this study could be improved.",
+                                required=True)
+
+
 
     def clean(self):
         return clean_to_zero(self)

@@ -9,10 +9,10 @@
 <div>
 <div class="experimentPageTitle">
 
-<h2> Post-Task Questions about the System and Topic</h2>
+<h2> Post-Task Questions about the <b>System and Topic</b>. Part 2 of 2.</h2>
 
-<p> Thank you for completing the task for topic:  <b> {{tasktitle}} </b>.
-    Please answer the following questions about the search system and topic. </p>
+<p> Regarding the topic: <b> {{tasktitle}} </b>.</p>
+ <p>  Please answer the following questions about the <b>search system and topic.</b> </p>
 
   </div>
    </div>
@@ -41,15 +41,6 @@
 
             {% endfor %}
             </table>
-
-            <script type="text/javascript">
-                var frmvalidator = new Validator("survey_form");
-                {% for field in formset.visible_fields %}
-                frmvalidator.addValidation("{{field.html_name}}", "selectradio", "{{ field.label }}");
-                {% endfor %}
-            frmvalidator.EnableOnPageErrorDisplaySingleBox();
-            frmvalidator.EnableMsgsTogether();
-            frmvalidator.EnableFocusOnError(true);
 
             </script>
 

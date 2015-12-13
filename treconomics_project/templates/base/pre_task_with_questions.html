@@ -20,10 +20,11 @@
         <p>In preparation for a meeting with this group later today,
             you need to create a list of news articles relevant to four topics that were published
             from 1996-2000, the final term of the Clinton Adminstration.</p>
-        ---!>
+
+        -->
+ <p>The search task is a description of the topic, and the type of information within documents that would be relevant to this specific topic.</p>
 
         <p>Below is a description of the search task that we would like you to undertake.</p>
-        <p>The search task is a description of the topic, and the type of information within documents that would be relevant to this specific topic.</p>
 
         <div id="query">
             <p>{% autoescape off %} <strong>{{ taskdescription }}</strong> {% endautoescape %} </p>
@@ -31,12 +32,12 @@
         <b> {{tasktitle}} </b> <span>Search Task: <strong>{{task}}</strong> Search Topic: <strong>{{topic}}</strong></span>
 
         <p>{% autoescape off %} <em>{{taskdescription}}</em> {% endautoescape %} </p>
-        -->
+ -->
         </div>
         <br/>
         <p><b> Pre-Task Questions</b></p>
 
-        <p>Before you search for this task, please answer the following questions.</p>
+        <p>Before you start searching, please answer the following questions.</p>
     </div>
 
 
@@ -63,17 +64,6 @@
 
                 {% endfor %}
             </table>
-
-            <script type="text/javascript">
-                var frmvalidator = new Validator("survey_form");
-                {% for field in formset.visible_fields %}
-                    frmvalidator.addValidation("{{field.html_name}}", "selectradio", "{{ field.label }}");
-                {% endfor %}
-                frmvalidator.EnableOnPageErrorDisplaySingleBox();
-                frmvalidator.EnableMsgsTogether();
-                frmvalidator.EnableFocusOnError(true);
-
-            </script>
 
 
             <div class="surveySubmitButton">

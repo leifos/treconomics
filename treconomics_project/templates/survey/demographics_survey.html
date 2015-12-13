@@ -18,35 +18,27 @@
     <div id='survey_form_errorloc' class='error_strings' style="color: #F00; text-align: center;"></div>
 
     <form id="survey_form" method="post" action="{{action}}">
-<table cellpadding="20">
-    {% csrf_token %}
-    {# Include the hidden fields #}
-    {% for hidden in formset.hidden_fields %}
-    {{ hidden }}
-    {% endfor %}
-    {# Include the visible fields #}
-    {% for field in formset.visible_fields %}
-	<tr>
-	<td>
+    <table cellpadding="20">
+        {% csrf_token %}
+        {# Include the hidden fields #}
+        {% for hidden in formset.hidden_fields %}
+        {{ hidden }}
+        {% endfor %}
+        {# Include the visible fields #}
+        {% for field in formset.visible_fields %}
+	    <tr>
+	        <td>
             {{ field.errors }}
             {{ field.label_tag }}
-	</td>
-	<td>
- 	{{ field }}
-	</td>
+	        </td>
+	        <td>
+ 	        {{ field }}
+	        </td>
         </tr>
-	
-    {% endfor %}
-</table>
+        {% endfor %}
+    </table>
 
-<script type="text/javascript">
-    var frmvalidator = new Validator("survey_form");
-    frmvalidator.addValidation("id_age", "req", "Please provide your age (in years).");
-    frmvalidator.addValidation("id_sex", "req", "Please indicate your sex.");
-    frmvalidator.EnableOnPageErrorDisplaySingleBox();
-    frmvalidator.EnableMsgsTogether();
-    frmvalidator.EnableFocusOnError(true);
-</script>
+
 
 <div class="surveySubmitButton">
  <input class="largebutton" type="submit" name="submit" value="Submit" />

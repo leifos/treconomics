@@ -1,0 +1,44 @@
+{% extends 'base/base.html' %}
+
+{% block exp_info_block %}
+    <p> <!-- a href="/treconomics/logout">Logout</a> -->
+    </p>
+{% endblock %}
+
+{% block exp_block %}
+
+    <script>
+        $(document).ready(function () {
+            $('.surveySubmitButton').click(function () {
+                $(this).hide()
+            });
+        })
+    </script>
+
+
+
+    <div class="experimentPageTitle">
+        <p color="red">The system will automatically timeout and inform you when the time for this search task is up (2 minutes for the practice task, 10 minute for the actual tasks).</p>
+
+
+        <p>Please continue searching until this point.</p>
+
+
+        <p> When you are ready click the "next" button to continue to the next task: </p>
+    </div>
+
+    <div class="surveySubmitButton">
+        <a href="{% url 'next' %}">
+            <button class="button" type="next"> Next</button>
+        </a>
+
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block exp_footer_block %}
+    Participant: {{ participant }}  - Condition: {{ condition }} - Task: {{ task }}
+{% endblock %}

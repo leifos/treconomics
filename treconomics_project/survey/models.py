@@ -101,13 +101,13 @@ class SearchEfficacy(models.Model):
 
 class PreTaskTopicKnowledgeSurvey(models.Model):
     user = models.ForeignKey(User)
-    task_id = models.IntegerField(default=0)
-    topic_num = models.IntegerField(default=0)
-    topic_knowledge = models.IntegerField(default=0, help_text="How much do you know about this topic?")
-    topic_relevance = models.IntegerField(default=0)
-    topic_interest = models.IntegerField(default=0)
-    topic_searched = models.IntegerField(default=0)
-    topic_difficulty = models.IntegerField(default=0)
+    task_id = models.IntegerField()
+    topic_num = models.IntegerField()
+    topic_knowledge = models.IntegerField()
+    topic_relevance = models.IntegerField()
+    topic_interest = models.IntegerField()
+    topic_searched = models.IntegerField()
+    topic_difficulty = models.IntegerField()
 
     def __unicode__(self):
         return self.user.username

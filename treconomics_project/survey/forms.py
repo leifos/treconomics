@@ -370,21 +370,21 @@ class PreTaskTopicKnowledgeSurveyForm(ModelForm):
     topic_knowledge = forms.ChoiceField(widget=RadioSelect,
                                         choices=TOPIC_NOTHING_CHOICES,
                                         label="How much do you know about this topic?",
-                                        required=False)
+                                        required=True)
     topic_relevance = forms.ChoiceField(widget=RadioSelect,
                                         choices=TOPIC_NOTATALL_CHOICES,
                                         label="How relevant is this topic to your life?",
-                                        required=False)
+                                        required=True)
     topic_interest = forms.ChoiceField(widget=RadioSelect,
                                        choices=TOPIC_NOTATALL_CHOICES,
                                        label="How interested are you to learn more about this topic?",
-                                       required=False)
+                                       required=True)
     topic_searched = forms.ChoiceField(widget=RadioSelect, choices=TOPIC_NEVER_CHOICES,
                                        label="Have you ever searched for information related to this topic?",
-                                       required=False)
+                                       required=True)
     topic_difficulty = forms.ChoiceField(widget=RadioSelect, choices=TOPIC_EASY_CHOICES,
                                          label="How difficult do you think it will be to search for information about this topic?",
-                                         required=False)
+                                         required=True)
 
     def clean(self):
         return clean_to_zero(self)

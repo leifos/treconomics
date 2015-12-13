@@ -487,6 +487,8 @@ class PostExperimentView(ExperimentContextMixin, TemplateView):
 class TaskSpacerView(ExperimentContextMixin, TemplateView):
     template_name = 'base/task_spacer.html'
 
+class TaskSpacer2View(ExperimentContextMixin, TemplateView):
+    template_name = 'base/task_spacer2.html'
 
 class EndExperimentView(ExperimentContextMixin, TemplateView):
     template_name = 'base/end_experiment_amt.html'

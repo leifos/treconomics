@@ -80,6 +80,7 @@ def time_search_experiment_out(request):
     ec = get_experiment_context(request)
     task_id = ec["taskid"]
     timeout = experiment_setups[ec['condition']].get_timeout(task_id)
+    print "Timeout: ", timeout
     logging.debug('%s %d' % ('timeout:', timeout))
 
     if timeout == 0:

@@ -6,7 +6,7 @@ from django.conf.urls import patterns, url
 import views
 from .views import PreExperimentView
 from .views import PostExperimentView
-from .views import TaskSpacerView
+from .views import TaskSpacerView, TaskSpacer2View
 from .views import EndExperimentView
 from .views import SessionCompletedView
 from search import views as search_views
@@ -36,6 +36,11 @@ urlpatterns = \
              url(r'^showtask/$', views.show_task),
              url(r'^sessioncommence/$', views.commence_session),
              url(r'^taskspacer/$', TaskSpacerView.as_view()),
+
+             url(r'^taskspacer2/$', TaskSpacer2View.as_view()),
+
+
+
              url(r'^sessioncompleted/$', SessionCompletedView.as_view(), name='session-completed'),
              url(r'^postexperiment/$', PostExperimentView.as_view()),
              url(r'^endexperiment/$', EndExperimentView.as_view()),
