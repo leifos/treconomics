@@ -84,6 +84,8 @@ def time_search_experiment_out(request):
     logging.debug('%s %d' % ('timeout:', timeout))
 
     if timeout == 0:
+        log_event(event="SEARCH_TASK_COMPLETED", request=request)
+        log_event(event="SEARCH_TASK_COMPLETED_TIMEOUT", request=request)
         return False
     else:
         current_time = datetime.datetime.now()
