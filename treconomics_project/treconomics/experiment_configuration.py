@@ -12,10 +12,12 @@ from experiment_setup import ExperimentSetup
 work_dir = os.getcwd()
 # when deployed this needs to match up with the hostname, and directory to where the project is
 
-if socket.gethostname() == 'newssearch':
-    work_dir = '~/ifind/applications/treconomics_project3/'
 
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
+if socket.gethostname() == 'leifos':
+    my_whoosh_doc_index_dir = '/home/leifos/test100index/'
+
+
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
 qrels_file = os.path.join(work_dir, "data/TREC2005.qrels.txt")
@@ -79,7 +81,7 @@ exp_work_flows = [
 snippet_flow = [
     'startexperiment/', 'preexperiment/UK/',
     'demographicssurvey/',
-    'prepracticetask/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer',
+    'prepracticetask/0/','taskspacer2', 'search/0/', 'postpracticetask/0/', 'taskspacer',
     'pretaskquestions/1/','taskspacer2', 'search/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
         'taskspacer',
     'pretaskquestions/2/', 'taskspacer2','search/2/', 'snippetposttask/2/','systemsnippetposttask/2/',
@@ -112,24 +114,24 @@ suggestion_trie = AutocompleteTrie(
 search_engine = Whooshtrec(
     whoosh_index_dir=my_whoosh_doc_index_dir,
     stopwords_file=stopword_file,
-    model=2,
+    model=1,
     newschema=True)
 
-search_engine.key_name = 'pl2'
+search_engine.key_name = 'bm25'
 
 exp_test = ExperimentSetup(
     workflow=snippet_flow,
     engine=search_engine,
     practice_topic='341',
-    topics=['347', '367', '354'],
+    topics=['347', '367', '435'],
     rpp=10,
     practice_interface=1,
     interface=[1, 2, 3],
     rotation_type=1,
-    description='standard condition pl2 test',
+    description='standard condition bm25 test',
     trie=suggestion_trie,
     autocomplete=True,
-    timeout=[120,600,600,600])  # 300s = 5min; 600s = 10min; 1200s = 20min
+    timeout=[100,600,600,600])  # 300s = 5min; 600s = 10min; 1200s = 20min
 
 
 # these correspond to conditions

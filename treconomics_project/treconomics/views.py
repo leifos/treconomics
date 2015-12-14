@@ -104,7 +104,8 @@ def view_register_amt_user(request):
             user = User.objects.get_or_create(username=username)[0]
             user.set_password(password)
             user.save()
-            up = UserProfile.objects.get_or_create(user=user, condition=0,experiment=0,rotation=0, data='')[0]
+            up = UserProfile.objects.get_or_create(user=user, condition=0,experiment=0,rotation=user.id, data='')[0]
+            print "UserProfile, rotation:", user.id
             up.save()
             return render(request, 'base/amt_login.html', {'registered': True})
         else:

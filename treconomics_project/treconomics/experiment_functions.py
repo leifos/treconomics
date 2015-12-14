@@ -102,7 +102,7 @@ def time_search_experiment_out(request):
 def log_performance(request, perf):
     ec = get_experiment_context(request)
 
-    msg = ec["username"] + " " + str(ec["condition"]) + " 0 " + perf["num"] + " VIEW_PERFORMANCE "
+    msg = ec["username"] + " " + str(ec["condition"]) + " 0 0 " + perf["num"] + " VIEW_PERFORMANCE "
     msg = msg + " " + str(perf["total"]) + " " + str(perf["score"]) + " " + str(perf["rels"]) + " " + str(perf["nons"])
     event_logger.info(msg)
 
@@ -111,7 +111,7 @@ def log_event(event, request, query="", whooshid=-2, judgement=-2, trecid="", ra
               metrics=None):
     ec = get_experiment_context(request)
 
-    msg = "{0} {1} {2} {3} {4}".format(ec["username"], ec["condition"], ec["taskid"], ec["topicnum"], event)
+    msg = "{0} {1} {2} {3} {4}".format(ec["username"], ec["condition"], ec["interface"],  ec["taskid"], ec["topicnum"], event)
 
     if whooshid > -1:
         event_logger.info(
