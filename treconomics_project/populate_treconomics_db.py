@@ -13,7 +13,7 @@ def populate():
                          'and their carry-on luggage.</p>'
                          '<p>A relevant document would discuss how effective government orders to '
                          'better scrutinize passengers and luggage on international flights and to step '
-                         'up screening of all carry-on baggage has been</p>.')
+                         'up screening of all carry-on baggage has been.</p>')
     add_task(topic_num='347',
              title='Wildlife Extinction',
              description='<p>For this task, your job is '

@@ -406,8 +406,6 @@ def post_task_with_questions(request, taskid):
         survey = PostTaskTopicRatingSurveyForm()
         profile.tasks_completed = int(taskid)
         profile.save()
-        print "SEARCH TASK COMPLETED"
-        log_event(event="SEARCH_TASK_COMPLETED", request=request)
         log_event(event="POST_TASK_SURVEY_STARTED", request=request)
 
     # if we had a survey questions we could ask them here
@@ -446,7 +444,8 @@ def show_timeout_message(request):
     Used to display a simple page indicating the user to the fact that their time for a task has expired.
     After a 5 second delay, the page automatically redirects to /treconomics/next/.
     """
-    log_event(event="EXPERIMENT_TIMEOUT", request=request)
+    log_event(event="SESSION_COMPLETED_X", request=self.request)
+    log_event(event="EXPERIMENT_TIMEOUT_X", request=request)
 
     return render(request, 'base/timeout.html')
 
@@ -521,5 +520,6 @@ class TimeoutView(ExperimentContextMixin, TemplateView):
     template_name = 'base/timeout.html'
 
     def dispatch(self, request, *args, **kwargs):
+        log_event(event="SESSION_COMPLETED", request=self.request)
         log_event(event="EXPERIMENT_TIMEOUT", request=request)
         pass

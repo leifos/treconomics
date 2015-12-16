@@ -32,10 +32,7 @@
 <div id="mark">
     <br/>
      {% if user_judgement  == 1 %}
-
-
-         <p>Marked Relevant</p>
-
+            Marked Relevant
      {% else %}
         <button class="largebutton" type="relevant" value="{{ docid }}" name="{{ docid }}" onclick="markRelevant()" > Mark as Relevant </button>
      {% endif %}
@@ -44,7 +41,7 @@
 
 <script>
 function markRelevant(){$.ajax({ url:"/treconomics/"+{{docid}}+"?judge=1&docid="+{{docid}}+"&rank="+{{rank}}, complete: function(data){
-    $('#mark').replaceWith('<div id="mark">Marked Relevant </div>');
+    $('#mark').replaceWith('<div id="mark"><br/>Marked Relevant </div>');
      } }); }
 function markNonRelevant(){$.ajax({ url:"/treconomics/"+{{docid}}+"?judge=0&docid="+{{docid}}+"&rank="+{{rank}}, complete: function(data){
      $('#mark').replaceWith('<div id="mark">  <button class="largebutton" type="relevant" value="{{docid}}" name="{{docid}}" onclick="markRelevant()" >Mark as Relevant </button></div>');
