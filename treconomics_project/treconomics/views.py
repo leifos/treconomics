@@ -488,8 +488,17 @@ class PostExperimentView(ExperimentContextMixin, TemplateView):
 class TaskSpacerView(ExperimentContextMixin, TemplateView):
     template_name = 'base/task_spacer.html'
 
-class TaskSpacer2View(ExperimentContextMixin, TemplateView):
-    template_name = 'base/task_spacer2.html'
+
+@login_required
+def task_spacer_msg(request, msg_id):
+    ec = get_experiment_context(request)
+    uname = ec["username"]
+    condition = ec["condition"]
+
+    context_dict = {'msg_id': msg_id, 'participant': uname, 'condition': condition}
+    return render(request, 'base/task_spacer2.html', context_dict)
+
+
 
 class EndExperimentView(ExperimentContextMixin, TemplateView):
     template_name = 'base/end_experiment_amt.html'

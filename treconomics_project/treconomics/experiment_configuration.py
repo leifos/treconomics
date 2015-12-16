@@ -81,12 +81,12 @@ exp_work_flows = [
 snippet_flow = [
     'startexperiment/', 'preexperiment/UK/',
     'demographicssurvey/',
-    'prepracticetask/0/','taskspacer2', 'search/0/', 'postpracticetask/0/', 'taskspacer',
-    'pretaskquestions/1/','taskspacer2', 'search/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
+    'prepracticetask/0/','taskspacer2/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer',
+    'pretaskquestions/1/','taskspacer2/1/', 'search/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
         'taskspacer',
-    'pretaskquestions/2/', 'taskspacer2','search/2/', 'snippetposttask/2/','systemsnippetposttask/2/',
+    'pretaskquestions/2/', 'taskspacer2/2/','search/2/', 'snippetposttask/2/','systemsnippetposttask/2/',
         'taskspacer',
-    'pretaskquestions/3/','taskspacer2', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/3/',
+    'pretaskquestions/3/','taskspacer2/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/3/',
     'taskspacer', 'snippetexitsurvey/', 'performance/', 'endexperiment/',
     'logout/'
 ]

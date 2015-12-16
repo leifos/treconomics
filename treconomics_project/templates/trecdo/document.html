@@ -30,9 +30,11 @@
         <button class="largebutton" onclick="window.location.href='{{current_search}}'">Back to Results</button>
      {% endif %}
 <div id="mark">
+    <br/>
      {% if user_judgement  == 1 %}
 
-         Marked Relevant
+
+         <p>Marked Relevant</p>
 
      {% else %}
         <button class="largebutton" type="relevant" value="{{ docid }}" name="{{ docid }}" onclick="markRelevant()" > Mark as Relevant </button>

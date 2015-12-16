@@ -6,7 +6,7 @@ from django.conf.urls import patterns, url
 import views
 from .views import PreExperimentView
 from .views import PostExperimentView
-from .views import TaskSpacerView, TaskSpacer2View
+from .views import TaskSpacerView
 from .views import EndExperimentView
 from .views import SessionCompletedView
 from search import views as search_views
@@ -37,7 +37,7 @@ urlpatterns = \
              url(r'^sessioncommence/$', views.commence_session),
              url(r'^taskspacer/$', TaskSpacerView.as_view()),
 
-             url(r'^taskspacer2/$', TaskSpacer2View.as_view()),
+             url(r'^taskspacer2/(?P<msg_id>\d+)/$', views.task_spacer_msg),
 
 
 

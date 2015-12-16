@@ -7,25 +7,19 @@
 
 {% block exp_block %}
 
-    <script>
-        $(document).ready(function () {
-            $('.surveySubmitButton').click(function () {
-                $(this).hide()
-            });
-        })
-    </script>
-
-
 
     <div class="experimentPageTitle">
-        <p color="red">The system will automatically timeout and inform you when the time for this search task is up:</p>
+        <p color="red">The system will automatically timeout and inform you when the time for this search task is up.</p>
         <ul>
-            <li>2 minutes for the practice task</li>
-            <li>10 minute for the actual tasks</li>
+            {% if msg_id == '0' %}
+            <li>Please search for <b>2 minutes</b> for this practice task.</li>
+            {% else %}
+            <li>Please search for <b>10 minutes</b> for this task.</li>
+            {% endif %}
         </ul>
 
 
-        <p>Please continue searching until this point.</p>
+        <p>Continue searching until the system times out.</p>
 
 
         <p> When you are ready click the "next" button to continue to the next task: </p>
