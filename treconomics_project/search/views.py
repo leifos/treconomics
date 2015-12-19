@@ -226,7 +226,7 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
 
     search_engine = experiment_setups[condition].get_engine()
 
-    snippet_sizes = [2,4,10]
+    snippet_sizes = [2, 0, 8]
     pos = interface - 1
     search_engine.snippet_size = snippet_sizes[pos]
 

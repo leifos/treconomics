@@ -664,7 +664,7 @@ class SnippetPostTaskSurveyForm(ModelForm):
     snip_helpfulness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets (title, link and description) were unhelpful.",
+        label="The result summaries were unhelpful.",
         required=True)
 
     serp_simplicity = forms.ChoiceField(
@@ -676,14 +676,14 @@ class SnippetPostTaskSurveyForm(ModelForm):
     snip_distracting = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets were distracting.",
+        label="The result summaries were distracting.",
         required=True)
 
 
     snip_informativeness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets were informative.",
+        label="The result summaries were informative.",
         required=True)
 
     serp_confusion = forms.ChoiceField(
@@ -695,13 +695,13 @@ class SnippetPostTaskSurveyForm(ModelForm):
     snip_clarity = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets gave a clear indication of what documents were about.",
+        label="The result summaries gave a clear indication of what documents were about.",
         required=True)
 
     snip_usefulness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets were useful to identify relevant documents.",
+        label="The result summaries were useful to identify relevant documents.",
         required=True)
 
 
@@ -884,8 +884,8 @@ class SnippetDemographicsSurveyForm(ModelForm):
         exclude = ('user',)
 
 
-SNIP_CHOICES = ((1, 'Very Short (title + 1 line)'),
-                (2,'Short (title + 2-3 lines)'), (3,'Long (title + 4-6 lines)'))
+SNIP_CHOICES = ((1, 'Very Short (title only)'),
+                (2,'Short (title + 1-2 lines)'), (3,'Long (title + 4-6 lines)'))
 
 
 
@@ -908,24 +908,24 @@ class SnippetExitSurvey(models.Model):
 class SnippetExitSurveyForm(ModelForm):
     snip_info = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The most informative snippets were:", required=True)
+        label="The most informative result summaries were:", required=True)
     snip_easy = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The unhelpful snippets were:", required=True)
+        label="The unhelpful result summaries were:", required=True)
     snip_help = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The easiest snippets to use were:", required=True)
+        label="The easiest result summaries to use were:", required=True)
     snip_useful = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The least useful snippets were:",
+        label="The least useful result summaries were:",
         required=True)
     snip_prefer = forms.ChoiceField(
         widget=RadioSelect, choices=SNIP_CHOICES,
-        label="The most preferable type of snippet for such tasks were:",
+        label="The most preferable type of result summaries for such tasks were:",
         required=True)
 
     snip_why = forms.CharField(widget=Textarea,
-                               label="Given your last answer, explain why you prefer snippets of this length.",
+                               label="Given your last answer, explain why you prefer result summaries of this length.",
                                required=True)
     snip_improve = forms.CharField(widget=Textarea,
                                 label="Please provide suggestions on how this study could be improved.",
