@@ -231,13 +231,14 @@ class AnitaPreTaskSurveyForm(ModelForm):
 
     class Meta:
         model = AnitaPreTaskSurvey
-        exclude = ('user', 'task_id', 'topic_num')
+        exclude = ('user', 'task_id', 'topic_num', 'condition')
 
 
 class AnitaPostTask0Survey(models.Model):
     user = models.ForeignKey(User)
     task_id = models.IntegerField(default=0)
     topic_num = models.IntegerField(default=0)
+    condition = models.IntegerField()
     apt_satisfied_amount = models.IntegerField(default=0)
     apt_satisfied_steps = models.IntegerField(default=0)
     apt_work_fast = models.IntegerField(default=0)
@@ -284,6 +285,7 @@ class AnitaPostTask1Survey(models.Model):
     user = models.ForeignKey(User)
     task_id = models.IntegerField(default=0)
     topic_num = models.IntegerField(default=0)
+    condition = models.IntegerField()
     apt_search_diff = models.IntegerField(default=0)
     apt_hurried = models.IntegerField(default=0)
     apt_satisfied_systems = models.IntegerField(default=0)
@@ -319,7 +321,7 @@ class AnitaPostTask1SurveyForm(ModelForm):
 
     class Meta:
         model = AnitaPostTask1Survey
-        exclude = ('user', 'task_id', 'topic_num')
+        exclude = ('user', 'task_id', 'topic_num','condition')
 
 
 #
@@ -580,6 +582,8 @@ class MickeyPostTaskSurvey(models.Model):
     user = models.ForeignKey(User)
     task_id = models.IntegerField(default=0)
     topic_num = models.IntegerField(default=0)
+    condition = models.IntegerField(default=0)
+    interface = models.IntegerField(default=0)
     snip_helpfulness = models.IntegerField(default=0)
     serp_simplicity = models.IntegerField(default=0)
     snip_informativeness = models.IntegerField(default=0)
@@ -626,7 +630,7 @@ class MickeyPostTaskSurveyForm(ModelForm):
 
     class Meta:
         model = MickeyPostTaskSurvey
-        exclude = ('user', 'task_id', 'topic_num')
+        exclude = ('user', 'task_id', 'topic_num','condition')
 
 
 class AnitaPreTaskResource(resources.ModelResource):
@@ -648,6 +652,8 @@ class SnippetPostTaskSurvey(models.Model):
     user = models.ForeignKey(User)
     task_id = models.IntegerField()
     topic_num = models.IntegerField()
+    condition = models.IntegerField()
+    interface = models.IntegerField()
     snip_helpfulness = models.IntegerField()
     serp_simplicity = models.IntegerField()
     snip_distracting = models.IntegerField()
@@ -712,7 +718,7 @@ class SnippetPostTaskSurveyForm(ModelForm):
 
     class Meta:
         model = SnippetPostTaskSurvey
-        exclude = ('user', 'task_id', 'topic_num')
+        exclude = ('user', 'task_id', 'topic_num','condition','interface')
 
 
 class SnippetPostTaskResource(resources.ModelResource):
@@ -729,6 +735,8 @@ class SystemSnippetPostTaskSurvey(models.Model):
     user = models.ForeignKey(User)
     task_id = models.IntegerField()
     topic_num = models.IntegerField()
+    condition = models.IntegerField()
+    interface = models.IntegerField()
     apt_accurate = models.IntegerField()
     apt_quick_results = models.IntegerField()
     apt_search_diff = models.IntegerField()
@@ -784,7 +792,7 @@ class SystemSnippetPostTaskSurveyForm(ModelForm):
 
     class Meta:
         model = SystemSnippetPostTaskSurvey
-        exclude = ('user', 'task_id', 'topic_num')
+        exclude = ('user', 'task_id', 'topic_num','condition','interface')
 
 
 class SystemSnippetPostTaskResource(resources.ModelResource):
@@ -794,7 +802,7 @@ class SystemSnippetPostTaskResource(resources.ModelResource):
         exclude = ('id',)
 
 
-SEARCH_FREQ = ((-1,'Not Specified'), (6, 'Many times a day'),
+SEARCH_FREQ = (('','Not Specified'), (6, 'Many times a day'),
                 (5,'1-2 times a day'), (4,'A many times a week'), (3,'A few times a week'),
                 (2,'Sometimes'), (1,'Rarely'), (0,'Never'), )
 
@@ -814,11 +822,9 @@ class SnippetDemographicsSurvey(models.Model):
     work = models.CharField(max_length=100)
     level = models.CharField(max_length=3)
 
-    search_freq = models.IntegerField(
-        help_text="How often do you search the web?")
+    search_freq = models.IntegerField()
 
-    news_search_freq = models.IntegerField(
-        help_text="How often do you search the web for news articles?")
+    news_search_freq = models.IntegerField()
 
     input_device = models.CharField(max_length=2)
 
@@ -831,8 +837,8 @@ class SnippetDemographicsSurveyForm(ModelForm):
     age = forms.IntegerField(
         label="Please provide your age (in years).",
         max_value=100,
-        min_value=0,
-        required=False)
+        min_value=18,
+        required=True)
 
     sex = forms.CharField(
      max_length=1,
@@ -857,9 +863,6 @@ class SnippetDemographicsSurveyForm(ModelForm):
         label="How often do you search the web for news articles?",
         max_value=7, min_value=-1, required=True)
 
-    #search_freq = forms.IntegerField( widget=forms.Select(choices=SEARCH_FREQ),
-    #    label="How often do you search the web for news articles?",
-    #    max_value=7, min_value=-1, required=False)
 
     search_engine = forms.CharField( widget=forms.Select(choices=ENGINES),
         label="What search engine do you typically use?",
@@ -873,9 +876,6 @@ class SnippetDemographicsSurveyForm(ModelForm):
         cleaned_data = self.cleaned_data
         if not cleaned_data.get("age"):
             cleaned_data["age"] = 0
-
-        #if not cleaned_data.get("search_freq"):
-        #    cleaned_data["search_freq"] = 0
 
         return cleaned_data
 
@@ -940,3 +940,57 @@ class SnippetExitSurveyForm(ModelForm):
         model = SnippetExitSurvey
         exclude = ('user',)
 
+
+
+class SnippetPreTaskTopicKnowledgeSurvey(models.Model):
+    user = models.ForeignKey(User)
+    task_id = models.IntegerField()
+    topic_num = models.IntegerField()
+    condition = models.IntegerField()
+    interface = models.IntegerField()
+    topic_knowledge = models.IntegerField()
+    topic_relevance = models.IntegerField()
+    topic_interest = models.IntegerField()
+    topic_searched = models.IntegerField()
+    topic_difficulty = models.IntegerField()
+
+    def __unicode__(self):
+        return self.user.username
+
+
+TOPIC_NOTHING_CHOICES = ( (1, 'Nothing'), (2, ''), (3, ''), (4, ''), (5, 'I Know Details')  )
+TOPIC_NOTATALL_CHOICES = ( (1, 'Not at all'), (2, ''), (3, ''), (4, ''), (5, 'Very Much')  )
+TOPIC_NEVER_CHOICES = ( (1, 'Never'), (2, ''), (3, ''), (4, ''), (5, 'Very Often')  )
+TOPIC_EASY_CHOICES = ( (1, 'Very Easy'), (2, ''), (3, ''), (4, ''), (5, 'Very Difficult')  )
+TOPIC_NOTGOOD_CHOICES = ( (1, 'Not Good'), (2, ''), (3, ''), (4, ''), (5, 'Very Good')  )
+TOPIC_UNSUCCESSFUL_CHOICES = ( (1, 'Unsuccessful'), (2, ''), (3, ''), (4, ''), (5, 'Successful')  )
+TOPIC_FEW_CHOICES = ( (1, 'A few of them'), (2, ''), (3, ''), (4, ''), (5, 'All of them')  )
+
+
+class SnippetPreTaskTopicKnowledgeSurveyForm(ModelForm):
+
+    topic_knowledge = forms.ChoiceField(widget=RadioSelect,
+                                        choices=TOPIC_NOTHING_CHOICES,
+                                        label="How much do you know about this topic?",
+                                        required=True)
+    topic_relevance = forms.ChoiceField(widget=RadioSelect,
+                                        choices=TOPIC_NOTATALL_CHOICES,
+                                        label="How relevant is this topic to your life?",
+                                        required=True)
+    topic_interest = forms.ChoiceField(widget=RadioSelect,
+                                       choices=TOPIC_NOTATALL_CHOICES,
+                                       label="How interested are you to learn more about this topic?",
+                                       required=True)
+    topic_searched = forms.ChoiceField(widget=RadioSelect, choices=TOPIC_NEVER_CHOICES,
+                                       label="Have you ever searched for information related to this topic?",
+                                       required=True)
+    topic_difficulty = forms.ChoiceField(widget=RadioSelect, choices=TOPIC_EASY_CHOICES,
+                                         label="How difficult do you think it will be to search for information about this topic?",
+                                         required=True)
+
+    def clean(self):
+        return clean_to_zero(self)
+
+    class Meta:
+        model = SnippetPreTaskTopicKnowledgeSurvey
+        exclude = ('user', 'task_id', 'topic_num','condition','interface')

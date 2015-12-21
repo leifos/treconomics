@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block exp_info_block %}
+
     <script type="text/javascript">
         var APP_ROOT = '{{ application_root }}';
 
@@ -23,6 +24,7 @@
         <a href="{% url 'saved' %}">View Saved</a> |
         <a href="JavaScript:taskPopup('/treconomics/showtask/');">Show Task</a>
        <!-- | <a href="{% url 'next' %}" id="end-task-link"> End Task</a> -->
+       | <a href="{% url 'next' %}" id="end-task-link">End</a>
     </p>
 {% endblock %}
 
@@ -67,6 +69,9 @@
 
     </div>
 
+
+
+
 {% endblock %}
 
 
@@ -74,3 +79,4 @@
 {% block exp_footer_block %}
     Participant: {{ participant }}  - Condition: {{ condition }} - Task: {{ task }} - Topic: {{ topicno }}
 {% endblock %}
+

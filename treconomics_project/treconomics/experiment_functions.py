@@ -113,7 +113,7 @@ def log_event(event, request, query="", whooshid=-2, judgement=-2, trecid="", ra
               metrics=None):
     ec = get_experiment_context(request)
 
-    msg = "{0} {1} {2} {3} {4}".format(ec["username"], ec["condition"], ec["interface"],  ec["taskid"], ec["topicnum"], event)
+    msg = "{0} {1} {2} {3} {4} {5}".format(ec["username"], ec["condition"], ec["interface"],  ec["taskid"], ec["topicnum"], event)
 
     if whooshid > -1:
         event_logger.info(

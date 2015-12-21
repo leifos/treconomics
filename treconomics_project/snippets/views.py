@@ -9,7 +9,7 @@ from treconomics.experiment_functions import get_experiment_context
 from treconomics.experiment_functions import log_event
 from survey.views import handle_survey
 from models import AnitaPreTaskSurveyForm, AnitaPostTask0SurveyForm, AnitaPostTask1SurveyForm, \
-    AnitaPostTask2SurveyForm, AnitaPostTask3SurveyForm, SnippetPostTaskSurveyForm, SystemSnippetPostTaskSurveyForm
+    AnitaPostTask2SurveyForm, AnitaPostTask3SurveyForm, SnippetPostTaskSurveyForm, SystemSnippetPostTaskSurveyForm, SnippetPreTaskTopicKnowledgeSurveyForm
 from models import AnitaDemographicsSurveyForm, AnitaExit1SurveyForm, AnitaExit2SurveyForm, \
     AnitaExit3SurveyForm
 from models import AnitaConsentForm
@@ -23,6 +23,7 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
     ec = get_experiment_context(request)
     condition = ec["condition"]
     topicnum = ec["topicnum"]
+    interface = ec["interface"]
     t = TaskDescription.objects.get(topic_num=topicnum)
     errors = ""
     uname = request.user.username
@@ -34,8 +35,10 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = u
-            obj.task_id = ec["taskid"]
-            obj.topic_num = ec["topicnum"]
+            obj.task_id = taskid
+            obj.topic_num = topicnum
+            obj.condition = condition
+            obj.interface = interface
             obj.save()
             log_event(event=survey_name.upper() + "_SURVEY_COMPLETED", request=request)
             return redirect('next')
@@ -55,6 +58,7 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
     # provide link to search interface / next system
     context_dict = {'participant': uname,
                     'condition': condition,
+                    'interface': interface,
                     'task': taskid,
                     'topic': t.topic_num,
                     'tasktitle': t.title,
@@ -178,3 +182,9 @@ def view_snippet_posttask(request, taskid):
 def view_system_snippet_posttask(request, taskid):
     return handle_task_and_questions_survey(request, taskid, SystemSnippetPostTaskSurveyForm, 'SYSTEM_SNIPPET_POSTTASK',
                                             '/treconomics/systemsnippetposttask/', 'survey/system_snippet_posttask_survey.html')
+
+
+@login_required
+def view_snippet_pretask(request, taskid):
+    return handle_task_and_questions_survey(request, taskid, SnippetPreTaskTopicKnowledgeSurveyForm, 'SNIPPET_PRETASK',
+                                            '/treconomics/snippetpretask/', 'survey/system_snippet_posttask_survey.html')

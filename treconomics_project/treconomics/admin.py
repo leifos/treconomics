@@ -101,7 +101,7 @@ admin.site.register(UserProfile, UserProfileAdmin)
 # admin.site.register(AnitaExit1Survey, UserSurveyAdmin)
 # admin.site.register(AnitaExit2Survey, UserSurveyAdmin)
 # admin.site.register(AnitaExit3Survey, UserSurveyAdmin)
-admin.site.register(AnitaDemographicsSurvey, UserSurveyAdmin)
+#admin.site.register(AnitaDemographicsSurvey, UserSurveyAdmin)
 
 # Important
 admin.site.register(DocumentsExamined)
