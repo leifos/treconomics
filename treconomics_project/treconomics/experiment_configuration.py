@@ -14,9 +14,8 @@ work_dir = os.getcwd()
 
 
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
-if socket.gethostname() == 'leifos':
+if 'local' not in socket.gethostname():
     my_whoosh_doc_index_dir = '/home/leifos/test100index/'
-
 
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
