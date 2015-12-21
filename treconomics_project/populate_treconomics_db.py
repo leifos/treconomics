@@ -6,7 +6,7 @@ def populate():
     print 'Adding Task Descriptions'
     add_task(topic_num='341',
              title='Airport Security',
-             description='<p>In this practice task, '
+             description='<p>For this task, '
                          'your job is to find articles '
                          'that discuss procedures taken by international '
                          'airports, to better screen passengers '
