@@ -117,6 +117,7 @@ search_engine = Whooshtrec(
     newschema=True)
 
 search_engine.key_name = 'bm25'
+search_engine.set_fragmenter(frag_type=2, surround=40)
 
 exp_test = ExperimentSetup(
     workflow=snippet_flow,
