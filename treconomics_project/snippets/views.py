@@ -187,4 +187,4 @@ def view_system_snippet_posttask(request, taskid):
 @login_required
 def view_snippet_pretask(request, taskid):
     return handle_task_and_questions_survey(request, taskid, SnippetPreTaskTopicKnowledgeSurveyForm, 'SNIPPET_PRETASK',
-                                            '/treconomics/snippetpretask/', 'survey/system_snippet_posttask_survey.html')
+                                            '/treconomics/snippetpretask/', 'base/pre_task_with_questions.html')
