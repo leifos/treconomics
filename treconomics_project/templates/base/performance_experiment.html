@@ -14,8 +14,8 @@
         <hr/>
         <p>Search task: <b>{{ topic.title }}</b></p>
 
-        <p><em>Total number of relevant documents: <strong style="color: #3366FF;">{{ topic.total }}</strong></em></p>
-
+        <!--<p><em>Total number of relevant documents: <strong style="color: #3366FF;">{{ topic.total }}</strong></em></p>
+        -->
         <p>
         <ul>
             <li>Documents you <em><strong>correctly</strong> identified:</em> <strong
@@ -31,6 +31,8 @@
     {% endfor %}
 
     <hr/>
+        <p><strong>Your average score across all topics: <span style="color: #3366FF;">{{ avg_wellness }}</span></strong></p>
+
 
     <p>When you have examined the results above, please click the <em>Next</em> button below to continue.</p>
 
