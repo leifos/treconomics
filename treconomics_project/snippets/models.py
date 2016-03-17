@@ -584,45 +584,54 @@ class MickeyPostTaskSurvey(models.Model):
     topic_num = models.IntegerField(default=0)
     condition = models.IntegerField(default=0)
     interface = models.IntegerField(default=0)
-    snip_helpfulness = models.IntegerField(default=0)
-    serp_simplicity = models.IntegerField(default=0)
+    snip_readable = models.IntegerField(default=0)
+    snip_confidence = models.IntegerField(default=0)
     snip_informativeness = models.IntegerField(default=0)
-    serp_confusion = models.IntegerField(default=0)
+    snip_relevance = models.IntegerField(default=0)
     snip_clarity = models.IntegerField(default=0)
+    snip_size = models.IntegerField(default=0)
+
 
     def __unicode__(self):
         return self.user.username
 
 
 class MickeyPostTaskSurveyForm(ModelForm):
-    snip_helpfulness = forms.ChoiceField(
+    snip_readable = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets(title, link and description) were unhelpful.",
+        label="The result snippets (title, link and description) were not readable.",
         required=False)
 
-    serp_simplicity = forms.ChoiceField(
+    snip_confidence = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The search engine result page was easy and simple to use.",
+        label="The result snippets increased my confidence in my decisions.",
         required=False)
 
     snip_informativeness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result snippets were informative.",
+        label="The result snippets were not informative.",
         required=False)
 
-    serp_confusion = forms.ChoiceField(
+    snip_relevance = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The search engine result page was confusing.",
+        label="The results snippets help me judge the relevance of the document.",
         required=False)
 
     snip_clarity = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="The result snippets were clear and concise.",
+        required=False)
+
+
+    snip_size = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The result snippets were not an appropriate size.",
         required=False)
 
     def clean(self):
@@ -654,61 +663,56 @@ class SnippetPostTaskSurvey(models.Model):
     topic_num = models.IntegerField()
     condition = models.IntegerField()
     interface = models.IntegerField()
-    snip_helpfulness = models.IntegerField()
-    serp_simplicity = models.IntegerField()
-    snip_distracting = models.IntegerField()
-    snip_informativeness = models.IntegerField()
-    serp_confusion = models.IntegerField()
-    snip_clarity = models.IntegerField()
-    snip_usefulness = models.IntegerField()
+    #snip_helpfulness = models.IntegerField(default=0)
+    snip_clarity = models.IntegerField(default=0)
+    snip_confidence = models.IntegerField(default=0)
+    snip_informativeness = models.IntegerField(default=0)
+    snip_relevance = models.IntegerField(default=0)
+    snip_readable = models.IntegerField(default=0)
+    snip_size = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.user.username
 
 
 class SnippetPostTaskSurveyForm(ModelForm):
-    snip_helpfulness = forms.ChoiceField(
+    snip_clarity = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result summaries were unhelpful.",
-        required=True)
+        label="The result snippets (title, link and description) were clear and concise.",
+        required=False)
 
-    serp_simplicity = forms.ChoiceField(
+
+    snip_confidence = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The search engine result page was easy and simple to use.",
-        required=True)
-
-    snip_distracting = forms.ChoiceField(
-        widget=RadioSelect,
-        choices=LIKERT_CHOICES,
-        label="The result summaries were distracting.",
-        required=True)
-
+        label="The result snippets increased my confidence in my decisions.",
+        required=False)
 
     snip_informativeness = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result summaries were informative.",
-        required=True)
+        label="The result snippets were not informative.",
+        required=False)
 
-    serp_confusion = forms.ChoiceField(
+    snip_relevance = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The search engine result page was confusing.",
-        required=True)
+        label="The results snippets help me judge the relevance of the document.",
+        required=False)
 
-    snip_clarity = forms.ChoiceField(
+    snip_readable = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result summaries gave a clear indication of what documents were about.",
-        required=True)
+        label="The result snippets  were not readable.",
+        required=False)
 
-    snip_usefulness = forms.ChoiceField(
+
+    snip_size = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The result summaries were useful to identify relevant documents.",
-        required=True)
+        label="The result snippets were an appropriate size and length.",
+        required=False)
 
 
 
@@ -884,8 +888,8 @@ class SnippetDemographicsSurveyForm(ModelForm):
         exclude = ('user',)
 
 
-SNIP_CHOICES = ((1, 'Very Short (title only)'),
-                (2,'Short (title + 1-2 lines)'), (3,'Long (title + 4-6 lines)'))
+SNIP_CHOICES = ((0, 'Title Only'),(1, 'Title + 1 line summary)'),
+                (2,'Title + 1-2 lines summary)'), (3,'Title + 2-3 line summary'))
 
 
 

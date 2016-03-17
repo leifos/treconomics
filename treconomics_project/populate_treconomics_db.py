@@ -44,6 +44,13 @@ def populate():
                          'or the illegal boarding or taking control of a boat.</p>'
                          '<p>Documents discussing piracy on any body of water are relevant.  Documents discussing the legal taking of ships or their contents by a national authority are non-relevant.  Clashes between fishing vessels over fishing are not relevant, unless one vessel is boarded.</p>')
 
+    add_task(topic_num='408',
+             title='Tropical Storms',
+             description='<p>For this task, your job is to find '
+                        'about tropical storms (hurricanes and typhoons) that have caused significant property damage and loss of life? '
+                         'The date of the storm, the area affected, and the extent of damage/casualties are all of interest</p>'
+                         '<p>Documents that describe the damage caused by a tropical storm as  '
+                         ' "slight", "limited", or "small" are not relevant.</p>')
 
 
 def add_user(username, password, condition, experiment, rotation, data=None):

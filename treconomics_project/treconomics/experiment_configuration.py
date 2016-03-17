@@ -14,8 +14,8 @@ work_dir = os.getcwd()
 
 
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
-if 'local' not in socket.gethostname():
-    my_whoosh_doc_index_dir = '/home/leifos/test100index/'
+#if 'local' not in socket.gethostname():
+#    my_whoosh_doc_index_dir = '/home/leifos/test100index/'
 
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
@@ -86,6 +86,8 @@ snippet_flow = [
     'snippetpretask/2/', 'taskspacer2/2/','search/2/', 'snippetposttask/2/','systemsnippetposttask/2/',
         'taskspacer',
     'snippetpretask/3/','taskspacer2/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/3/',
+     'taskspacer',
+    'snippetpretask/4/','taskspacer2/4/', 'search/4/', 'snippetposttask/4/','systemsnippetposttask/4/',
     'taskspacer', 'snippetexitsurvey/', 'performance/', 'endexperiment/',
     'logout/'
 ]
@@ -95,10 +97,11 @@ snippet_flow = [
 
 
 test_flow = [
-    'startexperiment/',
+    'startexperiment/', 'snippetexitsurvey/','snippetpretask/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
     'pretask/1/', 'search/1/','taskspacer',
     'pretask/2/', 'search/2/','taskspacer',
-    'pretask/3/', 'search/3/','endexperiment/',
+    'pretask/3/', 'search/3/',
+    'pretask/4/', 'search/4/','endexperiment/',
     'logout/'
 ]
 
@@ -117,21 +120,21 @@ search_engine = Whooshtrec(
     newschema=True)
 
 search_engine.key_name = 'bm25'
-search_engine.set_fragmenter(frag_type=2, surround=40)
+search_engine.set_fragmenter(frag_type=2, surround=30)
 
 exp_test = ExperimentSetup(
-    workflow=snippet_flow,
+    workflow=test_flow,
     engine=search_engine,
     practice_topic='367',
-    topics=['347', '341', '435'],
+    topics=['347', '341', '435','408'],
     rpp=10,
     practice_interface=1,
-    interface=[1, 2, 3],
+    interface=[1, 2, 3, 4],
     rotation_type=1,
     description='standard condition bm25 test',
     trie=suggestion_trie,
     autocomplete=True,
-    timeout=[100,600,600,600])  # 300s = 5min; 600s = 10min; 1200s = 20min
+    timeout=[100,600,600,600, 600])  # 300s = 5min; 600s = 10min; 1200s = 20min
 
 
 # these correspond to conditions

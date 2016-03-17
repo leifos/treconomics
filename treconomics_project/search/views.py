@@ -224,11 +224,15 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
     query.top = page_len
     result_dict['query'] = query_terms
 
+    print query
     search_engine = experiment_setups[condition].get_engine()
 
-    snippet_sizes = [2, 0, 8]
+    snippet_sizes = [2, 0, 1, 3]
+    snippet_surround = [40, 40, 40, 40]
+
     pos = interface - 1
     search_engine.snippet_size = snippet_sizes[pos]
+    search_engine.set_fragmenter(frag_type=2, surround=snippet_surround[pos])
 
     response = search_engine.search(query)
 
@@ -244,7 +248,7 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
 
     if num_pages > 0:
         result_dict['trec_search'] = True
-        result_dict['trec_results'] = response.results
+        result_dict['trec_results'] = response.results[len(response.results)-page_len:len(response.results)]
         result_dict['curr_page'] = response.actual_page
         print response.actual_page
         if page > 1:
@@ -404,6 +408,8 @@ def search(request, taskid=-1):
                 # Get some results! Call this wrapper function which uses the Django cache backend.
                 print 'WE WANT TO GET A QUERY BACK'
                 print "INTERFACE IS {0}".format(interface)
+
+                print "page: {0} pagelen: {1}".format(page,page_len)
                 get_results(request, result_dict,
                             page,
                             page_len,
@@ -411,6 +417,8 @@ def search(request, taskid=-1):
                             user_query,
                             interface)
 
+
+                print "Results Returned: {0}".format(len(result_dict['trec_results']))
                 result_dict['page'] = page
                 result_dict['focus_querybox'] = 'false'
 
