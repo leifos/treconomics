@@ -406,7 +406,7 @@ def search(request, taskid=-1):
                 return render(request, 'trecdo/results.html', result_dict)
             else:
                 # Get some results! Call this wrapper function which uses the Django cache backend.
-                print 'WE WANT TO GET A QUERY BACK'
+
                 print "INTERFACE IS {0}".format(interface)
 
                 print "page: {0} pagelen: {1}".format(page,page_len)
@@ -418,7 +418,6 @@ def search(request, taskid=-1):
                             interface)
 
 
-                print "Results Returned: {0}".format(len(result_dict['trec_results']))
                 result_dict['page'] = page
                 result_dict['focus_querybox'] = 'false'
 
