@@ -123,7 +123,7 @@ search_engine.key_name = 'bm25'
 search_engine.set_fragmenter(frag_type=2, surround=30)
 
 exp_test = ExperimentSetup(
-    workflow=test_flow,
+    workflow=snippet_flow,
     engine=search_engine,
     practice_topic='367',
     topics=['347', '341', '435','408'],
