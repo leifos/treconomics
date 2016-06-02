@@ -23,9 +23,15 @@ $(function() {
     
     $('#query').focus(function() {
         $.ajax({
-            'url': '/treconomics/query_focus/'
+            url: '/treconomics/query_focus/',
+            }).fail(function(data) {
+                var responseData = $.parseJSON(data.responseText);
+
+                if ('timeout' in responseData) {
+                    alert("Your time for this task has expired. We will now redirect you to the next step.");
+                    window.location = '/treconomics/next/';
+                }
         });
-    
     });
 
     if ($('#query')) {
