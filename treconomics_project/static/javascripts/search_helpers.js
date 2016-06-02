@@ -16,6 +16,15 @@ function disableClick(event) {
     }
 }
 
+$('#query').focus(function() {
+    alert('FOCUS');
+    
+    $.ajax({
+        'url': '/treconomics/query_focus/'
+    });
+    
+})
+
 $(function() {
     //bindDocumentClicks();
     bindResultHovering();
