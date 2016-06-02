@@ -416,7 +416,7 @@ def search(request, taskid=-1):
                             condition,
                             user_query,
                             interface)
-                log_event(event="QUERY_COMPLETE", request=request, query=query_terms)
+                log_event(event="QUERY_COMPLETE", request=request, query=user_query)
 
                 result_dict['page'] = page
                 result_dict['focus_querybox'] = 'false'
