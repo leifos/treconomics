@@ -16,19 +16,17 @@ function disableClick(event) {
     }
 }
 
-$('#query').focus(function() {
-    alert('FOCUS');
-    
-    $.ajax({
-        'url': '/treconomics/query_focus/'
-    });
-    
-})
-
 $(function() {
     //bindDocumentClicks();
     bindResultHovering();
     bindFormSubmit();
+    
+    $('#query').focus(function() {
+        $.ajax({
+            'url': '/treconomics/query_focus/'
+        });
+    
+    });
 
     if ($('#query')) {
         if ($('#focus_querybox').val() == 'true') {
