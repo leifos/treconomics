@@ -1,0 +1,11 @@
+0 date
+1 time
+2 INFO 
+3 userid
+4 condition
+5 interface
+6 taskid (in sequence, order in which topics were undertaken)
+7 topicid
+
+8 action
+9 ...

@@ -1,0 +1,37 @@
+1 UserID
+2 Condition - what condition they were in
+3 Interface - what interface was being used.
+4 Order - the order in which the topics were performed.
+5 Topic - the TREC topic number
+6 Event - Count
+
+7 Pages - deepest page they went to for this query
+8 Doc Count - number of documents that they clicked on
+9 Doc Depth - last hover depth for this query
+10 Doc Rel Count - number of documents that the marked as relevant
+11 Doc Rel Depth
+12 Hover Count
+13 Hover Depth
+14 Rels Found - total number of TREC relevant documents that they identified for this query
+
+15 Query Time (seconds) - the amount of time from when they focus on the query box to when they hit search
+16 Query System Time (seconds) - how long it takes the search engine to retrieve the results.
+16 Query Session Time - the amount of time they spent veiwing the serp, looking at documents, etc, for this one query.
+17 Document Time (total, seconds)
+18 Serp time (total, seconds)
+19 Total SERP lag (seconds)
+
+20 P@1
+21 P@2
+22 P@3
+23 P@4
+24 P@5
+25 P@10
+26 P@15
+27 P@20
+28 P@25
+29 P@30
+30 P@40
+31 P@50
+32 RPrec
+33 Total Rels - total number of TREC relevant documents for this query
