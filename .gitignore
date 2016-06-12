@@ -8,6 +8,8 @@ MAIN_WRITELOCK
 *.dat
 *.db
 
+# OS X
+.DS_Store
 
 # C extensions
 *.so
