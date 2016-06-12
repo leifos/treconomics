@@ -38,6 +38,11 @@ class QueryLogEntry(object):
         self.curr_event = None
         self.last_event = None
         self.last_last_event = None
+        self.doc_click_time = False
+	
+	# Testing by David for new SERP
+	self.last_serp_event = None
+	self.new_total_serp = 0.0
         
         # Additional attributes to store details on system lag and imposed delays
         self.serp_lag_calculated_for = []  # Added by David, list of times for the queries we've worked out lag for!
@@ -86,8 +91,7 @@ class QueryLogEntry(object):
         )
         """
         times = "{0} {1} {2} {3} {4} {5}".format(
-            self.query_time, self.system_query_delay, self.session_time, self.document_time, serp_time,
-            self.serp_lag
+            self.query_time, self.system_query_delay, self.session_time, self.document_time, self.serp_lag, self.new_total_serp
         )
 
 
@@ -100,8 +104,9 @@ class QueryLogEntry(object):
     def update_times(self, curr_time):
 
         #print curr_time, self.last_time, get_time_diff(self.last_time, curr_time)
+
         if self.curr_event == 'DELAY_RESULTS_PAGE':
-            #self.serp_lag = get_time_diff(self.session_start_time, curr_time)
+            self.serp_lag = get_time_diff(self.session_start_time, curr_time)
             self.last_query_delay_time = curr_time
 
         if self.curr_event == 'QUERY_COMPLETE':  # Was VIEW_SEARCH_RESULTS_PAGE
@@ -109,10 +114,6 @@ class QueryLogEntry(object):
                 self.imposed_query_delay = get_time_diff(self.last_query_delay_time, curr_time)
             #if self.last_event == 'QUERY_END':  # Was QUERY_ISSUED
             #    self.serp_lag = get_time_diff(self.session_start_time, curr_time)
-	
-	# SERP LAG NEW - Uncomment the three lines above for the old SERP lag.
-	if self.curr_event == 'SEARCH_RESULTS_PAGE_QUALITY' and self.last_event == 'QUERY_COMPLETE':
-		self.serp_lag = get_time_diff(self.last_time, curr_time)
         
         if self.system_query_delay == 0.0 and self.curr_event == 'QUERY_END' and self.last_event == 'QUERY_START':
             self.system_query_delay = self.system_query_delay + get_time_diff(self.last_time, curr_time)
@@ -137,10 +138,36 @@ class QueryLogEntry(object):
 	# This could be more robust.
 	# What if the searcher were to view the list of documents marked, or view the task, whilst viewing a document?
 	# Maybe this functionality should be disabled while a document is being viewed.
-        if self.last_event in ['DOC_MARKED_VIEWED','DOC_MARKED_RELEVANT','DOC_MARKED_NONRELEVANT']:
-            self.document_time = self.document_time + get_time_diff(self.last_time, curr_time)
-
-
+	# Commented out by DMAX on June 8th 2016 - replaced with more robust document time measures (see below).        
+	#if self.last_event in ['DOC_MARKED_VIEWED','DOC_MARKED_RELEVANT','DOC_MARKED_NONRELEVANT']:
+        #    self.document_time = self.document_time + get_time_diff(self.last_time, curr_time)
+	
+	# DMAX - Added new document time measures (June 8th 2016)
+	# self.doc_click_time contains the document click time. Set to False otherwise.
+	if not self.doc_click_time and self.curr_event == 'DOC_CLICKED':
+	    self.doc_click_time = curr_time
+	
+	# Added in VIEW_SAVED_DOCS to cater for the event where a searcher flips to the saved document screen instead.
+	if self.doc_click_time and self.curr_event in ['QUERY_START', 'VIEW_SAVED_DOCS', 'PRACTICE_SEARCH_TASK_COMPLETED','SESSION_COMPLETED','EXPERIMENT_TIMEOUT','SNIPPET_POSTTASK_SURVEY_STARTED','SEARCH_TASK_COMPLETED']:
+	    self.document_time = self.document_time + get_time_diff(self.doc_click_time, curr_time)
+	    self.doc_click_time = False
+	# DMAX - End new document time measures
+	
+	# DMAX - Adding in new SERP details
+	if not self.last_serp_event and self.curr_event == 'VIEW_SEARCH_RESULTS_PAGE':
+	    self.last_serp_event = curr_time
+	#elif self.last_serp_event and self.curr_event == 'QUERY_FOCUS':
+	#    print 'QF', curr_time
+	elif self.last_serp_event and self.curr_event not in ['DOCUMENT_HOVER_IN', 'DOCUMENT_HOVER_OUT']:
+	    self.new_total_serp = self.new_total_serp + get_time_diff(self.last_serp_event, curr_time)
+	    self.last_serp_event = None
+	# DMAX - End new SERP details
+	
+	# DMAX - Updated SERP lag time
+	if self.curr_event == 'QUERY_END' and self.last_event == 'QUERY_START':
+	    self.serp_lag = self.serp_lag + get_time_diff(self.last_time, curr_time)
+	# DMAX - End updated SERP lag time
+	
 
     def end_query_session(self,end_time):
         #update the session_end_time

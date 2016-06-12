@@ -18,8 +18,8 @@
 16 Query System Time (seconds) - how long it takes the search engine to retrieve the results.
 16 Query Session Time - the amount of time they spent veiwing the serp, looking at documents, etc, for this one query.
 17 Document Time (total, seconds)
-18 Serp time (total, seconds)
-19 Total SERP lag (seconds)
+18 Serp Lag (total seconds - QUERY_START to QUERY_END)
+19 Serp time (total, seconds)
 
 20 P@1
 21 P@2
