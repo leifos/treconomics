@@ -17,8 +17,12 @@ class UserLog(object):
         Do what checks need to be done here. To take a line out, set its include attribute to False.
         """
         query_focii = []
+        # doc_clicks = []
         
         for line_obj in self.obj_list:
+            if line_obj.get_action() == 'VIEW_TASK':
+                line_obj.include = False
+            
             if line_obj.get_action() == 'QUERY_FOCUS':
                 query_focii.append(line_obj)
             
@@ -30,6 +34,17 @@ class UserLog(object):
                         focus.include = False
                 
                 query_focii = []
+            
+            # if line_obj.get_action() == 'DOC_CLICKED':
+            #     doc_clicks.append(line_obj)
+            # elif line_obj.get_action() in ['QUERY_START', 'VIEW_SAVED_DOCS', 'PRACTICE_SEARCH_TASK_COMPLETED','SESSION_COMPLETED','EXPERIMENT_TIMEOUT','SNIPPET_POSTTASK_SURVEY_STARTED','SEARCH_TASK_COMPLETED']:
+            #     if len(doc_clicks) > 1:
+            #         del doc_clicks[0]
+            #
+            #         for click in doc_clicks:
+            #             click.include = False
+            #
+            #     doc_clicks = []
     
 class LogEntry(object):
     """
