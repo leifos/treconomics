@@ -49,9 +49,8 @@ def show_document(request, whoosh_docid):
     :param whoosh_docid: the way of identifying the selected document
     :return:
     """
-    sys.stdout.flush()
-    # if time_search_experiment_out(request):
-    #     return reverse('timeout')
+    if time_search_experiment_out(request):
+        return redirect('timeout')
 
     ec = get_experiment_context(request)
     uname = ec["username"]
@@ -59,10 +58,6 @@ def show_document(request, whoosh_docid):
 
     condition = ec["condition"]
     current_search = request.session['queryurl']
-
-    log_event(event="DOC_CLICKED",
-              request=request,
-              whooshid=whoosh_docid)
 
     # get document from index
     fields = ixr.stored_fields(int(whoosh_docid))
@@ -107,33 +102,33 @@ def show_document(request, whoosh_docid):
             # mark_document handles logging of this event
         return JsonResponse(user_judgement, safe=False)
     else:
-        if time_search_experiment_out(request):
-            # TODO I think I might have fixed it
-            return redirect('timeout')
-        else:
-            # marks that the document has been viewed
-            rank = get_document_rank()
+        log_event(event="DOC_CLICKED",
+                  request=request,
+                  whooshid=whoosh_docid)
+        
+        # marks that the document has been viewed
+        rank = get_document_rank()
 
-            doc_length = ixr.doc_field_length(long(doc_id), 'content')
-            user_judgement = mark_document(request, doc_id, user_judgement, title, doc_num, rank, doc_length)
+        doc_length = ixr.doc_field_length(long(doc_id), 'content')
+        user_judgement = mark_document(request, doc_id, user_judgement, title, doc_num, rank, doc_length)
 
-            context_dict = {'participant': uname,
-                            'task': taskid,
-                            'condition': condition,
-                            'current_search': current_search,
-                            'docid': doc_id,
-                            'docnum': doc_num,
-                            'title': title,
-                            'doc_date': doc_date,
-                            'doc_source': doc_source,
-                            'content': content,
-                            'user_judgement': user_judgement,
-                            'rank': rank}
+        context_dict = {'participant': uname,
+                        'task': taskid,
+                        'condition': condition,
+                        'current_search': current_search,
+                        'docid': doc_id,
+                        'docnum': doc_num,
+                        'title': title,
+                        'doc_date': doc_date,
+                        'doc_source': doc_source,
+                        'content': content,
+                        'user_judgement': user_judgement,
+                        'rank': rank}
 
-            if request.GET.get('backtoassessment', False):
-                context_dict['backtoassessment'] = True
+        if request.GET.get('backtoassessment', False):
+            context_dict['backtoassessment'] = True
 
-            return render(request, 'trecdo/document.html', context_dict)
+        return render(request, 'trecdo/document.html', context_dict)
 
 
 @login_required

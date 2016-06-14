@@ -16,6 +16,7 @@ work_dir = os.getcwd()
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
 if 'local' not in socket.gethostname():
     my_whoosh_doc_index_dir = '/home/leifos/fullindex/'
+    #my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint-whoosh-fullindex'
 
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
@@ -134,7 +135,7 @@ exp_test = ExperimentSetup(
     description='standard condition bm25 test',
     trie=suggestion_trie,
     autocomplete=True,
-    timeout=[100,600,600,600, 600])  # 300s = 5min; 600s = 10min; 1200s = 20min
+    timeout=[150,600,600,600, 600])  # 300s = 5min; 600s = 10min; 1200s = 20min
 
 
 # these correspond to conditions
