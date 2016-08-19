@@ -27,7 +27,7 @@ class QueryLogEntry(object):
         self.doc_trec_rel_count = 0
         self.pages = 0
         self.curr_page = 1
-        self.session_start_time = vals[1]
+        self.session_start_time = '{date} {time}'.format(date=vals[0],time=vals[1])
         self.session_end_time = None
         self.query_time = query_time
         self.session_time = 0.0
@@ -39,10 +39,10 @@ class QueryLogEntry(object):
         self.last_event = None
         self.last_last_event = None
         self.doc_click_time = False
-	
-	# Testing by David for new SERP
-	self.last_serp_event = None
-	self.new_total_serp = 0.0
+        
+        # Testing by David for new SERP
+        self.last_serp_event = None
+        self.new_total_serp = 0.0
         
         # Additional attributes to store details on system lag and imposed delays
         self.serp_lag_calculated_for = []  # Added by David, list of times for the queries we've worked out lag for!
@@ -55,7 +55,7 @@ class QueryLogEntry(object):
         self.last_document_delay_time = None
         self.imposed_document_delay = 0.0
         self.document_lag = 0.0
-
+        
         # issue query to whoosh and get performance values
         self.p = []
         self.perf = ['0.0  ' * 14]
@@ -69,8 +69,8 @@ class QueryLogEntry(object):
             self.perf = get_query_performance_metrics(self.qrel_handler, response.results, topicnum)
             #print self.perf
         self.last_event='QUERY_ISSUED'
-        self.last_time = vals[1]
-
+        self.last_time = '{date} {time}'.format(date=vals[0],time=vals[1])
+    
     def __str__(self):
         q = ' '.join(self.query)
         #q = ''
@@ -188,7 +188,7 @@ class QueryLogEntry(object):
     def process(self, vals):
         self.event_count = self.event_count + 1
         self.curr_event = vals[8]
-        self.update_times(vals[1])
+        self.update_times('{date} {time}'.format(date=vals[0],time=vals[1]))
         
         if 'VIEW_SEARCH_RESULTS_PAGE' in vals:
             n = 1
@@ -232,7 +232,7 @@ class QueryLogEntry(object):
                     
         self.last_last_event = self.last_event    
         self.last_event = vals[8]
-        self.last_time = vals[1]
+        self.last_time = '{date} {time}'.format(date=vals[0],time=vals[1])
 
 class ExpLogEntry(object):
 
@@ -279,11 +279,11 @@ class ExpLogEntry(object):
         #if self.last_query_focus_time is None:
 
         if ('QUERY_FOCUS' in vals):
-            self.last_query_focus_time = vals[1]
+            self.last_query_focus_time = '{date} {time}'.format(date=vals[0],time=vals[1])
 
         if self.last_query_focus_time is None:
             if ('VIEW_SEARCH_BOX' in vals):
-                self.last_query_focus_time = vals[1]
+                self.last_query_focus_time = '{date} {time}'.format(date=vals[0],time=vals[1])
         
         # End de-dentation
 
@@ -303,7 +303,7 @@ class ExpLogEntry(object):
             #print
             if self.last_query_focus_time is None:
                 self.last_query_focus_time = self.last_event_time
-            self.current_query = QueryLogEntry(self.key, vals, self.qrel_handler, self.engine, get_time_diff(self.last_query_focus_time, vals[1]))
+            self.current_query = QueryLogEntry(self.key, vals, self.qrel_handler, self.engine, get_time_diff(self.last_query_focus_time, '{date} {time}'.format(date=vals[0],time=vals[1])))
             self.last_query_focus_time = None
             self.queries.append(self.current_query)
         else:
@@ -312,14 +312,14 @@ class ExpLogEntry(object):
                 self.current_query.process(vals)
         
         # probably should put a condition on this (start task, doc viewed, view serp, etc, ) not all/any
-        self.last_event_time = vals[1]
+        self.last_event_time = '{date} {time}'.format(date=vals[0],time=vals[1])
 
         event = vals[8]
         if event in ['PRACTICE_SEARCH_TASK_COMPLETED','SESSION_COMPLETED','EXPERIMENT_TIMEOUT','SNIPPET_POSTTASK_SURVEY_STARTED','SEARCH_TASK_COMPLETED']:
             #print 'search task complete - event'
             if self.current_query:
                 #print "end of search session"
-                self.current_query.end_query_session(vals[1])
+                self.current_query.end_query_session('{date} {time}'.format(date=vals[0],time=vals[1]))
 
             
             

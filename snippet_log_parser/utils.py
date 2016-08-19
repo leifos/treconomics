@@ -102,7 +102,7 @@ def get_query_performance_metrics(qrels, results, topic_num):
 
 
 def get_time_diff(past,present):
-    FMT = "%H:%M:%S,%f"
+    FMT = "%Y-%m-%d %H:%M:%S,%f"
 
     if past == 0:
         return 0.0
