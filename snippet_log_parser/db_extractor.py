@@ -16,18 +16,18 @@ def get_user_accounts():
     for user in users:
         try:
             treconomics_user = UserProfile.objects.get(user=user)
-
+        
+        
+        
             if treconomics_user.steps_completed > 0:
                 count = count + 1
                 accounts.append({'userid': treconomics_user.user.id,
                      'username': treconomics_user.user.username,
                      'condition': treconomics_user.condition,
                      'rotation': treconomics_user.rotation})
-
         except:
             pass
-
-
+    
     print "number of users with step:", count
     return accounts
 
@@ -58,16 +58,16 @@ def get_key(model, exclude_fields):
 
 
 def get_demographics(users):
-    from treconomics.models_anita_experiments import AnitaDemographicsSurvey
+    from snippets.models import SnippetDemographicsSurvey
     exclude = ['id', 'user']  # Exclude the following fields from output
-    fields = get_key(AnitaDemographicsSurvey, exclude)
+    fields = get_key(SnippetDemographicsSurvey, exclude)
     output = '{0},{1}{2}'.format(get_user_key(), fields, os.linesep)
 
     fields = fields.split(',')
 
     for treconomics_user in users:
         try:
-            survey = AnitaDemographicsSurvey.objects.get(user=treconomics_user['userid'])
+            survey = SnippetDemographicsSurvey.objects.get(user=treconomics_user['userid'])
 
             output_line = get_user_details(treconomics_user) + ','
 
@@ -113,48 +113,26 @@ def write(filename, contents):
     f.close()
 
 if __name__ == '__main__':
-
-    print sys.argv
     if len(sys.argv) < 3 or len(sys.argv) > 3:
         print 'Usage: {0} <db> <path_to_treconomics_project>'.format(sys.argv[0])
         exit(2)
-
-
-
+    
     setup_django_env(sys.argv[2])
-
-
-
+    
     users = get_user_accounts()
     demographics = get_demographics(users)
-
-
-    from treconomics.models_anita_experiments import AnitaPreTaskSurvey, AnitaPostTask0Survey
-    from treconomics.models_anita_experiments import AnitaPostTask1Survey, AnitaPostTask2Survey,AnitaPostTask3Survey
-    from treconomics.models_anita_experiments import AnitaExit1Survey,AnitaExit2Survey,AnitaExit3Survey
-
-    pretasksurvey = get_task_survey(users, AnitaPreTaskSurvey)
-    posttasksurvey0 = get_task_survey(users, AnitaPostTask0Survey)
-    posttasksurvey1 = get_task_survey(users, AnitaPostTask1Survey)
-    posttasksurvey2 = get_task_survey(users, AnitaPostTask2Survey)
-    posttasksurvey3 = get_task_survey(users, AnitaPostTask3Survey)
-
-    exitsurvey1 = get_task_survey(users, AnitaExit1Survey)
-    exitsurvey2 = get_task_survey(users, AnitaExit2Survey)
-    exitsurvey3 = get_task_survey(users, AnitaExit3Survey)
-
-
-    #examined = get_task_survey(users, DocumentsExamined, exclude=['id', 'user', 'url', 'title'])
-
+    
+    from snippets.models import SnippetExitSurvey
+    from snippets.models import SnippetPostTaskSurvey
+    from snippets.models import SnippetPreTaskTopicKnowledgeSurvey
+    from snippets.models import SystemSnippetPostTaskSurvey
+    
+    exit_survey = get_task_survey(users, SnippetExitSurvey)
+    post_task = get_task_survey(users, SnippetPostTaskSurvey)
+    pre_task_knowledge = get_task_survey(users, SnippetPreTaskTopicKnowledgeSurvey)
+    system_post_task = get_task_survey(users, SystemSnippetPostTaskSurvey)
+    
     write('demographics.csv', demographics)
-    write('pretasksurvey.csv', pretasksurvey)
-    write('posttasksurvey0.csv', posttasksurvey0)
-    write('posttasksurvey1.csv', posttasksurvey1)
-    write('posttasksurvey2.csv', posttasksurvey2)
-    write('posttasksurvey3.csv', posttasksurvey3)
-    write('exitsurvey1.csv', exitsurvey1)
-    write('exitsurvey2.csv', exitsurvey2)
-    write('exitsurvey3.csv', exitsurvey3)
-
-
-	
+    write('pre_task_knowledge.csv', pre_task_knowledge)
+    write('post_task.csv', post_task)
+    write('system_post_task.csv', system_post_task)

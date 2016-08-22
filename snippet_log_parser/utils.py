@@ -8,6 +8,9 @@ def setup_django_env(path_to_treconomics_project):
     '''
     sys.path.append(path_to_treconomics_project)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'treconomics_project.settings')
+    
+    import django
+    django.setup()
 
     
 def get_query_result_performance(qrels, results, topic_num):

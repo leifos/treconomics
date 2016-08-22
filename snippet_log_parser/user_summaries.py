@@ -6,32 +6,30 @@ from utils import setup_django_env
 
 SELECTED_TOPIC = 'ALL'
 OUTPUT_KEYS = [
-    'condition',
     'interface',
     'order',
     'topic',
+    
     'query_count',
-    'page_count',
-    'page_count_per_query',
+    
+    'pages',
+    'pages_per_query',
     'doc_count',
     'doc_count_per_query',
     'doc_depth_per_query',
+    'doc_rel_count',
+    'doc_rel_depth_per_query',
+    'hover_count_per_query',
     'hover_depth_per_query',
-    'doc_relevant_depth_per_query',
-    'docs_marked_relevant_count',
-    'docs_trec_relevant_count',
-
-    'time_total_query',
-    'time_total_session',
-    'time_total_system',
-    'time_per_query',
-    'time_total_doc',
-    'time_per_doc',
-    'time_total_serp',
-    'time_serp_per_query',
-    'time_total_serp_lag',
-    'time_serp_lag_per_query', #
-
+    'rels_found',
+    
+    'query_time',
+    'query_system_time',
+    'query_session_time',
+    'doc_time',
+    'serp_lag',
+    'serp_time',
+    
     'p1',
     'p2',
     'p3',
@@ -44,7 +42,50 @@ OUTPUT_KEYS = [
     'p30',
     'p40',
     'p50',
-    'rprec'
+    'rprec',
+    #
+    # 'total_rels'
+    #
+    #
+    # 'condition',
+    # 'interface',
+    # 'order',
+    # 'topic',
+    # 'query_count',
+    # 'page_count',
+    # 'page_count_per_query',
+    # 'doc_count',
+    # 'doc_count_per_query',
+    # 'doc_depth_per_query',
+    # 'hover_depth_per_query',
+    # 'doc_relevant_depth_per_query',
+    # 'docs_marked_relevant_count',
+    # 'docs_trec_relevant_count',
+    #
+    # 'time_total_query',
+    # 'time_total_session',
+    # 'time_total_system',
+    # 'time_per_query',
+    # 'time_total_doc',
+    # 'time_per_doc',
+    # 'time_total_serp',
+    # 'time_serp_per_query',
+    # 'time_total_serp_lag',
+    # 'time_serp_lag_per_query', #
+    #
+    # 'p1',
+    # 'p2',
+    # 'p3',
+    # 'p4',
+    # 'p5',
+    # 'p10',
+    # 'p15',
+    # 'p20',
+    # 'p25',
+    # 'p30',
+    # 'p40',
+    # 'p50',
+    # 'rprec'
 ]
 
 
@@ -56,27 +97,24 @@ def create_user_dict():
 
     for key in OUTPUT_KEYS:
         return_dict[key] = 0.0
-
-    return_dict['doc_examined_depth'] = []
-    return_dict['hover_depth'] = []
-
+    
     return_dict['query_count'] = 0.0
-    return_dict['page_count'] = 0.0
+    return_dict['pages'] = 0.0
     return_dict['doc_count'] = 0.0
-    return_dict['docs_marked_relevant_count'] = 0.0
-    return_dict['doc_relevant_depth'] = []
-    return_dict['doc_hover_count'] = 0.0
-    return_dict['doc_hover_depth'] = []
-    return_dict['docs_trec_relevant_count'] = 0.0
-
-    return_dict['time_total_query'] = 0.0
-    return_dict['time_total_system'] = 0.0
-    return_dict['time_total_session'] = 0.0
-    return_dict['time_total_doc'] = 0.0
-    return_dict['time_total_serp'] = 0.0
-    return_dict['time_total_serp_lag'] = 0.0
-
-
+    return_dict['doc_depth'] = []
+    return_dict['doc_rel_count'] = 0.0
+    return_dict['doc_rel_depth'] = []
+    return_dict['hover_count'] = 0.0
+    return_dict['hover_depth'] = []
+    return_dict['rels_found'] = 0.0
+    
+    return_dict['query_time'] = 0.0
+    return_dict['query_system_time'] = 0.0
+    return_dict['query_session_time'] = 0.0
+    return_dict['doc_time'] = 0.0
+    return_dict['serp_lag'] = 0.0
+    return_dict['serp_time'] = 0.0
+    
     return_dict['p1'] = []
     return_dict['p2'] = []
     return_dict['p3'] = []
@@ -90,6 +128,42 @@ def create_user_dict():
     return_dict['p40'] = []
     return_dict['p50'] = []
     return_dict['rprec'] = []
+    
+    # ####
+    #
+    # return_dict['doc_examined_depth'] = []
+    # return_dict['hover_depth'] = []
+    #
+    # return_dict['query_count'] = 0.0
+    # return_dict['page_count'] = 0.0
+    # return_dict['doc_count'] = 0.0
+    # return_dict['docs_marked_relevant_count'] = 0.0
+    # return_dict['doc_relevant_depth'] = []
+    # return_dict['doc_hover_count'] = 0.0
+    # return_dict['doc_hover_depth'] = []
+    # return_dict['docs_trec_relevant_count'] = 0.0
+    #
+    # return_dict['time_total_query'] = 0.0
+    # return_dict['time_total_system'] = 0.0
+    # return_dict['time_total_session'] = 0.0
+    # return_dict['time_total_doc'] = 0.0
+    # return_dict['time_total_serp'] = 0.0
+    # return_dict['time_total_serp_lag'] = 0.0
+    #
+    #
+    # return_dict['p1'] = []
+    # return_dict['p2'] = []
+    # return_dict['p3'] = []
+    # return_dict['p4'] = []
+    # return_dict['p5'] = []
+    # return_dict['p10'] = []
+    # return_dict['p15'] = []
+    # return_dict['p20'] = []
+    # return_dict['p25'] = []
+    # return_dict['p30'] = []
+    # return_dict['p40'] = []
+    # return_dict['p50'] = []
+    # return_dict['rprec'] = []
 
     return return_dict
 
@@ -156,24 +230,24 @@ def generate_user_summaries(input_file):
             summaries[user]['order'] = order
             summaries[user]['topic'] = topic
             summaries[user]['interface'] = interface
-
+        
         summaries[user]['query_count'] += 1
-        summaries[user]['page_count'] += int(split_line[7])
+        summaries[user]['pages'] += int(split_line[7])
         summaries[user]['doc_count'] += int(split_line[8])
-        summaries[user]['doc_examined_depth'].append(int(split_line[9]))
-        summaries[user]['docs_marked_relevant_count'] += int(split_line[10])
-        summaries[user]['doc_relevant_depth'].append(int(split_line[11]))
-        summaries[user]['doc_hover_count'] += int(split_line[12])
-        summaries[user]['doc_hover_depth'].append(int(split_line[13]))
-        summaries[user]['docs_trec_relevant_count'] += int(split_line[14])
-
-        summaries[user]['time_total_query'] += float(split_line[15])
-        summaries[user]['time_total_system'] += float(split_line[16])
-        summaries[user]['time_total_session'] += float(split_line[17])
-        summaries[user]['time_total_doc'] += float(split_line[18])
-        summaries[user]['time_total_serp'] += float(split_line[20])
-        summaries[user]['time_total_serp_lag'] += float(split_line[19])
-
+        summaries[user]['doc_depth'].append(int(split_line[9]))
+        summaries[user]['doc_rel_count'] += int(split_line[10])
+        summaries[user]['doc_rel_depth'].append(int(split_line[11]))
+        summaries[user]['hover_count'] += int(split_line[12])
+        summaries[user]['hover_depth'].append(int(split_line[13]))
+        summaries[user]['rels_found'] += int(split_line[14])
+    
+        summaries[user]['query_time'] += float(split_line[15])
+        summaries[user]['query_system_time'] += float(split_line[16])
+        summaries[user]['query_session_time'] += float(split_line[17])
+        summaries[user]['doc_time'] += float(split_line[18])
+        summaries[user]['serp_lag'] += float(split_line[19])
+        summaries[user]['serp_time'] += float(split_line[20])
+    
         summaries[user]['p1'].append(float(split_line[21]))
         summaries[user]['p2'].append(float(split_line[22]))
         summaries[user]['p3'].append(float(split_line[23]))
@@ -187,27 +261,60 @@ def generate_user_summaries(input_file):
         summaries[user]['p40'].append(float(split_line[31]))
         summaries[user]['p50'].append(float(split_line[32]))
         summaries[user]['rprec'].append(float(split_line[33]))
+        
+        # summaries[user]['query_count'] += 1
+        # summaries[user]['pages'] += int(split_line[7])
+        # summaries[user]['doc_count'] += int(split_line[8])
+        # summaries[user]['doc_examined_depth'].append(int(split_line[9]))
+        # summaries[user]['docs_marked_relevant_count'] += int(split_line[10])
+        # summaries[user]['doc_relevant_depth'].append(int(split_line[11]))
+        # summaries[user]['doc_hover_count'] += int(split_line[12])
+        # summaries[user]['doc_hover_depth'].append(int(split_line[13]))
+        # summaries[user]['docs_trec_relevant_count'] += int(split_line[14])
+        #
+        # summaries[user]['time_total_query'] += float(split_line[15])
+        # summaries[user]['time_total_system'] += float(split_line[16])
+        # summaries[user]['time_total_session'] += float(split_line[17])
+        # summaries[user]['time_total_doc'] += float(split_line[18])
+        # summaries[user]['time_total_serp'] += float(split_line[20])
+        # summaries[user]['time_total_serp_lag'] += float(split_line[19])
+        #
+        # summaries[user]['p1'].append(float(split_line[21]))
+        # summaries[user]['p2'].append(float(split_line[22]))
+        # summaries[user]['p3'].append(float(split_line[23]))
+        # summaries[user]['p4'].append(float(split_line[24]))
+        # summaries[user]['p5'].append(float(split_line[25]))
+        # summaries[user]['p10'].append(float(split_line[26]))
+        # summaries[user]['p15'].append(float(split_line[27]))
+        # summaries[user]['p20'].append(float(split_line[28]))
+        # summaries[user]['p25'].append(float(split_line[29]))
+        # summaries[user]['p30'].append(float(split_line[30]))
+        # summaries[user]['p40'].append(float(split_line[31]))
+        # summaries[user]['p50'].append(float(split_line[32]))
+        # summaries[user]['rprec'].append(float(split_line[33]))
 
     for user in summaries:
 
         q = float(summaries[user]['query_count'])
         d = float(summaries[user]['doc_count'])
+        
         if d < 1.0:
             d = 1.0
         if q < 1.0:
             q = 1.0
-
-        summaries[user]['page_count_per_query'] = float(summaries[user]['page_count']) / q
+        
+        summaries[user]['pages_per_query'] = float(summaries[user]['pages']) / q
         summaries[user]['doc_count_per_query'] = float(summaries[user]['doc_count']) / q
-        summaries[user]['doc_depth_per_query'] = float(sum(summaries[user]['doc_examined_depth'])) / q
-        summaries[user]['doc_relevant_depth_per_query'] = float(sum(summaries[user]['doc_relevant_depth'])) / q
-
-        summaries[user]['hover_depth_per_query'] = float(sum(summaries[user]['doc_hover_depth']) ) / q
-        summaries[user]['time_per_query'] = summaries[user]['time_total_query'] / q
-        summaries[user]['time_per_doc'] = summaries[user]['time_total_doc'] / d
-        summaries[user]['time_serp_per_query'] =summaries[user]['time_total_serp'] /q
-        summaries[user]['time_serp_lag_per_query'] = summaries[user]['time_total_serp_lag'] / q
-
+        summaries[user]['doc_depth_per_query'] = float(sum(summaries[user]['doc_depth'])) / q
+        summaries[user]['doc_rel_depth_per_query'] = float(sum(summaries[user]['doc_rel_depth'])) / q
+        
+        summaries[user]['hover_count_per_query'] = float(summaries[user]['hover_count']) / q
+        summaries[user]['hover_depth_per_query'] = float(sum(summaries[user]['hover_depth']) ) / q
+        summaries[user]['time_per_query'] = summaries[user]['query_time'] / q
+        summaries[user]['time_per_doc'] = summaries[user]['doc_time'] / d
+        summaries[user]['time_serp_per_query'] =summaries[user]['serp_time'] /q
+        summaries[user]['time_serp_lag_per_query'] = summaries[user]['serp_lag'] / q
+        
         summaries[user]['p1'] = sum(summaries[user]['p1']) / float(len(summaries[user]['p1']))
         summaries[user]['p2'] = sum(summaries[user]['p2']) / float(len(summaries[user]['p2']))
         summaries[user]['p3'] = sum(summaries[user]['p3']) / float(len(summaries[user]['p3']))
