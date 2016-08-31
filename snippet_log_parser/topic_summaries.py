@@ -205,12 +205,12 @@ def generate_user_summaries(input_file):
         summaries[user][topic]['p50'].append(float(split_line[32]))
         summaries[user][topic]['rprec'].append(float(split_line[33]))
         
-        summaries[user]['click_trec_rel'] += int(split_line[34])
-        summaries[user]['click_trec_nonrel'] += int(split_line[35])
-        summaries[user]['hover_trec_rel'] += int(split_line[36])
-        summaries[user]['hover_trec_nonrel'] += int(split_line[37])
-        summaries[user]['doc_trec_rel'] += int(split_line[38])
-        summaries[user]['doc_trec_nonrel'] += int(split_line[39])
+        summaries[user][topic]['click_trec_rel'] += int(split_line[34])
+        summaries[user][topic]['click_trec_nonrel'] += int(split_line[35])
+        summaries[user][topic]['hover_trec_rel'] += int(split_line[36])
+        summaries[user][topic]['hover_trec_nonrel'] += int(split_line[37])
+        summaries[user][topic]['doc_trec_rel'] += int(split_line[38])
+        summaries[user][topic]['doc_trec_nonrel'] += int(split_line[39])
         
     for user in summaries:
         for topic in summaries[user]:
