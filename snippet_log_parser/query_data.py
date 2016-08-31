@@ -247,6 +247,7 @@ class ExpLogEntry(object):
         self.last_event_time = None
         self.last_query_focus_time = None
         self.engine = engine
+        self.query_ended_previously = False
 
     def __str__(self):
         
@@ -305,6 +306,7 @@ class ExpLogEntry(object):
                 self.last_query_focus_time = self.last_event_time
             self.current_query = QueryLogEntry(self.key, vals, self.qrel_handler, self.engine, get_time_diff(self.last_query_focus_time, '{date} {time}'.format(date=vals[0],time=vals[1])))
             self.last_query_focus_time = None
+            self.query_ended_previously = False
             self.queries.append(self.current_query)
         else:
             if self.current_query:
@@ -317,9 +319,10 @@ class ExpLogEntry(object):
         event = vals[8]
         if event in ['PRACTICE_SEARCH_TASK_COMPLETED','SESSION_COMPLETED','EXPERIMENT_TIMEOUT','SNIPPET_POSTTASK_SURVEY_STARTED','SEARCH_TASK_COMPLETED']:
             #print 'search task complete - event'
-            if self.current_query:
+            if self.current_query and not self.query_ended_previously:
                 #print "end of search session"
                 self.current_query.end_query_session('{date} {time}'.format(date=vals[0],time=vals[1]))
+                self.query_ended_previously = True
 
             
             
