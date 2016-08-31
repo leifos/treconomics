@@ -212,6 +212,8 @@ class QueryLogEntry(object):
         self.hover_trec_rel_count = relevant_count
         self.hover_trec_nonrel_count = self.hover_depth - relevant_count
         
+        self.click_trec_rel_count = self.doc_count - self.click_trec_nonrel_count
+        
         #print self.hover_depth
      
     def process(self, vals):
@@ -236,9 +238,7 @@ class QueryLogEntry(object):
 
             self.doc_count = self.doc_count + 1
             
-            if is_relevant(self.qrel_handler, vals[7], vals[10]) == 1:
-                self.click_trec_rel_count = self.click_trec_rel_count + 1
-            else:
+            if is_relevant(self.qrel_handler, vals[7], vals[10]) == 0:
                 self.click_trec_nonrel_count = self.click_trec_nonrel_count + 1
         
         if 'DOCUMENT_HOVER_IN' in vals:
