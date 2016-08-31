@@ -17,14 +17,20 @@ class QueryLogEntry(object):
         self.key = key
         self.qrel_handler = qrel_handler
         self.query = vals[9:]
+        self.topic = vals[7]
         self.event_count = 0
+        self.click_trec_rel_count = 0 # For P(C|R) and P(M|R)
+        self.click_trec_nonrel_count = 0 # For P(C|N) and P(M|N)
         self.doc_count = 0
         self.doc_depth = 0
         self.hover_count = 0  # Added by David
         self.hover_depth = 0  # Added by David
+        self.hover_trec_rel_count = 0 # For P(C|R)
+        self.hover_trec_nonrel_count = 0 # For P(C|N)
         self.doc_rel_count = 0
         self.doc_rel_depth = 0
-        self.doc_trec_rel_count = 0
+        self.doc_trec_rel_count = 0 # For P(C|R)
+        self.doc_trec_nonrel_count = 0 # For P(C|N)
         self.pages = 0
         self.curr_page = 1
         self.session_start_time = '{date} {time}'.format(date=vals[0],time=vals[1])
@@ -39,6 +45,8 @@ class QueryLogEntry(object):
         self.last_event = None
         self.last_last_event = None
         self.doc_click_time = False
+        
+        self.query_response = None  # Stores the results for parsing later on.
         
         # Testing by David for new SERP
         self.last_serp_event = None
@@ -67,6 +75,7 @@ class QueryLogEntry(object):
             response = engine.search(q)
             (un, cond, interface, order, topicnum) = key.split(' ')
             self.perf = get_query_performance_metrics(self.qrel_handler, response.results, topicnum)
+            self.query_response = response
             #print self.perf
         self.last_event='QUERY_ISSUED'
         self.last_time = '{date} {time}'.format(date=vals[0],time=vals[1])
@@ -93,11 +102,17 @@ class QueryLogEntry(object):
         times = "{0} {1} {2} {3} {4} {5}".format(
             self.query_time, self.system_query_delay, self.session_time, self.document_time, self.serp_lag, self.new_total_serp
         )
+        
+        prob_vals = "{0} {1} {2} {3} {4} {5}".format(
+            self.click_trec_rel_count,
+            self.click_trec_nonrel_count,
+            self.hover_trec_rel_count,
+            self.hover_trec_nonrel_count,
+            self.doc_trec_rel_count,
+            self.doc_trec_nonrel_count
+        )
 
-
-        #s = "%1.2f %1.2f %1.2f %1.2f %d %d %d %d %d %s %d %1.2f %1.2f %1.2f %d %d" % (self.query_time, self.session_time, self.document_time, serp_time, self.event_count, self.doc_count, self.doc_rel_count, self.doc_depth, self.pages, p, self.doc_trec_rel_count, self.serp_lag, self.imposed_query_delay, self.imposed_document_delay, self.hover_count, self.hover_depth)
-
-        s = "{0} {1} {2} {3}".format(q.replace(' ', '_'), counts, times, performances)
+        s = "{0} {1} {2} {3} {4}".format(q.replace(' ', '_'), counts, times, performances, prob_vals)
 
         return s
 
@@ -184,6 +199,20 @@ class QueryLogEntry(object):
         #if self.last_event == 'VIEW_SEARCH_RESULTS_PAGE':
         #    self.snippet_time = self.snippet_time + get_time_diff(self.view_serp_time, end_time)
         
+        # Adding some code to work out probabilities for clicking!        
+        relevant_count = 0
+        
+        for i in range(0, self.hover_depth):
+            if self.hover_depth > len(self.query_response.results):
+                continue
+            
+            if self.qrel_handler.get_value(self.topic, self.query_response.results[i].docid) > 0:
+                relevant_count = relevant_count + 1
+        
+        self.hover_trec_rel_count = relevant_count
+        self.hover_trec_nonrel_count = self.hover_depth - relevant_count
+        
+        #print self.hover_depth
      
     def process(self, vals):
         self.event_count = self.event_count + 1
@@ -206,6 +235,11 @@ class QueryLogEntry(object):
                 self.doc_depth = m
 
             self.doc_count = self.doc_count + 1
+            
+            if is_relevant(self.qrel_handler, vals[7], vals[10]) == 1:
+                self.click_trec_rel_count = self.click_trec_rel_count + 1
+            else:
+                self.click_trec_nonrel_count = self.click_trec_nonrel_count + 1
         
         if 'DOCUMENT_HOVER_IN' in vals:
             m = int(vals[-1])
@@ -224,7 +258,11 @@ class QueryLogEntry(object):
                 self.doc_rel_count = self.doc_rel_count + 1
                 # add in here a check to determine whether the document was trec relevant.
                 
-                self.doc_trec_rel_count = self.doc_trec_rel_count + is_relevant(self.qrel_handler, vals[7], vals[10])
+                if is_relevant(self.qrel_handler, vals[7], vals[10]) == 1:
+                    self.doc_trec_rel_count = self.doc_trec_rel_count + 1
+                else:
+                    self.doc_trec_nonrel_count = self.doc_trec_nonrel_count + 1
+                
                 m = int(vals[13])
                 if self.doc_rel_depth < m:
                     self.doc_rel_depth = m
@@ -304,10 +342,12 @@ class ExpLogEntry(object):
             #print
             if self.last_query_focus_time is None:
                 self.last_query_focus_time = self.last_event_time
+            
             self.current_query = QueryLogEntry(self.key, vals, self.qrel_handler, self.engine, get_time_diff(self.last_query_focus_time, '{date} {time}'.format(date=vals[0],time=vals[1])))
             self.last_query_focus_time = None
             self.query_ended_previously = False
             self.queries.append(self.current_query)
+            
         else:
             if self.current_query:
                 # process result under this query object

@@ -35,3 +35,16 @@
 31 P@50
 32 RPrec
 33 Total Rels - total number of TREC relevant documents for this query
+
+34 click_trec_rel_count
+35 click_trec_nonrel_count
+36 hover_trec_rel_count
+37 hover_trec_nonrel_count
+38 doc_trec_rel_count
+39 doc_trec_nonrel_count
+
+use 34-39 for probabilities:
+P(M|R) = doc_trec_rel_count / click_trec_rel_count
+P(M|N) = doc_trec_nonrel_count / click_trec_nonrel_count
+P(C|R) = click_trec_rel_count / hover_trec_rel_count
+P(C|N) = click_trec_nonrel_count / hover_trec_nonrel_count

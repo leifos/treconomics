@@ -43,6 +43,18 @@ OUTPUT_KEYS = [
     'p40',
     'p50',
     'rprec',
+    
+    'click_trec_rel',
+    'click_trec_nonrel',
+    'hover_trec_rel',
+    'hover_trec_nonrel',
+    'doc_trec_rel',
+    'doc_trec_nonrel',
+    
+    'pmr',
+    'pmn',
+    'pcr',
+    'pcn',
 ]
 
 
@@ -86,42 +98,13 @@ def create_user_dict():
     return_dict['p50'] = []
     return_dict['rprec'] = []
     
-    # ####
-    #
-    # return_dict['doc_examined_depth'] = []
-    # return_dict['hover_depth'] = []
-    #
-    # return_dict['query_count'] = 0.0
-    # return_dict['page_count'] = 0.0
-    # return_dict['doc_count'] = 0.0
-    # return_dict['docs_marked_relevant_count'] = 0.0
-    # return_dict['doc_relevant_depth'] = []
-    # return_dict['doc_hover_count'] = 0.0
-    # return_dict['doc_hover_depth'] = []
-    # return_dict['docs_trec_relevant_count'] = 0.0
-    #
-    # return_dict['time_total_query'] = 0.0
-    # return_dict['time_total_system'] = 0.0
-    # return_dict['time_total_session'] = 0.0
-    # return_dict['time_total_doc'] = 0.0
-    # return_dict['time_total_serp'] = 0.0
-    # return_dict['time_total_serp_lag'] = 0.0
-    #
-    #
-    # return_dict['p1'] = []
-    # return_dict['p2'] = []
-    # return_dict['p3'] = []
-    # return_dict['p4'] = []
-    # return_dict['p5'] = []
-    # return_dict['p10'] = []
-    # return_dict['p15'] = []
-    # return_dict['p20'] = []
-    # return_dict['p25'] = []
-    # return_dict['p30'] = []
-    # return_dict['p40'] = []
-    # return_dict['p50'] = []
-    # return_dict['rprec'] = []
-
+    return_dict['click_trec_rel'] = 0
+    return_dict['click_trec_nonrel'] = 0
+    return_dict['hover_trec_rel'] = 0
+    return_dict['hover_trec_nonrel'] = 0
+    return_dict['doc_trec_rel'] = 0
+    return_dict['doc_trec_nonrel'] = 0
+    
     return return_dict
 
 def generate_output(summaries, separator=' ', include_header=True):
@@ -146,7 +129,6 @@ def generate_output(summaries, separator=' ', include_header=True):
             output_str += os.linesep
 
         for user in summaries:
-            #user_str = '{0}{1}'.format(map(int, re.findall('\d+', user))[0], separator)
             for topic in summaries[user]:
                 topic_str = '{0}{1}'.format(user, separator)
                 
@@ -223,37 +205,13 @@ def generate_user_summaries(input_file):
         summaries[user][topic]['p50'].append(float(split_line[32]))
         summaries[user][topic]['rprec'].append(float(split_line[33]))
         
-        # summaries[user]['query_count'] += 1
-        # summaries[user]['pages'] += int(split_line[7])
-        # summaries[user]['doc_count'] += int(split_line[8])
-        # summaries[user]['doc_examined_depth'].append(int(split_line[9]))
-        # summaries[user]['docs_marked_relevant_count'] += int(split_line[10])
-        # summaries[user]['doc_relevant_depth'].append(int(split_line[11]))
-        # summaries[user]['doc_hover_count'] += int(split_line[12])
-        # summaries[user]['doc_hover_depth'].append(int(split_line[13]))
-        # summaries[user]['docs_trec_relevant_count'] += int(split_line[14])
-        #
-        # summaries[user]['time_total_query'] += float(split_line[15])
-        # summaries[user]['time_total_system'] += float(split_line[16])
-        # summaries[user]['time_total_session'] += float(split_line[17])
-        # summaries[user]['time_total_doc'] += float(split_line[18])
-        # summaries[user]['time_total_serp'] += float(split_line[20])
-        # summaries[user]['time_total_serp_lag'] += float(split_line[19])
-        #
-        # summaries[user]['p1'].append(float(split_line[21]))
-        # summaries[user]['p2'].append(float(split_line[22]))
-        # summaries[user]['p3'].append(float(split_line[23]))
-        # summaries[user]['p4'].append(float(split_line[24]))
-        # summaries[user]['p5'].append(float(split_line[25]))
-        # summaries[user]['p10'].append(float(split_line[26]))
-        # summaries[user]['p15'].append(float(split_line[27]))
-        # summaries[user]['p20'].append(float(split_line[28]))
-        # summaries[user]['p25'].append(float(split_line[29]))
-        # summaries[user]['p30'].append(float(split_line[30]))
-        # summaries[user]['p40'].append(float(split_line[31]))
-        # summaries[user]['p50'].append(float(split_line[32]))
-        # summaries[user]['rprec'].append(float(split_line[33]))
-
+        summaries[user]['click_trec_rel'] += int(split_line[34])
+        summaries[user]['click_trec_nonrel'] += int(split_line[35])
+        summaries[user]['hover_trec_rel'] += int(split_line[36])
+        summaries[user]['hover_trec_nonrel'] += int(split_line[37])
+        summaries[user]['doc_trec_rel'] += int(split_line[38])
+        summaries[user]['doc_trec_nonrel'] += int(split_line[39])
+        
     for user in summaries:
         for topic in summaries[user]:
             q = float(summaries[user][topic]['query_count'])
@@ -263,19 +221,19 @@ def generate_user_summaries(input_file):
                 d = 1.0
             if q < 1.0:
                 q = 1.0
-        
+            
             summaries[user][topic]['pages_per_query'] = float(summaries[user][topic]['pages']) / q
             summaries[user][topic]['doc_count_per_query'] = float(summaries[user][topic]['doc_count']) / q
             summaries[user][topic]['doc_depth_per_query'] = float(sum(summaries[user][topic]['doc_depth'])) / q
             summaries[user][topic]['doc_rel_depth_per_query'] = float(sum(summaries[user][topic]['doc_rel_depth'])) / q
-        
+            
             summaries[user][topic]['hover_count_per_query'] = float(summaries[user][topic]['hover_count']) / q
             summaries[user][topic]['hover_depth_per_query'] = float(sum(summaries[user][topic]['hover_depth']) ) / q
             summaries[user][topic]['time_per_query'] = summaries[user][topic]['query_time'] / q
             summaries[user][topic]['time_per_doc'] = summaries[user][topic]['doc_time'] / d
             summaries[user][topic]['time_serp_per_query'] =summaries[user][topic]['serp_time'] /q
             summaries[user][topic]['time_serp_lag_per_query'] = summaries[user][topic]['serp_lag'] / q
-        
+            
             summaries[user][topic]['p1'] = sum(summaries[user][topic]['p1']) / float(len(summaries[user][topic]['p1']))
             summaries[user][topic]['p2'] = sum(summaries[user][topic]['p2']) / float(len(summaries[user][topic]['p2']))
             summaries[user][topic]['p3'] = sum(summaries[user][topic]['p3']) / float(len(summaries[user][topic]['p3']))
@@ -289,19 +247,36 @@ def generate_user_summaries(input_file):
             summaries[user][topic]['p40'] = sum(summaries[user][topic]['p40']) / float(len(summaries[user][topic]['p40']))
             summaries[user][topic]['p50'] = sum(summaries[user][topic]['p50']) / float(len(summaries[user][topic]['p50']))
             summaries[user][topic]['rprec'] = sum(summaries[user][topic]['rprec']) / float(len(summaries[user][topic]['rprec']))
-
+            
+            
+            summaries[user][topic]['pmr'] = 0.0
+            summaries[user][topic]['pmn'] = 0.0
+            summaries[user][topic]['pcr'] = 0.0
+            summaries[user][topic]['pcn'] = 0.0
+            
+            if summaries[user][topic]['click_trec_rel'] > 0:
+                summaries[user][topic]['pmr'] = summaries[user][topic]['doc_trec_rel'] / float(summaries[user][topic]['click_trec_rel'])
+            
+            if summaries[user][topic]['click_trec_nonrel'] > 0:
+                summaries[user][topic]['pmn'] = summaries[user][topic]['doc_trec_nonrel'] / float(summaries[user][topic]['click_trec_nonrel'])
+            
+            if summaries[user][topic]['hover_trec_rel'] > 0:
+                summaries[user][topic]['pcr'] = summaries[user][topic]['click_trec_rel'] / float(summaries[user][topic]['hover_trec_rel'])
+            
+            if summaries[user][topic]['hover_trec_nonrel'] > 0:
+                summaries[user][topic]['pcn'] = summaries[user][topic]['click_trec_nonrel'] / float(summaries[user][topic]['hover_trec_nonrel'])
+    
     return summaries
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2 or len(sys.argv) > 2:
+    if len(sys.argv) != 2:
         print 'Usage: {0} <query_summary_file>'.format(sys.argv[0])
     else:
-
         try:
             f = open(sys.argv[1], 'r')
         except IOError:
             print 'Input file \'{0}\' not found or could not be opened.'.format(sys.argv[1])
             sys.exit(1)
-
+        
         user_summaries = generate_user_summaries(f)
         print generate_output(user_summaries, separator=',')
