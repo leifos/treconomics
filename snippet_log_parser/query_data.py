@@ -17,20 +17,23 @@ class QueryLogEntry(object):
         self.key = key
         self.qrel_handler = qrel_handler
         self.query = vals[9:]
+        
+        # There's quote marks at the start and end of the query, remove them
+        self.query[0] = self.query[0][1:]
+        self.query[-1] = self.query[-1][:-1]
+        
         self.topic = vals[7]
         self.event_count = 0
-        self.click_trec_rel_count = 0 # For P(C|R) and P(M|R)
-        self.click_trec_nonrel_count = 0 # For P(C|N) and P(M|N)
         self.doc_count = 0
         self.doc_depth = 0
         self.hover_count = 0  # Added by David
         self.hover_depth = 0  # Added by David
-        self.hover_trec_rel_count = 0 # For P(C|R)
-        self.hover_trec_nonrel_count = 0 # For P(C|N)
+        self.hover_trec_rel_count = 0
+        self.hover_trec_nonrel_count = 0
         self.doc_rel_count = 0
         self.doc_rel_depth = 0
-        self.doc_trec_rel_count = 0 # For P(C|R)
-        self.doc_trec_nonrel_count = 0 # For P(C|N)
+        self.doc_trec_rel_count = 0  # Records documents MARKED that are trec rel
+        self.doc_trec_nonrel_count = 0  # Records documents MARKED that are not trec rel
         self.pages = 0
         self.curr_page = 1
         self.session_start_time = '{date} {time}'.format(date=vals[0],time=vals[1])
@@ -45,6 +48,10 @@ class QueryLogEntry(object):
         self.last_event = None
         self.last_last_event = None
         self.doc_click_time = False
+        
+        # Probability variables, added by David (2016-11-30)
+        self.doc_clicked_trec_rel_count = 0
+        self.doc_clicked_trec_nonrel_count = 0
         
         self.query_response = None  # Stores the results for parsing later on.
         
@@ -70,7 +77,7 @@ class QueryLogEntry(object):
         if engine:
             q = Query(' '.join(self.query))
             q.skip = 1
-            q.top = 200
+            q.top = 1000
             #print "Issuing {0}".format(q.terms)
             response = engine.search(q)
             (un, cond, interface, order, topicnum) = key.split(' ')
@@ -82,15 +89,24 @@ class QueryLogEntry(object):
     
     def __str__(self):
         q = ' '.join(self.query)
-        #q = ''
-
-        performances = ' '.join(self.perf)
         
+        performances = ' '.join(self.perf)
         serp_time = self.view_serp_time + self.snippet_time
-
-        counts = "{0} {1} {2} {3} {4} {5} {6} {7}".format(
-            self.pages, self.doc_count, self.doc_depth, self.doc_rel_count,
-            self.doc_rel_depth, self.hover_count, self.hover_depth, self.doc_trec_rel_count
+        
+        counts = "{0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} {11} {12}".format(
+            self.pages,
+            self.doc_count,
+            self.doc_depth,
+            self.doc_rel_count,
+            self.doc_rel_depth,
+            self.hover_count,
+            self.hover_trec_rel_count,
+            self.hover_trec_nonrel_count,
+            self.hover_depth,
+            self.doc_trec_rel_count,
+            self.doc_trec_nonrel_count,
+            self.doc_clicked_trec_rel_count,
+            self.doc_clicked_trec_nonrel_count
         )
         
         """
@@ -103,14 +119,15 @@ class QueryLogEntry(object):
             self.query_time, self.system_query_delay, self.session_time, self.document_time, self.serp_lag, self.new_total_serp
         )
         
-        prob_vals = "{0} {1} {2} {3} {4} {5}".format(
-            self.click_trec_rel_count,
-            self.click_trec_nonrel_count,
-            self.hover_trec_rel_count,
-            self.hover_trec_nonrel_count,
-            self.doc_trec_rel_count,
-            self.doc_trec_nonrel_count
-        )
+        # prob_vals = "{0} {1} {2} {3} {4} {5}".format(
+        #     self.probs_marked_trec_rel,
+        #     self.probs_clicked_trec_rel,
+        #     self.probs_marked_trec_nrel,
+        #     self.probs_clicked_trec_nrel,
+        #     self.probs_rel_to_hover_depth,
+        #     self.probs_nrel_to_hover_depth,
+        # )
+        prob_vals = "??"
 
         s = "{0} {1} {2} {3} {4}".format(q.replace(' ', '_'), counts, times, performances, prob_vals)
 
@@ -185,36 +202,34 @@ class QueryLogEntry(object):
 	
 
     def end_query_session(self,end_time):
-        #update the session_end_time
-        # and compute the diff
-	
-	# DMAX added in this condition to take the first event only.
-	# Subsequent events add overhead to the time - that isn't strictly part of the session.
-	if self.session_end_time is None:
-        	self.session_end_time = end_time
-        	self.session_time = get_time_diff(self.session_start_time, end_time)
-        #print "session time", self.session_time
+        # DMAX added in this condition to take the first event only.
+        # Subsequent events add overhead to the time - that isn't strictly part of the session.
+        if self.session_end_time is None:
+                self.session_end_time = end_time
+                self.session_time = get_time_diff(self.session_start_time, end_time)
+            #print "session time", self.session_time
         
-        	self.update_times(end_time)
-        #if self.last_event == 'VIEW_SEARCH_RESULTS_PAGE':
-        #    self.snippet_time = self.snippet_time + get_time_diff(self.view_serp_time, end_time)
+                self.update_times(end_time)
+            #if self.last_event == 'VIEW_SEARCH_RESULTS_PAGE':
+            #    self.snippet_time = self.snippet_time + get_time_diff(self.view_serp_time, end_time)
         
-        # Adding some code to work out probabilities for clicking!        
+        # Adding some code to work out probabilities for clicking!
         relevant_count = 0
-        
+    
         for i in range(0, self.hover_depth):
             if self.hover_depth > len(self.query_response.results):
                 continue
-            
+        
             if self.qrel_handler.get_value(self.topic, self.query_response.results[i].docid) > 0:
                 relevant_count = relevant_count + 1
-        
-        self.hover_trec_rel_count = relevant_count
-        self.hover_trec_nonrel_count = self.hover_depth - relevant_count
-        
-        self.click_trec_rel_count = self.doc_count - self.click_trec_nonrel_count
-        
-        #print self.hover_depth
+            
+        for i in range(0, self.hover_depth):
+            docid_at_rank = self.query_response.results[i].docid
+            
+            if is_relevant(self.qrel_handler, self.topic, docid_at_rank) == 0:
+                self.hover_trec_nonrel_count = self.hover_trec_nonrel_count + 1
+            else:
+                self.hover_trec_rel_count = self.hover_trec_rel_count + 1
      
     def process(self, vals):
         self.event_count = self.event_count + 1
@@ -239,7 +254,9 @@ class QueryLogEntry(object):
             self.doc_count = self.doc_count + 1
             
             if is_relevant(self.qrel_handler, vals[7], vals[10]) == 0:
-                self.click_trec_nonrel_count = self.click_trec_nonrel_count + 1
+                self.doc_clicked_trec_nonrel_count = self.doc_clicked_trec_nonrel_count + 1
+            else:
+                self.doc_clicked_trec_rel_count = self.doc_clicked_trec_rel_count + 1
         
         if 'DOCUMENT_HOVER_IN' in vals:
             m = int(vals[-1])
@@ -258,10 +275,22 @@ class QueryLogEntry(object):
                 self.doc_rel_count = self.doc_rel_count + 1
                 # add in here a check to determine whether the document was trec relevant.
                 
-                if is_relevant(self.qrel_handler, vals[7], vals[10]) == 1:
-                    self.doc_trec_rel_count = self.doc_trec_rel_count + 1
-                else:
+                if is_relevant(self.qrel_handler, vals[7], vals[10]) == 0:
                     self.doc_trec_nonrel_count = self.doc_trec_nonrel_count + 1
+                else:
+                    self.doc_trec_rel_count = self.doc_trec_rel_count + 1
+                
+                # print "TOPIC", vals[7]
+                # print "DOC", vals[10]
+                # print "JUDGEMENT", is_relevant(self.qrel_handler, vals[7], vals[10])
+                # print "===="
+                #
+                # if is_relevant(self.qrel_handler, vals[7], vals[10]) == 1:
+                #     self.doc_trec_rel_count = self.doc_trec_rel_count + 1
+                #     self.probs_marked_trec_rel = self.probs_marked_trec_rel + 1
+                # else:
+                #     self.doc_trec_nonrel_count = self.doc_trec_nonrel_count + 1
+                #     self.probs_marked_trec_nrel = self.probs_marked_trec_nrel + 1
                 
                 m = int(vals[13])
                 if self.doc_rel_depth < m:
