@@ -118,18 +118,8 @@ class QueryLogEntry(object):
         times = "{0} {1} {2} {3} {4} {5}".format(
             self.query_time, self.system_query_delay, self.session_time, self.document_time, self.serp_lag, self.new_total_serp
         )
-        
-        # prob_vals = "{0} {1} {2} {3} {4} {5}".format(
-        #     self.probs_marked_trec_rel,
-        #     self.probs_clicked_trec_rel,
-        #     self.probs_marked_trec_nrel,
-        #     self.probs_clicked_trec_nrel,
-        #     self.probs_rel_to_hover_depth,
-        #     self.probs_nrel_to_hover_depth,
-        # )
-        prob_vals = "??"
 
-        s = "{0} {1} {2} {3} {4}".format(q.replace(' ', '_'), counts, times, performances, prob_vals)
+        s = "{0} {1} {2} {3} {4}".format(q.replace(' ', '_'), counts, times, performances)
 
         return s
 
