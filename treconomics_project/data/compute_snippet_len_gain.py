@@ -90,7 +90,7 @@ def get_words_from_snippet(summary):
 
 
 pl2_search_engine = Whooshtrec(
-    whoosh_index_dir='fullindex/',
+    whoosh_index_dir='/Users/david/Workspace/indexes/aquaint_test500_whoosh/',
     stopwords_file='',
     model=2,
     newschema=True)
@@ -100,7 +100,6 @@ pl2_search_engine = Whooshtrec(
 
 
 def main():
-
     #print "Making Language Model"
     lm = LanguageModel(file='vocab.in')
 
@@ -111,6 +110,8 @@ def main():
 
     #print "Queries read in: {0}".format(len(query_list))
     sizes = [0, 1,2,3,4,5,6,7,8,9,10]
+    
+    
 
     qno = 0
 
