@@ -6,7 +6,9 @@ from utils import setup_django_env
 
 SELECTED_TOPIC = 'ALL'
 OUTPUT_KEYS = [
+    'user_id',
     'interface',
+    'snippet_len',
     'order',
     'topic',
     
@@ -28,12 +30,18 @@ OUTPUT_KEYS = [
     'clicked_rel',
     'clicked_nrel',
     
+    'total_query_time',
     'query_time',
     'query_system_time',
-    'query_session_time',
+    'total_session_time',
     'doc_time',
     'serp_lag',
     'serp_time',
+    
+    'time_per_query',
+    'time_per_doc',
+    'time_serp_per_query',
+    'time_per_snippet',
     
     'p1',
     'p2',
@@ -65,6 +73,8 @@ def create_user_dict():
     for key in OUTPUT_KEYS:
         return_dict[key] = 0.0
     
+    return_dict['user_id'] = 0
+    return_dict['snippet_len'] = 0
     return_dict['query_count'] = 0.0
     return_dict['pages'] = 0.0
     return_dict['doc_count'] = 0.0
@@ -80,9 +90,10 @@ def create_user_dict():
     return_dict['clicked_rel'] = 0.0
     return_dict['clicked_nrel'] = 0.0
     
+    return_dict['total_query_time'] = 0.0
     return_dict['query_time'] = 0.0
     return_dict['query_system_time'] = 0.0
-    return_dict['query_session_time'] = 0.0
+    return_dict['total_session_time'] = 0.0
     return_dict['doc_time'] = 0.0
     return_dict['serp_lag'] = 0.0
     return_dict['serp_time'] = 0.0
@@ -147,7 +158,10 @@ def generate_user_summaries(input_file):
     Generates a list of user details with related information about each account from the given input file.
     '''
     summaries = {}
-
+    user_id_index = 0
+    user_id_mappings = {}
+    snippet_len_mappings = [2, 0, 1, 4]
+    
     for line in input_file:
         
         if line.startswith('userid'):
@@ -155,8 +169,15 @@ def generate_user_summaries(input_file):
         
         split_line = line.split()
         user = split_line[0]
+        
+        if user not in user_id_mappings:
+            user_id_mappings[user] = user_id_index
+            user_id_index = user_id_index + 1
+        
+        user_id = user_id_mappings[user]
         condition = int(split_line[1])
         interface = int(split_line[2])
+        snippet_len = snippet_len_mappings[interface - 1]
         topic = split_line[4]
         order = split_line[3]
         
@@ -170,6 +191,8 @@ def generate_user_summaries(input_file):
             summaries[user][topic]['topic'] = topic
             summaries[user][topic]['interface'] = interface
         
+        summaries[user][topic]['user_id'] = user_id
+        summaries[user][topic]['snippet_len'] = snippet_len
         summaries[user][topic]['query_count'] += 1
         summaries[user][topic]['pages'] += int(split_line[7])
         summaries[user][topic]['doc_count'] += int(split_line[8])
@@ -185,10 +208,11 @@ def generate_user_summaries(input_file):
         summaries[user][topic]['nrels_found'] += int(split_line[17])
         summaries[user][topic]['clicked_rel'] += int(split_line[18])
         summaries[user][topic]['clicked_nrel'] += int(split_line[19])
-    
+        
+        summaries[user][topic]['total_query_time'] += (float(split_line[20]) + float(split_line[21]) + float(split_line[24]))
         summaries[user][topic]['query_time'] += float(split_line[20])
         summaries[user][topic]['query_system_time'] += float(split_line[21])
-        summaries[user][topic]['query_session_time'] += float(split_line[22])
+        summaries[user][topic]['total_session_time'] += float(split_line[22])
         summaries[user][topic]['doc_time'] += float(split_line[23])
         summaries[user][topic]['serp_lag'] += float(split_line[24])
         summaries[user][topic]['serp_time'] += float(split_line[25])
@@ -226,8 +250,11 @@ def generate_user_summaries(input_file):
             summaries[user][topic]['hover_depth_per_query'] = float(sum(summaries[user][topic]['hover_depth']) ) / q
             summaries[user][topic]['time_per_query'] = summaries[user][topic]['query_time'] / q
             summaries[user][topic]['time_per_doc'] = summaries[user][topic]['doc_time'] / d
-            summaries[user][topic]['time_serp_per_query'] =summaries[user][topic]['serp_time'] /q
+            summaries[user][topic]['time_serp_per_query'] = summaries[user][topic]['serp_time'] / q
             summaries[user][topic]['time_serp_lag_per_query'] = summaries[user][topic]['serp_lag'] / q
+            # Time per snippet - not too sure about this.
+            # We take the total number of recorded hover events for the given user/topic combination, and divide the SERP time spent by that value.
+            summaries[user][topic]['time_per_snippet'] = summaries[user][topic]['serp_time'] / summaries[user][topic]['hover_count']
             
             summaries[user][topic]['p1'] = sum(summaries[user][topic]['p1']) / float(len(summaries[user][topic]['p1']))
             summaries[user][topic]['p2'] = sum(summaries[user][topic]['p2']) / float(len(summaries[user][topic]['p2']))
