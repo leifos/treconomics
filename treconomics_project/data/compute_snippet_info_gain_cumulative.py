@@ -5,10 +5,10 @@ from ifind.search.engines.whooshtrec import Whooshtrec
 from ifind.search import Query
 
 bm25_search_engine = Whooshtrec(
-    whoosh_index_dir='fullindex/',
-    stopwords_file='',
-    model=1,
-    newschema=True)
+	whoosh_index_dir='fullindex/',
+	stopwords_file='',
+	model=1,
+	newschema=True)
 
 bm25_search_engine.snippet_size = 40
 
@@ -31,11 +31,11 @@ def main():
 			query_str = query_str[1:-1]
 
 			#print("{0} {1} {2} {3} {4}".format(amtid, interface, order, topic, query_str))
-            q = make_query(query_str)
-            response = bm25_search_engine.search(q)
-            rno = 0
-            rtext = ''
-            for r in response:
+			q = make_query(query_str)
+			response = bm25_search_engine.search(q)
+			rno = 0
+			rtext = ''
+			for r in response:
 				rno += 1
 				rtext = rtext + ' ' + r.title + ' ' + r.summary
 				words = get_words_from_snippet(rtext)

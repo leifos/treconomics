@@ -36,6 +36,7 @@ class QueryLogEntry(object):
         self.doc_rel_depth = 0
         self.doc_trec_rel_count = 0  # Records documents MARKED that are trec rel
         self.doc_trec_nonrel_count = 0  # Records documents MARKED that are not trec rel
+        self.doc_trec_unjudged_count = 0 # Records documents MARKED that are UNJUDGED in the trec qrels
         self.pages = 0
         self.curr_page = 1
         self.session_start_time = '{date} {time}'.format(date=vals[0],time=vals[1])
@@ -123,7 +124,7 @@ class QueryLogEntry(object):
             self.query_time, self.system_query_delay, self.session_time, self.document_time, self.serp_lag, self.new_total_serp
         )
 
-        s = "{0} {1} {2} {3}".format(q.replace(' ', '_'), counts, times, performances)
+        s = "{0} {1} {2} {3}".format(counts, times, performances, self.doc_trec_unjudged_count)
 
         return s
 
@@ -229,11 +230,17 @@ class QueryLogEntry(object):
             
         for i in range(0, self.hover_depth):
             docid_at_rank = self.query_response.results[i].docid
+            qrel_judgement = is_relevant(self.qrel_handler, self.topic, docid_at_rank)
             
-            if is_relevant(self.qrel_handler, self.topic, docid_at_rank) == 0:
-                self.hover_trec_nonrel_count = self.hover_trec_nonrel_count + 1
-            else:
+            if qrel_judgement >= 1:
                 self.hover_trec_rel_count = self.hover_trec_rel_count + 1
+            else:
+                self.hover_trec_nonrel_count = self.hover_trec_nonrel_count + 1
+            
+            # if is_relevant(self.qrel_handler, self.topic, docid_at_rank) <= 0:
+            #     self.hover_trec_nonrel_count = self.hover_trec_nonrel_count + 1
+            # else:
+            #     self.hover_trec_rel_count = self.hover_trec_rel_count + 1
      
     def process(self, vals):
         self.event_count = self.event_count + 1
@@ -256,11 +263,17 @@ class QueryLogEntry(object):
                 self.doc_depth = m
 
             self.doc_count = self.doc_count + 1
+            qrel_judgement = is_relevant(self.qrel_handler, vals[7], vals[10])
             
-            if is_relevant(self.qrel_handler, vals[7], vals[10]) == 0:
-                self.doc_clicked_trec_nonrel_count = self.doc_clicked_trec_nonrel_count + 1
-            else:
+            if qrel_judgement >= 1:
                 self.doc_clicked_trec_rel_count = self.doc_clicked_trec_rel_count + 1
+            else:
+                self.doc_clicked_trec_nonrel_count = self.doc_clicked_trec_nonrel_count + 1
+            
+            # if is_relevant(self.qrel_handler, vals[7], vals[10]) <= 0:
+            #     self.doc_clicked_trec_nonrel_count = self.doc_clicked_trec_nonrel_count + 1
+            # else:
+            #     self.doc_clicked_trec_rel_count = self.doc_clicked_trec_rel_count + 1
         
         if 'DOCUMENT_HOVER_IN' in vals:
             m = int(vals[-1])
@@ -281,10 +294,15 @@ class QueryLogEntry(object):
                 
                 # add in here a check to determine whether the document was trec relevant.
                 
-                if is_relevant(self.qrel_handler, vals[7], vals[10]) == 0:
-                    self.doc_trec_nonrel_count = self.doc_trec_nonrel_count + 1
-                else:
+                qrel_judgement = is_relevant(self.qrel_handler, vals[7], vals[10])
+                
+                if qrel_judgement >= 1:
                     self.doc_trec_rel_count = self.doc_trec_rel_count + 1
+                else:
+                    self.doc_trec_nonrel_count = self.doc_trec_nonrel_count + 1
+                    
+                    if qrel_judgement == -1:
+                        self.doc_trec_unjudged_count = self.doc_trec_unjudged_count + 1
                 
                 m = int(vals[13])
                 if self.doc_rel_depth < m:
@@ -399,18 +417,47 @@ class ExpLogEntry(object):
             all_docs_unmarked = all_docs_unmarked + query_object.doc_unmarked_list
             query_object.doc_unmarked_list = []
         
+        topic = self.key.split(' ')[4]
+        
         for query_object in self.queries:
             for docid in all_docs_unmarked:
                 if docid in query_object.doc_marked_list:
-                    topic = self.key.split(' ')[4]
-                    
                     query_object.doc_marked_list.remove(docid)
-                    query_object.doc_rel_count = query_object.doc_rel_count - 1
-
-                    if is_relevant(self.qrel_handler, topic, docid) == 0:
-                        query_object.doc_clicked_trec_nonrel_count = query_object.doc_clicked_trec_nonrel_count - 1
-                    else:
-                        query_object.doc_clicked_trec_rel_count = query_object.doc_clicked_trec_rel_count - 1
+            
+            query_object.doc_rel_count = len(query_object.doc_marked_list)
+            query_object.doc_trec_unjudged_count = 0
+            query_object.doc_trec_nonrel_count = 0
+            query_object.doc_trec_rel_count = 0
+            
+            for docid in query_object.doc_marked_list:
+                qrel_judgement = is_relevant(self.qrel_handler, topic, docid)
+                
+                if qrel_judgement >= 1:
+                    query_object.doc_trec_rel_count = query_object.doc_trec_rel_count + 1
+                else:
+                    query_object.doc_trec_nonrel_count = query_object.doc_trec_nonrel_count + 1
+                    
+                    if qrel_judgement == -1:
+                        query_object.doc_trec_unjudged_count = query_object.doc_trec_unjudged_count + 1
+                
+                # if is_relevant(self.qrel_handler, topic, docid) <= 0:
+                #     query_object.doc_trec_nonrel_count = query_object.doc_trec_nonrel_count + 1
+                # else:
+                #     query_object.doc_trec_rel_count = query_object.doc_trec_rel_count + 1
+            
+        
+        # for query_object in self.queries:
+        #     for docid in all_docs_unmarked:
+        #         if docid in query_object.doc_marked_list:
+        #             topic = self.key.split(' ')[4]
+        #
+        #             query_object.doc_marked_list.remove(docid)
+        #             query_object.doc_rel_count = query_object.doc_rel_count - 1
+        #
+        #             if is_relevant(self.qrel_handler, topic, docid) == 0:
+        #                 query_object.doc_clicked_trec_nonrel_count = query_object.doc_clicked_trec_nonrel_count - 1
+        #             else:
+        #                 query_object.doc_clicked_trec_rel_count = query_object.doc_clicked_trec_rel_count - 1
             
 def main():
     if len(sys.argv) == 5:

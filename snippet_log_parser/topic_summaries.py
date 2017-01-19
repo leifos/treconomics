@@ -6,7 +6,6 @@ from utils import setup_django_env
 
 SELECTED_TOPIC = 'ALL'
 OUTPUT_KEYS = [
-    'user_id',
     'interface',
     'snippet_len',
     'order',
@@ -194,42 +193,42 @@ def generate_user_summaries(input_file):
         summaries[user][topic]['user_id'] = user_id
         summaries[user][topic]['snippet_len'] = snippet_len
         summaries[user][topic]['query_count'] += 1
-        summaries[user][topic]['pages'] += int(split_line[7])
-        summaries[user][topic]['doc_count'] += int(split_line[8])
-        summaries[user][topic]['doc_depth'].append(int(split_line[9]))
-        summaries[user][topic]['doc_rel_count'] += int(split_line[10])
-        summaries[user][topic]['doc_rel_depth'].append(int(split_line[11]))
-        summaries[user][topic]['hover_count'] += int(split_line[12])
-        summaries[user][topic]['hover_trec_rel_count'] += int(split_line[13])
-        summaries[user][topic]['hover_trec_nonrel_count'] += int(split_line[14])
+        summaries[user][topic]['pages'] += int(split_line[6])
+        summaries[user][topic]['doc_count'] += int(split_line[7])
+        summaries[user][topic]['doc_depth'].append(int(split_line[8]))
+        summaries[user][topic]['doc_rel_count'] += int(split_line[9])
+        summaries[user][topic]['doc_rel_depth'].append(int(split_line[10]))
+        summaries[user][topic]['hover_count'] += int(split_line[11])
+        summaries[user][topic]['hover_trec_rel_count'] += int(split_line[12])
+        summaries[user][topic]['hover_trec_nonrel_count'] += int(split_line[13])
         
-        summaries[user][topic]['hover_depth'].append(int(split_line[15]))
-        summaries[user][topic]['rels_found'] += int(split_line[16])
-        summaries[user][topic]['nrels_found'] += int(split_line[17])
-        summaries[user][topic]['clicked_rel'] += int(split_line[18])
-        summaries[user][topic]['clicked_nrel'] += int(split_line[19])
+        summaries[user][topic]['hover_depth'].append(int(split_line[14]))
+        summaries[user][topic]['rels_found'] += int(split_line[15])
+        summaries[user][topic]['nrels_found'] += int(split_line[16])
+        summaries[user][topic]['clicked_rel'] += int(split_line[17])
+        summaries[user][topic]['clicked_nrel'] += int(split_line[18])
         
-        summaries[user][topic]['total_query_time'] += (float(split_line[20]) + float(split_line[21]) + float(split_line[24]))
-        summaries[user][topic]['query_time'] += float(split_line[20])
-        summaries[user][topic]['query_system_time'] += float(split_line[21])
-        summaries[user][topic]['total_session_time'] += float(split_line[22])
-        summaries[user][topic]['doc_time'] += float(split_line[23])
-        summaries[user][topic]['serp_lag'] += float(split_line[24])
-        summaries[user][topic]['serp_time'] += float(split_line[25])
+        summaries[user][topic]['total_query_time'] += (float(split_line[19]) + float(split_line[20]) + float(split_line[23]))
+        summaries[user][topic]['query_time'] += float(split_line[19])
+        summaries[user][topic]['query_system_time'] += float(split_line[20])
+        summaries[user][topic]['total_session_time'] += float(split_line[21])
+        summaries[user][topic]['doc_time'] += float(split_line[22])
+        summaries[user][topic]['serp_lag'] += float(split_line[23])
+        summaries[user][topic]['serp_time'] += float(split_line[24])
     
-        summaries[user][topic]['p1'].append(float(split_line[26]))
-        summaries[user][topic]['p2'].append(float(split_line[27]))
-        summaries[user][topic]['p3'].append(float(split_line[28]))
-        summaries[user][topic]['p4'].append(float(split_line[29]))
-        summaries[user][topic]['p5'].append(float(split_line[30]))
-        summaries[user][topic]['p10'].append(float(split_line[31]))
-        summaries[user][topic]['p15'].append(float(split_line[32]))
-        summaries[user][topic]['p20'].append(float(split_line[33]))
-        summaries[user][topic]['p25'].append(float(split_line[34]))
-        summaries[user][topic]['p30'].append(float(split_line[35]))
-        summaries[user][topic]['p40'].append(float(split_line[36]))
-        summaries[user][topic]['p50'].append(float(split_line[37]))
-        summaries[user][topic]['rprec'].append(float(split_line[38]))
+        summaries[user][topic]['p1'].append(float(split_line[25]))
+        summaries[user][topic]['p2'].append(float(split_line[26]))
+        summaries[user][topic]['p3'].append(float(split_line[27]))
+        summaries[user][topic]['p4'].append(float(split_line[28]))
+        summaries[user][topic]['p5'].append(float(split_line[29]))
+        summaries[user][topic]['p10'].append(float(split_line[30]))
+        summaries[user][topic]['p15'].append(float(split_line[31]))
+        summaries[user][topic]['p20'].append(float(split_line[32]))
+        summaries[user][topic]['p25'].append(float(split_line[33]))
+        summaries[user][topic]['p30'].append(float(split_line[34]))
+        summaries[user][topic]['p40'].append(float(split_line[35]))
+        summaries[user][topic]['p50'].append(float(split_line[36]))
+        summaries[user][topic]['rprec'].append(float(split_line[37]))
         
     for user in summaries:
         for topic in summaries[user]:
@@ -280,6 +279,10 @@ def generate_user_summaries(input_file):
             
             if summaries[user][topic]['clicked_nrel'] > 0:
                 summaries[user][topic]['pmn'] = summaries[user][topic]['nrels_found'] / summaries[user][topic]['clicked_nrel']
+            
+            # if user == 'APGX2WZ59OWDN' and topic == '341':
+            #     print summaries[user][topic]['nrels_found']
+            #     print summaries[user][topic]['clicked_nrel']
             
             if summaries[user][topic]['hover_trec_rel_count'] > 0:
                 summaries[user][topic]['pcr'] = summaries[user][topic]['clicked_rel'] / summaries[user][topic]['hover_trec_rel_count']

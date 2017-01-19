@@ -51,10 +51,16 @@ def is_relevant(qrels, topic_num, docid):
     :param docid:
     :return: 1 is relevant, 0 if not relevant
     """
-    if qrels.get_value(topic_num, docid) > 0:
-        return 1
-    else:
-        return 0
+    qrel_value = qrels.get_value_if_exists(topic_num, docid)
+    
+    if qrel_value is None:
+        return -1  # No judgement
+    
+    return qrel_value
+    # if qrels.get_value_if_exists(topic_num, docid) > 0:
+    #     return 1
+    # else:
+    #     return 0
 
 
 def calculate_precision(qrels, results, topic_num, k):
