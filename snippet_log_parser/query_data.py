@@ -31,6 +31,8 @@ class QueryLogEntry(object):
         self.hover_trec_rel_count = 0
         self.hover_trec_nonrel_count = 0
         self.doc_rel_count = 0
+        self.doc_marked_list = []
+        self.doc_unmarked_list = []
         self.doc_rel_depth = 0
         self.doc_trec_rel_count = 0  # Records documents MARKED that are trec rel
         self.doc_trec_nonrel_count = 0  # Records documents MARKED that are not trec rel
@@ -46,6 +48,8 @@ class QueryLogEntry(object):
         self.last_serp_view_time = None  # Added by David
         self.curr_event = None
         self.last_event = None
+        self.last_interaction_event = None
+        self.last_interaction_time = None
         self.last_last_event = None
         self.doc_click_time = False
         
@@ -119,7 +123,7 @@ class QueryLogEntry(object):
             self.query_time, self.system_query_delay, self.session_time, self.document_time, self.serp_lag, self.new_total_serp
         )
 
-        s = "{0} {1} {2} {3} {4}".format(q.replace(' ', '_'), counts, times, performances)
+        s = "{0} {1} {2} {3}".format(q.replace(' ', '_'), counts, times, performances)
 
         return s
 
@@ -195,7 +199,17 @@ class QueryLogEntry(object):
         # DMAX added in this condition to take the first event only.
         # Subsequent events add overhead to the time - that isn't strictly part of the session.
         if self.session_end_time is None:
+                
+                # Added by David on December 13, 2016
+                # Last events (e.g. EXPERIMENT_TIMEOUT) should not be considered as the final session event.
+                # Some people in the experiment walk away (or something) for several minutes, meaning that times are way out.
+                # In this case, we roll back to the last interaction event - where the event is not EXPERIMENT_TIMEOUT or SESSION_COMPLETED.
+                end_time = self.last_interaction_time
                 self.session_end_time = end_time
+                
+                # print "END EVENT: {0}".format(self.last_interaction_event)
+                # print "END TIME: {0}".format(self.last_interaction_time)
+                
                 self.session_time = get_time_diff(self.session_start_time, end_time)
             #print "session time", self.session_time
         
@@ -205,7 +219,7 @@ class QueryLogEntry(object):
         
         # Adding some code to work out probabilities for clicking!
         relevant_count = 0
-    
+        
         for i in range(0, self.hover_depth):
             if self.hover_depth > len(self.query_response.results):
                 continue
@@ -263,6 +277,8 @@ class QueryLogEntry(object):
             r = int(vals[12])
             if r > 0:
                 self.doc_rel_count = self.doc_rel_count + 1
+                self.doc_marked_list.append(vals[10])
+                
                 # add in here a check to determine whether the document was trec relevant.
                 
                 if is_relevant(self.qrel_handler, vals[7], vals[10]) == 0:
@@ -270,26 +286,20 @@ class QueryLogEntry(object):
                 else:
                     self.doc_trec_rel_count = self.doc_trec_rel_count + 1
                 
-                # print "TOPIC", vals[7]
-                # print "DOC", vals[10]
-                # print "JUDGEMENT", is_relevant(self.qrel_handler, vals[7], vals[10])
-                # print "===="
-                #
-                # if is_relevant(self.qrel_handler, vals[7], vals[10]) == 1:
-                #     self.doc_trec_rel_count = self.doc_trec_rel_count + 1
-                #     self.probs_marked_trec_rel = self.probs_marked_trec_rel + 1
-                # else:
-                #     self.doc_trec_nonrel_count = self.doc_trec_nonrel_count + 1
-                #     self.probs_marked_trec_nrel = self.probs_marked_trec_nrel + 1
-                
                 m = int(vals[13])
                 if self.doc_rel_depth < m:
                     self.doc_rel_depth = m
-
+        
+        if 'DOC_MARKED_NONRELEVANT' in vals:
+            self.doc_unmarked_list.append(vals[10])
                     
-        self.last_last_event = self.last_event    
+        self.last_last_event = self.last_event
         self.last_event = vals[8]
-        self.last_time = '{date} {time}'.format(date=vals[0],time=vals[1])
+        self.last_time = '{date} {time}'.format(date=vals[0], time=vals[1])
+        
+        if (vals[8] not in ['SESSION_COMPLETED', 'EXPERIMENT_TIMEOUT']):
+            self.last_interaction_event = vals[8]
+            self.last_interaction_time = '{date} {time}'.format(date=vals[0], time=vals[1])
 
 class ExpLogEntry(object):
 
@@ -366,7 +376,6 @@ class ExpLogEntry(object):
             self.last_query_focus_time = None
             self.query_ended_previously = False
             self.queries.append(self.current_query)
-            
         else:
             if self.current_query:
                 # process result under this query object
@@ -382,8 +391,26 @@ class ExpLogEntry(object):
                 #print "end of search session"
                 self.current_query.end_query_session('{date} {time}'.format(date=vals[0],time=vals[1]))
                 self.query_ended_previously = True
+        
+        # Code for removing documents that were previously marked, but are then reselected as non-relevant.
+        all_docs_unmarked = []
+        
+        for query_object in self.queries:
+            all_docs_unmarked = all_docs_unmarked + query_object.doc_unmarked_list
+            query_object.doc_unmarked_list = []
+        
+        for query_object in self.queries:
+            for docid in all_docs_unmarked:
+                if docid in query_object.doc_marked_list:
+                    topic = self.key.split(' ')[4]
+                    
+                    query_object.doc_marked_list.remove(docid)
+                    query_object.doc_rel_count = query_object.doc_rel_count - 1
 
-            
+                    if is_relevant(self.qrel_handler, topic, docid) == 0:
+                        query_object.doc_clicked_trec_nonrel_count = query_object.doc_clicked_trec_nonrel_count - 1
+                    else:
+                        query_object.doc_clicked_trec_rel_count = query_object.doc_clicked_trec_rel_count - 1
             
 def main():
     if len(sys.argv) == 5:
@@ -395,7 +422,7 @@ def main():
         bm25 = Whooshtrec(whoosh_index_dir=my_whoosh_doc_index_dir, stopwords_file=stopword_file, model=1, newschema=True)
         elr = ExpTimeLogReader(ExpLogEntry, qrels, bm25)
         elr.process(filename)
-        elr.report(True)
+        elr.report(False)
     else:
         print "{0} <logfile> <qrelsfile> <indexpath> <stopwordsfile>".format(sys.argv[0])
 

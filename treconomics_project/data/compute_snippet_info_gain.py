@@ -5,7 +5,7 @@ from ifind.search.engines.whooshtrec import Whooshtrec
 from ifind.search import Query
 
 bm25_search_engine = Whooshtrec(
-    whoosh_index_dir='fullindex/',
+    whoosh_index_dir='/Users/david/Workspace/indexes/aquaint_test500_whoosh/',
     stopwords_file='',
     model=1,
     newschema=True)
@@ -15,9 +15,11 @@ bm25_search_engine.snippet_size = 40
 
 def main():
 	log_file = sys.argv[1]
-	
 	lm = LanguageModel(file='vocab.in')
 	
+	# Interface...      1   2   3   4
+	snippet_sizes    = [2,  0,  1,  4]
+	snippet_surround = [40, 40, 40, 40]
 	
 	with open(log_file) as f:
 		
@@ -32,7 +34,15 @@ def main():
 			
 			#print("{0} {1} {2} {3} {4}".format(amtid, interface, order, topic, query_str))
 			q = make_query(query_str)
+			
+			# Added by David (2016-12-04) - added snippet size and surround properties
+			interface_list_index = int(interface) - 1
+			bm25_search_engine.snippet_size = snippet_sizes[interface_list_index]
+			bm25_search_engine.set_fragmenter(frag_type=2, surround=snippet_surround[interface_list_index])
+			
+			# Issue the query to the search engine.
 			response = bm25_search_engine.search(q)
+			
 			rno = 0
 			for r in response:
 				rno += 1
