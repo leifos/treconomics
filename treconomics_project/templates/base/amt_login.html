@@ -12,13 +12,13 @@
 
         {% if registered %}
             <div>
-                <b>Your MTurk ID has been registered.</b>
+                <b>Your username has been registered.</b>
             </div>
         {% endif %}
 
            {% if already %}
             <div >
-                <b>Your MTurk has already been registered.</b>
+                <b>Your username has already been registered.</b>
             </div>
         {% endif %}
 
@@ -27,7 +27,7 @@
             <!-- cross-site request forgery protection -->
             <table class="searchtable">
                 <tr>
-                    <td class="searchlabel">Enter your MTurk worker id to start:</td>
+                    <td class="searchlabel">Enter your username to start:</td>
                     <td><input class="loginbox" type="text" name="username" value="" id="username" size="50"
                                tabindex="1"/></td>
                     <td><input class="button" type="submit" name="submit" value="Login" tabindex="2"/></td>

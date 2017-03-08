@@ -138,5 +138,21 @@ exp_test = ExperimentSetup(
     timeout=[150,600,600,600, 600])  # 300s = 5min; 600s = 10min; 1200s = 20min
 
 
+exp_jaana = ExperimentSetup(
+    workflow=snippet_flow,
+    engine=search_engine,
+    practice_topic='341',
+    topics=['347', '367', '435'],
+    rpp=10,
+    practice_interface=1,
+    interface=[1, 1, 1],
+    rotation_type=1,
+    description='standard condition bm25 test',
+    trie=suggestion_trie,
+    autocomplete=True,
+    timeout=[150,600,600,600, 600])
+
+
+
 # these correspond to conditions
-experiment_setups = [exp_test]
+experiment_setups = [exp_jaana]
