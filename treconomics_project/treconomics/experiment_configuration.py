@@ -15,7 +15,7 @@ work_dir = os.getcwd()
 
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
 if 'local' not in socket.gethostname():
-    my_whoosh_doc_index_dir = '/home/leifos/fullindex/'
+    my_whoosh_doc_index_dir = '/home/leifos/test500index'
     #my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint-whoosh-fullindex'
 
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
