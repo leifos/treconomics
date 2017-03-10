@@ -95,6 +95,21 @@ snippet_flow = [
 
 
 
+jaana_flow = [
+    'startexperiment/', 'preexperiment/UK/',
+    'demographicssurvey/',
+    'prepracticetask/0/','taskspacer2/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer',
+    'snippetpretask/1/','taskspacer2/1/', 'search/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
+        'taskspacer',
+    'snippetpretask/2/', 'taskspacer2/2/','search/2/', 'snippetposttask/2/','systemsnippetposttask/2/',
+        'taskspacer',
+    'snippetpretask/3/','taskspacer2/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/3/',
+      'taskspacer', 'snippetexitsurvey/', 'performance/', 'endexperiment/',
+    'logout/'
+]
+
+
+
 
 
 test_flow = [
@@ -139,7 +154,7 @@ exp_test = ExperimentSetup(
 
 
 exp_jaana = ExperimentSetup(
-    workflow=snippet_flow,
+    workflow=jaana_flow,
     engine=search_engine,
     practice_topic='341',
     topics=['347', '367', '435'],
