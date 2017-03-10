@@ -8,8 +8,8 @@ from models import DocumentsExamined, UserProfile
 from models import TaskDescription, TopicQuerySuggestion
 from snippets.models import AnitaPreTaskSurvey, AnitaPreTaskResource
 from snippets.models import MickeyPostTaskSurvey, MickeyPostTaskResource
-from snippets.models import AnitaDemographicsSurvey, SnippetExitSurvey, SnippetDemographicsSurvey, SystemSnippetPostTaskSurvey,SnippetPostTaskSurvey
-
+from snippets.models import AnitaDemographicsSurvey, SnippetExitSurvey, SnippetDemographicsSurvey, SystemSnippetPostTaskSurvey,SnippetPostTaskSurvey,SnippetPreTaskTopicKnowledgeSurvey
+from survey.models import PostTaskTopicRatingSurvey
 
 
 
@@ -82,8 +82,8 @@ admin.site.register(UserProfile, UserProfileAdmin)
 # admin.site.register(TaskDescription, TaskDescriptionAdmin)
 # admin.site.register(TopicQuerySuggestion, TopicQuerySuggestionAdmin)
 # admin.site.register(USDemographicsSurvey, UserSurveyAdmin)
-# admin.site.register(PreTaskTopicKnowledgeSurvey, PreTaskTopicKnowledgeSurveyAdmin)
-# admin.site.register(PostTaskTopicRatingSurvey, PostTaskTopicRatingSurveyAdmin)
+#admin.site.register(PreTaskTopicKnowledgeSurvey, PreTaskTopicKnowledgeSurveyAdmin)
+admin.site.register(PostTaskTopicRatingSurvey, PostTaskTopicRatingSurveyAdmin)
 # admin.site.register(NasaSystemLoad, NasaLoadAdmin)
 # admin.site.register(NasaQueryLoad, NasaLoadAdmin)
 # admin.site.register(NasaNavigationLoad, NasaLoadAdmin)
@@ -105,10 +105,10 @@ admin.site.register(UserProfile, UserProfileAdmin)
 
 # Important
 admin.site.register(DocumentsExamined)
-admin.site.register(SnippetExitSurvey)
+#admin.site.register(SnippetExitSurvey)
 admin.site.register(SnippetDemographicsSurvey)
-admin.site.register(SnippetPostTaskSurvey)
-admin.site.register(SystemSnippetPostTaskSurvey)
+admin.site.register(SnippetPreTaskTopicKnowledgeSurvey)
+#admin.site.register(SystemSnippetPostTaskSurvey)
 
 
 
