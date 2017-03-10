@@ -99,11 +99,11 @@ jaana_flow = [
     'startexperiment/', 'preexperiment/UK/',
     'demographicssurvey/',
     'prepracticetask/0/','taskspacer2/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer',
-    'snippetpretask/1/','taskspacer2/1/', 'search/1/', 'snippetposttask/1/',
+    'snippetpretask/1/','taskspacer2/1/', 'search/1/', 'posttaskquestions/1/',
         'taskspacer',
-    'snippetpretask/2/', 'taskspacer2/2/','search/2/', 'snippetposttask/2/'
+    'snippetpretask/2/', 'taskspacer2/2/','search/2/', 'posttaskquestions/2/'
         'taskspacer',
-    'snippetpretask/3/','taskspacer2/3/', 'search/3/', 'snippetposttask/3/'
+    'snippetpretask/3/','taskspacer2/3/', 'search/3/', 'posttaskquestions/3/'
       'taskspacer', 'performance/', 'endexperiment/',
     'logout/'
 ]

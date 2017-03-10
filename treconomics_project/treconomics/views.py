@@ -477,7 +477,7 @@ class ExperimentContextMixin(LoginRequiredMixin, ContextMixin):
 
 
 class PreExperimentView(ExperimentContextMixin, TemplateView):
-    template_name = 'base/pre_experiment_amt.html'
+    template_name = 'base/pre_experiment.html'
 
 
 class PostExperimentView(ExperimentContextMixin, TemplateView):
@@ -500,7 +500,7 @@ def task_spacer_msg(request, msg_id):
 
 
 class EndExperimentView(ExperimentContextMixin, TemplateView):
-    template_name = 'base/end_experiment_amt.html'
+    template_name = 'base/end_experiment.html'
 
 
 class SessionCompletedView(ExperimentContextMixin, TemplateView):
