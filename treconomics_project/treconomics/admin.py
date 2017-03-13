@@ -79,7 +79,7 @@ class TaskQuestionSurveyAdmin(admin.ModelAdmin):
     list_display = ['user', 'task_id', 'topic_num']
 
 admin.site.register(UserProfile, UserProfileAdmin)
-# admin.site.register(TaskDescription, TaskDescriptionAdmin)
+admin.site.register(TaskDescription, TaskDescriptionAdmin)
 # admin.site.register(TopicQuerySuggestion, TopicQuerySuggestionAdmin)
 # admin.site.register(USDemographicsSurvey, UserSurveyAdmin)
 #admin.site.register(PreTaskTopicKnowledgeSurvey, PreTaskTopicKnowledgeSurveyAdmin)

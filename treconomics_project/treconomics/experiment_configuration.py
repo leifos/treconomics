@@ -103,8 +103,7 @@ jaana_flow = [
         'taskspacer',
     'snippetpretask/2/', 'taskspacer2/2/','search/2/', 'posttaskquestions/2/',
         'taskspacer',
-    'snippetpretask/3/','taskspacer2/3/', 'search/3/', 'posttaskquestions/3/',
-      'taskspacer', 'performance/', 'endexperiment/',
+      'performance/', 'endexperiment/',
     'logout/'
 ]
 
@@ -156,17 +155,16 @@ exp_test = ExperimentSetup(
 exp_jaana = ExperimentSetup(
     workflow=jaana_flow,
     engine=search_engine,
-    practice_topic='341',
-    topics=['347', '367', '435'],
+    practice_topic='367',
+    topics=['347', '435'],
     rpp=10,
     practice_interface=1,
-    interface=[1, 1, 1],
+    interface=[1, 1],
     rotation_type=1,
     description='standard condition bm25 test',
     trie=suggestion_trie,
     autocomplete=True,
-    timeout=[150,600,600,600, 600])
-
+    timeout=[150,1200,1200])
 
 
 # these correspond to conditions
