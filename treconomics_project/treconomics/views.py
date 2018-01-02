@@ -24,7 +24,7 @@ from survey.models import ShortStressSurvey
 from survey.forms import PreTaskTopicKnowledgeSurveyForm
 from survey.forms import PostTaskTopicRatingSurveyForm
 from experiment_functions import get_experiment_context, print_experiment_context
-from experiment_functions import log_event
+from experiment_functions import log_event, populate_context_dict
 
 
 import logging
@@ -232,19 +232,27 @@ def pre_practice_task(request, taskid):
     request.session['taskid'] = taskid
 
     ec = get_experiment_context(request)
-    uname = ec["username"]
-    condition = ec["condition"]
+    #uname = ec["username"]
+    #condition = ec["condition"]
 
     topicnum = ec["topicnum"]
     t = TaskDescription.objects.get(topic_num=topicnum)
 
     # provide link to search interface / next system
-    context_dict = {'participant': uname,
-                    'condition': condition,
-                    'task': taskid,
-                    'topic': t.topic_num,
+    context_dict = {'topic': t.topic_num,
                     'tasktitle': t.title,
                     'taskdescription': t.description}
+
+    populate_context_dict(ec, context_dict)
+
+    #context_dict = {'participant': uname,
+    #                'condition': condition,
+    #                'task': taskid,
+    #                'topic': t.topic_num,
+    #                'tasktitle': t.title,
+    #                'taskdescription': t.description}
+
+    print(context_dict)
 
     return render(request, 'base/pre_practice_task.html', context_dict)
 
@@ -270,6 +278,9 @@ def post_practice_task(request, taskid):
     # else direct the participant to the pre task view
 
     context_dict = {'participant': uname, 'condition': condition, 'task': taskid}
+
+    populate_context_dict(ec, context_dict)
+    print(context_dict)
 
     return render(request, 'base/post_practice_task.html', context_dict)
 
@@ -491,10 +502,12 @@ class TaskSpacerView(ExperimentContextMixin, TemplateView):
 @login_required
 def task_spacer_msg(request, msg_id):
     ec = get_experiment_context(request)
-    uname = ec["username"]
-    condition = ec["condition"]
 
-    context_dict = {'msg_id': msg_id, 'participant': uname, 'condition': condition}
+    context_dict = {'msg_id': msg_id}
+    populate_context_dict(ec, context_dict)
+    #uname = ec["username"]
+    #condition = ec["condition"]
+
     return render(request, 'base/task_spacer2.html', context_dict)
 
 

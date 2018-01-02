@@ -15,7 +15,7 @@ class ExperimentSetup(object):
                  topics=['347', '344'],
                  practice_topic='367',
                  practice_interface=1,
-                 practive_diversity=0,
+                 practice_diversity=0,
                  rpp=10,
                  interface=[1, 2, 3],
                  diversity=[0,1,1],
@@ -43,7 +43,7 @@ class ExperimentSetup(object):
         self.delay_docview = delay_docview
         self.practice_topic = practice_topic
         self.practice_interface = practice_interface
-        self.practice_diversity = practive_diversity
+        self.practice_diversity = practice_diversity
         self.rotation_type = rotation_type
         # Do you want to use AJAX suggestions if the AJAX search interface is used?
         # To ensure that suggestions do not show with the structured interface, wrap the following assignments
@@ -206,7 +206,7 @@ if __name__ == '__main__':
                            topics=['347', '367', '354','999'],
                            rpp=10,
                            practice_interface=1,
-                           practive_diversity=0,
+                           practice_diversity=0,
                            interface= [1, 2, 3, 4],
                            diversity =[1, 1, 0, 0],
                            rotation_type=2,

@@ -50,6 +50,7 @@ def get_experiment_context(request):
     esd = es.get_exp_dict(ec["taskid"],ec["rotation"])
     ec["topicnum"] = esd["topic"]
     ec["interface"] = esd["interface"]
+    ec["diversity"] = esd["diversity"]
     ec["rpp"] = esd["rpp"]
     ec["autocomplete"] = esd["autocomplete"]
 
@@ -290,3 +291,22 @@ def get_query_performance_metrics(results, topic_num):
 
     return [p_at_1, p_at_2, p_at_3, p_at_4, p_at_5, p_at_10, p_at_15, p_at_20, p_at_25, p_at_30, p_at_40, p_at_50,
             r_prec, total_relevant_docs]
+
+
+def populate_context_dict(experiment_context, page_context_dict):
+
+    if "username" in experiment_context:
+        page_context_dict["participant"] = experiment_context["username"]
+    if "condition" in experiment_context:
+        page_context_dict["condition"] = experiment_context["condition"]
+    if "topicnum" in experiment_context:
+        page_context_dict["topic"] = experiment_context["topicnum"]
+    if "interface" in experiment_context:
+        page_context_dict["interface"]  = experiment_context["interface"]
+    if "rpp" in experiment_context:
+        page_context_dict["rpp"] = experiment_context["rpp"]
+    if "diversity" in experiment_context:
+        page_context_dict["diversity"] = experiment_context["diversity"]
+    return page_context_dict
+
+

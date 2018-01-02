@@ -94,6 +94,23 @@ snippet_flow = [
 ]
 
 
+diversity_flow = [
+    'startexperiment/', 'preexperiment/UK/',
+    'demographicssurvey/',
+    'prepracticetask/0/','taskspacer2/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer',
+    'snippetpretask/1/','taskspacer2/1/', 'search/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
+        'taskspacer',
+    'snippetpretask/2/', 'taskspacer2/2/','search/2/', 'snippetposttask/2/','systemsnippetposttask/2/',
+        'taskspacer',
+    'snippetpretask/3/','taskspacer2/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/3/',
+     'taskspacer',
+    'snippetpretask/4/','taskspacer2/4/', 'search/4/', 'snippetposttask/4/','systemsnippetposttask/4/',
+    'taskspacer', 'snippetexitsurvey/', 'performance/', 'endexperiment/',
+    'logout/'
+]
+
+
+
 
 jaana_flow = [
     'startexperiment/', 'preexperiment/UK/',
@@ -137,7 +154,7 @@ search_engine = Whooshtrec(
 search_engine.key_name = 'bm25'
 search_engine.set_fragmenter(frag_type=2, surround=30)
 
-exp_test = ExperimentSetup(
+exp_sigir2017 = ExperimentSetup(
     workflow=snippet_flow,
     engine=search_engine,
     practice_topic='367',
@@ -167,5 +184,23 @@ exp_jaana = ExperimentSetup(
     timeout=[150,1200,1200])
 
 
+exp_sigir2018 = ExperimentSetup(
+    workflow=diversity_flow,
+    engine=search_engine,
+    practice_topic='367',
+    topics=['347', '341', '435','408'],
+    rpp=10,
+    practice_interface=2,
+    interface=[2, 2, 2, 2],
+    rotation_type=2,
+    practice_diversity=2,
+    diversity=[1,2,3,4],
+    description='standard condition bm25 test',
+    trie=suggestion_trie,
+    autocomplete=True,
+    timeout=[0, 0, 0, 0, 0])  # 300s = 5min; 600s = 10min; 1200s = 20min
+
+
+
 # these correspond to conditions
-experiment_setups = [exp_jaana]
+experiment_setups = [exp_sigir2018, exp_jaana]

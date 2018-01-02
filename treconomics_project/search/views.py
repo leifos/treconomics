@@ -27,7 +27,7 @@ from treconomics.experiment_functions import get_topic_relevant_count
 from treconomics.experiment_functions import get_experiment_context
 from treconomics.experiment_functions import mark_document, log_event
 from treconomics.experiment_functions import time_search_experiment_out
-from treconomics.experiment_functions import get_performance
+from treconomics.experiment_functions import get_performance, populate_context_dict
 from treconomics.experiment_functions import query_result_performance, log_performance
 from treconomics.experiment_configuration import my_whoosh_doc_index_dir, data_dir
 from treconomics.experiment_configuration import experiment_setups
@@ -361,6 +361,9 @@ def search(request, taskid=-1):
                        'autocomplete': ec['autocomplete'],
                        'is_fast': 'true'
                        }
+
+        populate_context_dict(ec, result_dict)
+
 
         # Ensure that we set a queryurl.
         # This means that if a user clicks "View Saved" before posing a query, there will be something
