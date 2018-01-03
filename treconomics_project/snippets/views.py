@@ -62,7 +62,7 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
     context_dict = {'participant': uname,
                     'condition': condition,
                     'interface': interface,
-                    'divesrity': diversity,
+                    'diversity': diversity,
                     'task': taskid,
                     'topic': t.topic_num,
                     'tasktitle': t.title,
