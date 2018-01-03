@@ -21,6 +21,7 @@ class TaskDescription(models.Model):
     topic_num = models.IntegerField(default=0)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1500)
+    diversify = models.CharField(max_length=1500, default="")
 
     def __unicode__(self):
         return self.title

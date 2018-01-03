@@ -14,6 +14,7 @@ from models import AnitaDemographicsSurveyForm, AnitaExit1SurveyForm, AnitaExit2
     AnitaExit3SurveyForm
 from models import AnitaConsentForm
 from models import MickeyPostTaskSurveyForm, SnippetDemographicsSurveyForm, SnippetExitSurveyForm
+from models import BehaveDiversityPostTaskSurveyForm, SystemDiversityPostTaskSurveyForm, DiversityExitSurveyForm
 from treconomics.models import TaskDescription
 
 
@@ -24,6 +25,7 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
     condition = ec["condition"]
     topicnum = ec["topicnum"]
     interface = ec["interface"]
+    diversity = ec["diversity"]
     t = TaskDescription.objects.get(topic_num=topicnum)
     errors = ""
     uname = request.user.username
@@ -39,6 +41,7 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
             obj.topic_num = topicnum
             obj.condition = condition
             obj.interface = interface
+            obj.diversity = diversity
             obj.save()
             log_event(event=survey_name.upper() + "_SURVEY_COMPLETED", request=request)
             return redirect('next')
@@ -59,10 +62,12 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
     context_dict = {'participant': uname,
                     'condition': condition,
                     'interface': interface,
+                    'divesrity': diversity,
                     'task': taskid,
                     'topic': t.topic_num,
                     'tasktitle': t.title,
                     'taskdescription': t.description,
+                    'diversify': t.diversify,
                     'formset': survey,
                     'action': action_url,
                     'errors': errors,
@@ -188,3 +193,23 @@ def view_system_snippet_posttask(request, taskid):
 def view_snippet_pretask(request, taskid):
     return handle_task_and_questions_survey(request, taskid, SnippetPreTaskTopicKnowledgeSurveyForm, 'SNIPPET_PRETASK',
                                             '/treconomics/snippetpretask/', 'base/pre_task_with_questions.html')
+
+
+#### NEW SURVEY VIEWS FOR DIVERSITY
+
+@login_required
+def view_diversity_posttask(request, taskid):
+    return handle_task_and_questions_survey(request, taskid, BehaveDiversityPostTaskSurveyForm, 'DIVERSITY_POSTTASK',
+                                            '/treconomics/diversityposttask/', 'survey/diversity_posttask_survey.html')
+
+
+@login_required
+def view_system_diversity_posttask(request, taskid):
+    return handle_task_and_questions_survey(request, taskid, SystemDiversityPostTaskSurveyForm, 'SYSTEM_DIVERSITY_POSTTASK',
+                                            '/treconomics/systemdiversityposttask/', 'survey/system_diversity_posttask_survey.html')
+
+
+@login_required
+def view_diversity_exit_survey(request):
+    return handle_survey(request, DiversityExitSurveyForm, 'DIVERSITY_EXIT', '/treconomics/diversityexitsurvey/',
+                         'survey/anita_exit1_survey.html')

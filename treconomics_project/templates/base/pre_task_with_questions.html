@@ -12,27 +12,29 @@
 
     <div class="experimentPageTitle">
         <p><b> Task Description</b></p>
-        <!--
-        <p>You are working with a group of scholars who are investigating the differences in
-            how several topics have been described in the news near the end of term for the
-            last three U.S. presidents: Clinton, Bush and Obama.</p>
 
-        <p>In preparation for a meeting with this group later today,
-            you need to create a list of news articles relevant to four topics that were published
-            from 1996-2000, the final term of the Clinton Adminstration.</p>
-
-        -->
  <p>The search task is a description of the topic, and the type of information within documents that would be relevant to this specific topic.</p>
+
+
 
         <p>Below is a description of the search task that we would like you to undertake.</p>
 
+         {% if diversity < 3  %}
+            <p>For this task you must find <strong> RELEVANT and DIFFERENT </strong> documents.</p>
+        {% else %}
+            <p>For this task you must find <strong> RELEVANT </strong> documents.</p>
+    {% endif %}
+
+    <hr/>
+
+
         <div id="query">
             <p>{% autoescape off %} <strong style="color: #3366FF;">{{ taskdescription }}</strong> {% endautoescape %} </p>
-            <!--
-        <b> {{tasktitle}} </b> <span>Search Task: <strong>{{task}}</strong> Search Topic: <strong>{{topic}}</strong></span>
 
-        <p>{% autoescape off %} <em>{{taskdescription}}</em> {% endautoescape %} </p>
- -->
+            {% if diversity < 3 %}
+                <p>{% autoescape off %} <strong>{{ diversify }}</strong> {% endautoescape %}</p>
+            {% endif %}
+
         </div>
         <br/>
         <p><b> Pre-Task Questions</b></p>

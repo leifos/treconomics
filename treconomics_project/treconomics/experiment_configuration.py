@@ -97,15 +97,15 @@ snippet_flow = [
 diversity_flow = [
     'startexperiment/', 'preexperiment/UK/',
     'demographicssurvey/',
-    'prepracticetask/0/','taskspacer2/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer',
-    'snippetpretask/1/','taskspacer2/1/', 'search/1/', 'snippetposttask/1/','systemsnippetposttask/1/',
+    'prepracticetask/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer',
+    'snippetpretask/1/', 'search/1/', 'diversityposttask/1/','systemdiversityposttask/1/',
         'taskspacer',
-    'snippetpretask/2/', 'taskspacer2/2/','search/2/', 'snippetposttask/2/','systemsnippetposttask/2/',
+    'snippetpretask/2/','search/2/', 'diversityposttask/2/','systemdiversityposttask/2/',
         'taskspacer',
-    'snippetpretask/3/','taskspacer2/3/', 'search/3/', 'snippetposttask/3/','systemsnippetposttask/3/',
+    'snippetpretask/3/', 'search/3/', 'diversityposttask/3/','systemdiversityposttask/3/',
      'taskspacer',
-    'snippetpretask/4/','taskspacer2/4/', 'search/4/', 'snippetposttask/4/','systemsnippetposttask/4/',
-    'taskspacer', 'snippetexitsurvey/', 'performance/', 'endexperiment/',
+    'snippetpretask/4/', 'search/4/', 'diversityposttask/4/','systemdiversityposttask/4/',
+    'taskspacer', 'diversityexitsurvey/', 'performance/', 'endexperiment/',
     'logout/'
 ]
 
@@ -190,8 +190,8 @@ exp_sigir2018 = ExperimentSetup(
     practice_topic='367',
     topics=['347', '341', '435','408'],
     rpp=10,
-    practice_interface=2,
-    interface=[2, 2, 2, 2],
+    practice_interface=1,
+    interface=[1, 1, 1, 1],
     rotation_type=2,
     practice_diversity=2,
     diversity=[1,2,3,4],

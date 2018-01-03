@@ -998,3 +998,212 @@ class SnippetPreTaskTopicKnowledgeSurveyForm(ModelForm):
     class Meta:
         model = SnippetPreTaskTopicKnowledgeSurvey
         exclude = ('user', 'task_id', 'topic_num','condition','interface')
+
+########################################
+# DIVERSITY POST TASK SURVEYS
+#
+########################################
+
+class BehaveDiversityPostTaskSurvey(models.Model):
+    user = models.ForeignKey(User)
+    task_id = models.IntegerField()
+    topic_num = models.IntegerField()
+    condition = models.IntegerField()
+    interface = models.IntegerField()
+    diversity = models.IntegerField()
+    beh_div_success = models.IntegerField(default=0)
+    beh_div_speed = models.IntegerField(default=0)
+    beh_div_queries = models.IntegerField(default=0)
+    beh_div_documents = models.IntegerField(default=0)
+    beh_div_time = models.IntegerField(default=0)
+    beh_div_marked = models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return self.user.username
+
+
+class BehaveDiversityPostTaskSurveyForm(ModelForm):
+    beh_div_success = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="I was able to complete the search task successfully.",
+        required=False)
+
+
+    beh_div_speed = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="I was able the complete the search task quickly.",
+        required=False)
+
+    beh_div_queries = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="I issued more queries than I expected.",
+        required=False)
+
+    beh_div_documents= forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="I examined more document than I expected.",
+        required=False)
+
+    beh_div_time = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="I spent more time reading documents than I expected.",
+        required=False)
+
+
+    beh_div_marked = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="I marked more documents as relevant than I needed.",
+        required=False)
+
+    def clean(self):
+        return clean_to_zero(self)
+
+    class Meta:
+        model = BehaveDiversityPostTaskSurvey
+        exclude = ('user', 'task_id', 'topic_num','condition','interface','diversity')
+
+
+
+class SystemDiversityPostTaskSurvey(models.Model):
+    user = models.ForeignKey(User)
+    task_id = models.IntegerField()
+    topic_num = models.IntegerField()
+    condition = models.IntegerField()
+    interface = models.IntegerField()
+    diversity = models.IntegerField()
+    apt_accurate = models.IntegerField()
+    apt_quick_results = models.IntegerField()
+    apt_search_diff = models.IntegerField()
+    apt_time = models.IntegerField()
+    apt_satisfied_systems = models.IntegerField()
+    ae_cumbersome = models.IntegerField()
+    ae_confident = models.IntegerField()
+
+    def __unicode__(self):
+        return self.user.username
+
+
+class SystemDiversityPostTaskSurveyForm(ModelForm):
+
+    apt_accurate = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="It was important to me to complete this task accurately.",
+        required=True)
+
+    apt_quick_results = forms.ChoiceField(
+        widget=RadioSelect,
+        choices=LIKERT_CHOICES,
+        label="The system retrieved and displayed search results pages quickly.",
+        required=True)
+
+    apt_search_diff = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I thought it was difficult to search for information on this topic.",
+        required=True)
+
+    apt_time = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="The system helped me to complete my task sooner.", required=True)
+
+    apt_satisfied_systems = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I am satisfied with how the system performed for this task.",
+        required=True)
+
+    ae_cumbersome = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I found the system very cumbersome to use.", required=True)
+
+    ae_confident = forms.ChoiceField(
+        widget=RadioSelect, choices=LIKERT_CHOICES,
+        label="I felt very confident using the system.", required=True)
+
+
+    def clean(self):
+        return clean_to_zero(self)
+
+    class Meta:
+        model = SystemDiversityPostTaskSurvey
+        exclude = ('user', 'task_id', 'topic_num','condition','interface','diversity')
+
+
+########################################
+# DIVERSITY POST EXPERIMENT SURVEYS
+#
+########################################
+
+
+DIVERSITY_CHOICES = ((1, 'Definitely A '),(2, 'Mostly A'), (3, 'Slightly A'),
+                (4,'Slightly B'), (5,'Mostly B'), (6,'Definitely B') )
+
+
+class DiversityExitSurvey(models.Model):
+    user = models.ForeignKey(User)
+    div_info = models.IntegerField()
+    div_easy = models.IntegerField()
+    div_help = models.IntegerField()
+    div_useful = models.IntegerField()
+    div_prefer = models.IntegerField()
+    div_relevance_prefer = models.IntegerField()
+    div_diversity_prefer = models.IntegerField()
+    div_why = models.TextField()
+    div_improve = models.TextField()
+
+
+    def __unicode__(self):
+        return self.user.username
+
+
+class DiversityExitSurveyForm(ModelForm):
+    div_info = forms.ChoiceField(
+        widget=RadioSelect, choices=DIVERSITY_CHOICES,
+        label="The most informative system was:", required=True)
+    div_easy = forms.ChoiceField(
+        widget=RadioSelect, choices=DIVERSITY_CHOICES,
+        label="The most unhelpful system was:", required=True)
+    div_help = forms.ChoiceField(
+        widget=RadioSelect, choices=DIVERSITY_CHOICES,
+        label="The easiest system to use was:", required=True)
+    div_useful = forms.ChoiceField(
+        widget=RadioSelect, choices=DIVERSITY_CHOICES,
+        label="The least useful system was:",
+        required=True)
+
+    div_relevance_prefer = forms.ChoiceField(
+        widget=RadioSelect, choices=DIVERSITY_CHOICES,
+        label="The system that returned the most relevant information was:",
+        required=True)
+
+    div_diversity_prefer = forms.ChoiceField(
+        widget=RadioSelect, choices=DIVERSITY_CHOICES,
+        label="The system that returned the most diverse information was:",
+        required=True)
+
+    div_prefer = forms.ChoiceField(
+        widget=RadioSelect, choices=DIVERSITY_CHOICES,
+        label="The most preferable system overall was:",
+        required=True)
+
+
+    div_why = forms.CharField(widget=Textarea,
+                               label="Given your last answer, explain why you prefer result summaries of this length.",
+                               required=True)
+    div_improve = forms.CharField(widget=Textarea,
+                                label="Please provide suggestions on how this study could be improved.",
+                                required=True)
+
+
+
+    def clean(self):
+        return clean_to_zero(self)
+
+    class Meta:
+        model = DiversityExitSurvey
+        exclude = ('user',)

@@ -1,0 +1,132 @@
+{% extends 'base/base.html' %}
+
+{% block exp_info_block %}
+    <p> <!-- a href="/treconomics/logout">Logout</a> --> </p>
+{% endblock %}
+
+
+{% block exp_block %}
+    <script>
+        $(document).ready(function () {
+            $('.surveySubmitButton').click(function () {
+                $(this).hide()
+            });
+        })
+    </script>
+
+    <p> <h1> News Search System Study </h1></p>
+
+    <p>
+        <strong>Thank you</strong> for agreeing to participate in this study related on News Search Systems.<br/>
+    </p>
+
+    <p>
+    <h2><b>Important Notes</b></h2>
+    <ul>
+        <li><strong>Please do not use the "Back" or "Forward" functionality of your Web browser to navigate yourself through the process.</strong></li>
+        <li> At the end of the experiment, you will be redirected back to MTurk to submit the HIT.</li>
+        <li>In order to conduct this experiment you need to use Safari, Firefox or Chrome.
+            <strong>If you use any other browser, your HIT may not be accepted.</strong></li>
+        <li>Your screen resolution should be at least <strong>1024x768</strong> or above, otherwise your HIT will not be accepted.</li>
+        <li>Please read instructions throughout this experiment carefully. You will not be able to return to previous pages or resubmit your answers.</li>
+    </ul>
+
+
+    <h2><b>Your Role</b></h2>
+    <ul>
+        <li>For this study, imagine that you are a newspaper reporter, where you will need to write a story on
+            four topics. In order to accomplish this you will need to search for related background information.
+        </li>
+    </ul>
+
+    <h2><b>The Search Systems</b></h2>
+    <ul>
+        <li>The search systems that you will use connects to a database of about 1 million newspaper articles from the
+            <em>New York Times</em>, <em>The Associated Press</em> and <em>Xinhua</em> news agencies. The articles
+            within the database were published in 1998 to 2000. The search system you will be using looks similar to a web search
+            engine, though there might be some slight differences to the search interface.
+        </li>
+    </ul>
+
+    <h2><b>The Search Tasks</b></h2>
+    <ul>
+        <li>For each search task, you'll be given a short description of a topic and
+            what information would be relevant to this topic. </li>
+        <li> This can be viewed by the <b>Show Task</b> button at the top right-hand corner of the screen.</li>
+        <li>You need to pose queries and examine results, just like you would in a web search engine.</li>
+        <li> When viewing documents, you will be able to select the <b>Mark as Relevant</b> button when you find a document relevant to
+            the topic. </li>
+        <li>
+        There are <b>over 100 relevant documents</b> in the database for each topic.
+        </li>
+
+    </ul>
+
+    <h2><b>Goal</b></h2>
+    <ul>
+        <li><b>Your goal is to find and SAVE as 5 useful documents for each tasks.</b>
+        </li>
+
+        <li>From previous studies, we have a GOLD standard of useful documents.</li>
+        <li> Pay close attention to the task description - as there are two kinds of search task.</li>
+        <ul>
+            <li>(1) Find documents that match the criteria specified i.e. RELEVANT</li>
+            <li>(2) Find documents that match the criteria specified but report different aspects, i.e. RELEVANT and DIFFERENT.</li>
+
+        <li> For example, lets say the topic is on "People Smuggling" and the criteria states that a RELEVANT document must
+            identify the country where people were smuggled from, how they were smuggled and how many. </li>
+            <li> For search tasks were we ask for RELEVANT documents,
+                if you find 4 documents where people from <i>Canada</i> have been smuggled into the US. These are all considered useful.</li>
+            <li> However, for search task were we ask for RELEVANT and DIFFERENT documents, if you find 4 documents where people from <i>Canada</i> have been smuggled into the US.
+            Only 1 document is considered useful. Therefore, other documents need to be found, i.e. involving smuggling from <i>Mexico</i>, <i>Chile</i>, etc. to count as being useful, (RELEVANT and DIFFERENT).</li>
+            <li> Note: You can review your saved documents and the task description while searching.</li>
+        </ul>
+    </ul>
+    <h2><b>Success and Payment</b></h2>
+        <ul>
+
+        <li> You will be paid ONLY IF, you successfully complete all four tasks.</li>
+            <li> To be successful you must have <b>saved at least 5 useful documents</b> per search task, AND</li>
+            <li> <b>No more than 5 unuseful documents</b> per search task, i.e. accuracy greater than 50 percent.</li>
+            <li> That is, if you save more NOT RELEVANT documents than RELEVANT documents, the task will be deemed unsucessful.</li>
+            <li> From previous studies, most participants identified 5-10 RELEVANT documents in around 7-8 minutes with accuracy greater than 50 percent.</li>
+        <li><strong>Thus the experiment will take approximately 40-50 minutes of your time. </strong></li>
+    </ul>
+    </p>
+
+    <hr/>
+
+    <h2><b>Experiment Outline</b></h2>
+    <p> Before you start searching, we will ask you a few questions about you.</p>
+
+    <p>We will then give you a few minutes to get comfortable with the search interface by undertaking a <b>practice
+        task.</b></p>
+
+    <p>You'll then move onto the <b>four main search tasks</b>.
+
+        Before each task, you will complete a
+        <b>pre-task questionnaire</b>
+        about your knowledge of the search topic.
+
+        After you complete the task, you will complete a
+        <b>post-task questionnaire</b> about the search interface.</p>
+
+
+    <hr/>
+    <h2><b>Confirmation of Participation and Commitment</b></h2>
+
+    <p><strong>
+
+        If you agree to undertake this study and have carefully read the above conditions, then click the <em>Next</em> button below.</strong></p>
+
+    <div class="surveySubmitButton">
+        <a href="{% url 'next' %}">
+            <button class="largebutton" type="next">Next</button>
+        </a>
+    </div>
+{% endblock %}
+
+
+{% block exp_footer_block %}
+    Participant: {{ participant }}  - Condition: {{ condition }}
+{% endblock %}

@@ -22,23 +22,30 @@
             you will need to undertake.
         </p>
 
-        <!--    <p>To get you familar with the system we would like you to undertake the following practice search task.</p>
-        <p>The search task is a description of the topic, and the type of information within documents that would be relevant to this specific topic.</p>
-        <hr/>
-        -->
 
-        <!-- <div id="query" > <b> {{tasktitle}} </b> <span>Search Task: <strong>{{task}}</strong> Search Topic: <strong>{{topic}}</strong></span></div> -->
+        {% if diversity < 3  %}
+    <p>For this task you must find <strong> RELEVANT and DIFFERENT </strong> documents.</p>
+{% else %}
+ <p>For this task you must find <strong> RELEVANT </strong> documents.</p>
+    {% endif %}
+
+    <hr/>
+
 
         <p>{% autoescape off %} <strong>{{ taskdescription }}</strong> {% endautoescape %} </p>
 
+        {% if diversity < 3 %}
+    <p>{% autoescape off %} <strong>{{ diversify }}</strong> {% endautoescape %}</p>
+    {% endif %}
 
         <p>To get familiar with the system, we would like you to:
         <ul>
             <li> Select "Show Task" to remind you what the topic of the search task is.</li>
             <li> Search for articles about this topic by entering queries. </li>
-            <li> Mark at least two documents as relevant.</li>
+            <li> Mark at least three documents as relevant.</li>
             <li> Scroll down to click on the "Next" page button, and</li>
             <li> Review your list of documents by selecting "View Saved".</li>
+            <li> Your performance on the practice task will be shown once you "End Task".</li>
         </ul>
         </p>
 

@@ -9,6 +9,12 @@
     Below is a description of the search task that we would like you to undertake. The search task is a description of
     the topic, and the type of information within documents that would be relevant to this specific topic.
 
+{% if diversity < 3  %}
+    <p>For this task you must find <strong> RELEVANT and DIFFERENT </strong> documents.</p>
+{% else %}
+ <p>For this task you must find <strong> RELEVANT </strong> documents.</p>
+    {% endif %}
+
     <hr/>
 
     <p>{% if task == 0 %}<strong style="padding-right: 15px;">Practice Task</strong>
@@ -19,6 +25,9 @@
 
     <p> {% autoescape off %} <strong>{{ taskdescription }}</strong> {% endautoescape %}</p>
 
+    {% if diversity < 3 %}
+    <p>{% autoescape off %} <strong>{{ diversify }}</strong> {% endautoescape %}</p>
+    {% endif %}
     <script type="text/javascript" src="{% static 'javascripts/show_task.js' %}"></script>
 
 {% endblock %}

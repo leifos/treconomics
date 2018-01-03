@@ -221,7 +221,10 @@ def pre_task(request, taskid):
                     'task': taskid,
                     'topic': t.topic_num,
                     'tasktitle': t.title,
-                    'taskdescription': t.description}
+                    'taskdescription': t.description,
+                    'diversify': t.diversify}
+
+    populate_context_dict(ec, context_dict)
 
     return render(request, 'base/pre_task.html', context_dict)
 
@@ -241,16 +244,11 @@ def pre_practice_task(request, taskid):
     # provide link to search interface / next system
     context_dict = {'topic': t.topic_num,
                     'tasktitle': t.title,
-                    'taskdescription': t.description}
+                    'taskdescription': t.description,
+                    'diversify': t.diversify}
 
     populate_context_dict(ec, context_dict)
 
-    #context_dict = {'participant': uname,
-    #                'condition': condition,
-    #                'task': taskid,
-    #                'topic': t.topic_num,
-    #                'tasktitle': t.title,
-    #                'taskdescription': t.description}
 
     print(context_dict)
 
@@ -354,7 +352,10 @@ def show_task(request):
                     'task': taskid,
                     'topic': t.topic_num,
                     'tasktitle': t.title,
-                    'taskdescription': t.description}
+                    'taskdescription': t.description,
+                    'diversify': t.diversify}
+    populate_context_dict(ec, context_dict)
+
 
     return render(request, 'base/show_task.html', context_dict)
 
@@ -488,7 +489,7 @@ class ExperimentContextMixin(LoginRequiredMixin, ContextMixin):
 
 
 class PreExperimentView(ExperimentContextMixin, TemplateView):
-    template_name = 'base/pre_experiment.html'
+    template_name = 'base/pre_experiment_diversity.html'
 
 
 class PostExperimentView(ExperimentContextMixin, TemplateView):
@@ -513,7 +514,7 @@ def task_spacer_msg(request, msg_id):
 
 
 class EndExperimentView(ExperimentContextMixin, TemplateView):
-    template_name = 'base/end_experiment.html'
+    template_name = 'base/end_experiment_amt.html'
 
 
 class SessionCompletedView(ExperimentContextMixin, TemplateView):
