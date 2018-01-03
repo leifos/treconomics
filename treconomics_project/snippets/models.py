@@ -807,7 +807,7 @@ class SystemSnippetPostTaskResource(resources.ModelResource):
 
 
 SEARCH_FREQ = (('','Not Specified'), (6, 'Many times a day'),
-                (5,'1-2 times a day'), (4,'A many times a week'), (3,'A few times a week'),
+                (5,'1-2 times a day'), (4,'Many times a week'), (3,'A few times a week'),
                 (2,'Sometimes'), (1,'Rarely'), (0,'Never'), )
 
 

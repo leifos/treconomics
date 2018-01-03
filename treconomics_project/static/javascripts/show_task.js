@@ -12,6 +12,7 @@ function checkPopupStatus() {
         parentPath.indexOf('posttaskquestions') != -1 ||
         parentPath.indexOf('snippetposttask') != -1 ||
         parentPath.indexOf('systemsnippetposttask') != -1 ||
+        parentPath.indexOf('diversityposttask') != -1 ||
         parentPath.indexOf('timeout') != -1) {
         self.close();
     }
