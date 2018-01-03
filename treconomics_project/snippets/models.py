@@ -1193,7 +1193,7 @@ class DiversityExitSurveyForm(ModelForm):
 
 
     div_why = forms.CharField(widget=Textarea,
-                               label="Given your last answer, explain why you prefer result summaries of this length.",
+                               label="Given your last answer, explain why you prefer the selected system.",
                                required=True)
     div_improve = forms.CharField(widget=Textarea,
                                 label="Please provide suggestions on how this study could be improved.",
@@ -1207,3 +1207,4 @@ class DiversityExitSurveyForm(ModelForm):
     class Meta:
         model = DiversityExitSurvey
         exclude = ('user',)
+        fields = ['div_info', 'div_easy', 'div_help', 'div_useful', 'div_relevance_prefer', 'div_diversity_prefer', 'div_prefer', 'div_why', 'div_improve']

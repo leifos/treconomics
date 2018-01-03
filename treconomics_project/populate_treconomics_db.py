@@ -14,7 +14,7 @@ def populate():
                          '<p>A RELEVANT document would discuss how effective government orders to '
                          'better scrutinize passengers and luggage on international flights and to step '
                          'up screening of all carry-on baggage has been.</p> ',
-             diversify='<p> A RELEVANT AND DIFFERENT document should mention new airports.</p>'
+             diversify='<p> A RELEVANT AND DIFFERENT document should mention NEW airports.</p>'
              )
     add_task(topic_num='347',
              title='Wildlife Extinction',
@@ -56,7 +56,7 @@ def populate():
                          '<p>A RELEVANT document must describe  piracy on any body of water.</p>'
                          '<p>Documents discussing the legal taking of ships or their contents by a national authority are NOT RELEVANT.</p>  '
                          '<p>Clashes between fishing vessels over fishing are NOT RELEVANT, unless one vessel is boarded.</p>',
-             diversify='<p> A RELEVANT AND DIFFERENT document should be RELEVANT and also mention NEW ships or NEW bodies of water.')
+             diversify='<p> A RELEVANT AND DIFFERENT document should be RELEVANT and also mention NEW ships that were boarded.')
 
     add_task(topic_num='408',
              title='Tropical Storms',
