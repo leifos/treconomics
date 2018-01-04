@@ -15,8 +15,8 @@ work_dir = os.getcwd()
 
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
 if 'local' not in socket.gethostname():
-    my_whoosh_doc_index_dir = '/home/leifos/test500index'
-    #my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint_test500_whoosh'
+    #my_whoosh_doc_index_dir = '/home/leifos/test500index'
+    my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint_test500_whoosh'
 
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
@@ -200,7 +200,7 @@ exp_sigir2018 = ExperimentSetup(
     trie=suggestion_trie,
     autocomplete=True,
     target=5,
-    timeout=[0, 0, 0, 0, 0])  # 300s = 5min; 600s = 10min; 1200s = 20min
+    timeout=[10000, 10000, 10000, 10000, 10000])  # 300s = 5min; 600s = 10min; 1200s = 20min, 10000 to stop timeout events firing
 
 
 

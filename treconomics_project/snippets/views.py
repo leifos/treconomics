@@ -30,6 +30,8 @@ def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, a
     errors = ""
     uname = request.user.username
     u = User.objects.get(username=uname)
+    
+    request.session['diversity'] = diversity
 
     # handle post within this element. save data to survey table,
     if request.method == 'POST':

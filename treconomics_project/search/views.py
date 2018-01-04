@@ -124,6 +124,12 @@ def show_document(request, whoosh_docid):
                         'content': content,
                         'user_judgement': user_judgement,
                         'rank': rank}
+        
+        if 'task' in request.session:
+            context_dict['task'] = request.session['task']
+    
+        if 'diversity' in request.session:
+            context_dict['diversity'] = request.session['diversity']
 
         if request.GET.get('backtoassessment', False):
             context_dict['backtoassessment'] = True
