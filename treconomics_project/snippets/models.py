@@ -1077,7 +1077,6 @@ class SystemDiversityPostTaskSurvey(models.Model):
     condition = models.IntegerField()
     interface = models.IntegerField()
     diversity = models.IntegerField()
-    apt_accurate = models.IntegerField()
     apt_quick_results = models.IntegerField()
     apt_search_diff = models.IntegerField()
     apt_time = models.IntegerField()
@@ -1091,16 +1090,10 @@ class SystemDiversityPostTaskSurvey(models.Model):
 
 class SystemDiversityPostTaskSurveyForm(ModelForm):
 
-    apt_accurate = forms.ChoiceField(
-        widget=RadioSelect,
-        choices=LIKERT_CHOICES,
-        label="It was important to me to complete this task accurately.",
-        required=True)
-
     apt_quick_results = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="The system retrieved and displayed search results pages quickly.",
+        label="The system helped me complete my task quickly.",
         required=True)
 
     apt_search_diff = forms.ChoiceField(
@@ -1110,7 +1103,7 @@ class SystemDiversityPostTaskSurveyForm(ModelForm):
 
     apt_time = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="The system helped me to complete my task sooner.", required=True)
+        label="The system helped me to complete my task easily.", required=True)
 
     apt_satisfied_systems = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
@@ -1119,11 +1112,11 @@ class SystemDiversityPostTaskSurveyForm(ModelForm):
 
     ae_cumbersome = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I found the system very cumbersome to use.", required=True)
+        label="The system was very cumbersome to use.", required=True)
 
     ae_confident = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I felt very confident using the system.", required=True)
+        label="I felt confident using the system.", required=True)
 
 
     def clean(self):
@@ -1140,8 +1133,8 @@ class SystemDiversityPostTaskSurveyForm(ModelForm):
 ########################################
 
 
-DIVERSITY_CHOICES = ((1, 'Definitely A '),(2, 'Mostly A'), (3, 'Slightly A'),
-                (4,'Slightly B'), (5,'Mostly B'), (6,'Definitely B') )
+DIVERSITY_CHOICES = ((1, 'Definitely YoYo'), (3, 'Slightly YoYo'),
+                (4,'Slightly Hula'),  (6,'Definitely Hula') )
 
 
 class DiversityExitSurvey(models.Model):

@@ -501,10 +501,20 @@ class TaskSpacerView(ExperimentContextMixin, TemplateView):
 
 
 @login_required
-def task_spacer_with_details(request):
+def task_spacer_with_details(request, taskid):
+    request.session['taskid'] = taskid
     ec = get_experiment_context(request)
 
-    context_dict = {}
+    topicnum = ec["topicnum"]
+    t = TaskDescription.objects.get(topic_num=topicnum)
+
+    log_event(event="VIEW_TASK_SPACER_DETAILS", request=request)
+
+    context_dict = {'topic': t.topic_num,
+                    'tasktitle': t.title,
+                    'taskdescription': t.description,
+                    'diversify': t.diversify}
+
     populate_context_dict(ec, context_dict)
 
     return render(request, 'base/task_spacer_with_details.html', context_dict)

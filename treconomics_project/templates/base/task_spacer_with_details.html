@@ -35,6 +35,15 @@
             <p>For this task you must find <strong> RELEVANT </strong> documents.</p>
     {% endif %}
 
+
+
+        <p><b>Topic</b></p>
+         <p>{% autoescape off %} {{ taskdescription }} {% endautoescape %} </p>
+
+            {% if diversity < 3 %}
+                <p>{% autoescape off %} {{ diversify }} {% endautoescape %}</p>
+            {% endif %}
+
     <hr/>
 
 

@@ -98,13 +98,13 @@ diversity_flow = [
     'startexperiment/', 'preexperiment/UK/',
     'demographicssurvey/',
     'prepracticetask/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer/',
-    'snippetpretask/1/', 'taskspacerwithdetails/', 'search/1/', 'diversityposttask/1/','systemdiversityposttask/1/',
+    'snippetpretask/1/', 'taskspacerwithdetails/1/', 'search/1/', 'diversityposttask/1/','systemdiversityposttask/1/',
         'taskspacer',
-    'snippetpretask/2/','taskspacerwithdetails/','search/2/', 'diversityposttask/2/','systemdiversityposttask/2/',
+    'snippetpretask/2/','taskspacerwithdetails/2/','search/2/', 'diversityposttask/2/','systemdiversityposttask/2/',
         'taskspacer',
-    'snippetpretask/3/','taskspacerwithdetails/', 'search/3/', 'diversityposttask/3/','systemdiversityposttask/3/',
+    'snippetpretask/3/','taskspacerwithdetails/3/', 'search/3/', 'diversityposttask/3/','systemdiversityposttask/3/',
      'taskspacer',
-    'snippetpretask/4/','taskspacerwithdetails/', 'search/4/', 'diversityposttask/4/','systemdiversityposttask/4/',
+    'snippetpretask/4/','taskspacerwithdetails/4/', 'search/4/', 'diversityposttask/4/','systemdiversityposttask/4/',
     'taskspacer', 'diversityexitsurvey/', 'performance/', 'endexperiment/',
     'logout/'
 ]
