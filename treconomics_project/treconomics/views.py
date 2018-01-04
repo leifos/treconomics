@@ -484,7 +484,8 @@ class ExperimentContextMixin(LoginRequiredMixin, ContextMixin):
         ec = get_experiment_context(self.request)
         context['participant'] = ec['username']
         context['condition'] = ec['condition']
-
+        context['target'] = ec['target']
+        
         return context
 
 

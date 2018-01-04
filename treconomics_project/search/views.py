@@ -533,17 +533,11 @@ def view_performance_diversity(request):
     ec = get_experiment_context(request)
     uname = ec["username"]
     rotation = ec["rotation"]
+    condition = ec["condition"]
+    target = ec["target"]  # How many documents do people need to find?
     
+    # Gets the experimental setup for the given condition.
     setup = experiment_setups[condition]
-
-    def ratio(rels, nonrels):
-        """ expect two floats
-        """
-        dem = rels + nonrels
-        if dem > 0.0:
-            return round((rels * rels) / dem, 2)
-        else:
-            return 0.0
     
     performances = []
     
