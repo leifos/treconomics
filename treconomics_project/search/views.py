@@ -524,7 +524,6 @@ def view_performance(request):
                     'performances': performances, 'avg_wellness': avg_wellness}
     return render(request, 'base/performance_experiment.html', context_dict)
 
-from treconomics.experiment_configuration import exp_sigir2018
 
 def view_performance_diversity(request):
     """
@@ -533,8 +532,9 @@ def view_performance_diversity(request):
     """
     ec = get_experiment_context(request)
     uname = ec["username"]
-    condition = ec["condition"]
     rotation = ec["rotation"]
+    
+    setup = experiment_setups[condition]
 
     def ratio(rels, nonrels):
         """ expect two floats
@@ -555,8 +555,8 @@ def view_performance_diversity(request):
     }
     
     for i in range(1, 5):
-        topic_num = exp_sigir2018.get_rotation_topic(ec['rotation'], i)
-        diversity_num = exp_sigir2018.get_rotation_diversity(ec['rotation'], i)
+        topic_num = setup.get_rotation_topic(ec['rotation'], i)
+        diversity_num = setup.get_rotation_diversity(ec['rotation'], i)
         topic_desc = TaskDescription.objects.get(topic_num=topic_num).title
         
         perf = get_performance_diversity(uname, topic_num, diversity_num)
