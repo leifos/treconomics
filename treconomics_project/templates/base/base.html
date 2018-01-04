@@ -25,15 +25,19 @@
         {% block wait-box %}{% endblock %}
 
         <div class="container">
-        <div class="header">
-	    <h1>
+        <div class="header {%if diversity%}{% if diversity == 1 or diversity == 3 %}yoyo{% else %}hula{% endif %}{% endif %}">
+            <div class="title">
             {% if diversity %}
-                {% if diversity == 1 or diversity == 3 %}YoYo Search{% else %}Hula Search{% endif %}
+                {% if diversity == 1 or diversity == 3 %}
+                    <img src="/static/images/yoyo-top.png" /><span class="extra">Search</span>
+                {% else %}
+                    <img src="/static/images/hula-top.png" /><span class="extra">Search</span>
+                {% endif %}
             {% else %}
-            <em>NewsSearch</em>
+            <em>News Search System Study</em>
             {% endif %}
-        </h1>
-	    <div class="info_block"> {% block exp_info_block %}{% endblock %} </div>
+            </div>
+	        <div class="info_block"> {% block exp_info_block %}{% endblock %} </div>
         </div> <!-- end header div -->
 
  	    <div class="search">
