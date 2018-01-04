@@ -556,6 +556,7 @@ def view_performance_diversity(request):
         perf = get_performance_diversity(uname, topic_num, diversity_num)
         perf['num'] = topic_num
         perf['title'] = topic_desc
+        perf['diversity'] = diversity_num
         
         if diversity_num in [1, 3]:
             perf['system_name'] = 'YoYo Search'
@@ -572,12 +573,11 @@ def view_performance_diversity(request):
         perf['status'] = 'fail'
         perf['status_message'] = 'You failed this task.'
         
-        if diversity_num in [1, 2]:  # Rel and diff
-            if perf['diversity_new_found'] >= 5:
+        if perf['total_docs_marked'] >= target:
+            if diversity_num in [1, 2] and perf['percentage_rel_diversity'] >= 50:  # Rel and diff, and meets/exceeds the target?
                 perf['status'] = 'pass'
                 perf['status_message'] = 'You passed this task!'
-        elif diversity_num in [3, 4]:  # Rel only
-            if perf['percentage_rel'] >= 0.5:
+            elif diversity_num in [3, 4] and perf['percentage_rel'] >= 50:  # Rel only
                 perf['status'] = 'pass'
                 perf['status_message'] = 'You passed this task!'
             

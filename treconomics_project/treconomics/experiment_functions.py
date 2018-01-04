@@ -209,21 +209,27 @@ def assess_performance(topic_num, doc_list):
                 non_rels_found += 1
         else:
             non_rels_found += 1
-
-    performance = {'topicnum': topic_num, 'rels': rels_found, 'nons': non_rels_found, 'percentage_rel': (float(rels_found) / (rels_found + non_rels_found)) * 100}
+    
+    performance = {'topicnum': topic_num, 'total_docs_marked': total, 'rels': rels_found, 'nons': non_rels_found, 'percentage_rel': (float(rels_found) / (rels_found + non_rels_found)) * 100}
     return performance
 
 def assess_performance_diversity(topic_num, doc_list, diversity_flag):
     performance = assess_performance(topic_num, doc_list)
     
-    if diversity_flag in [1,2]:  # If the diversity flag is for one of the diversity conditions where RELEVANT and DIFFERENT documents were needed...
-        observed_entities = []
+    observed_entities = []
+    new_doc_count = 0
+    
+    for docid in doc_list:
+        doc_entities = qrels_diversity.get_mentioned_entities_for_doc(topic_num, docid)
+        new_in_doc = list(set(doc_entities) - set(observed_entities))
+        observed_entities = observed_entities + list(set(doc_entities) - set(observed_entities))
         
-        for docid in doc_list:
-            doc_entities = qrels_diversity.get_mentioned_entities_for_doc(topic_num, docid)
-            observed_entities = observed_entities + list(set(doc_entities) - set(observed_entities))
-        
-        performance['diversity_new_found'] = len(observed_entities)
+        if len(new_in_doc) > 0:
+            new_doc_count = new_doc_count + 1
+    
+    performance['diversity_new_docs'] = new_doc_count
+    performance['diversity_new_entities'] = len(observed_entities)
+    performance['percentage_rel_diversity'] = (float(new_doc_count) / performance['total_docs_marked']) * 100
     
     return performance
 

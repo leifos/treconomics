@@ -27,9 +27,9 @@
             <li>Documents <em><strong>incorrectly</strong> identified:</em> <strong
                     style="color: #800000;">{{ topic.nons }}</strong></li>
             
-            {% if topic.diversity_new_found %}
+            {% if topic.diversity == 1 or topic.diversity == 2 %}
             <li>New <strong><em>{{ topic.diversity_entity }}</em></strong> found: <strong
-                    style="color: #3366FF;">{{ topic.diversity_new_found}}</strong></li>
+                    style="color: #3366FF;">{{ topic.diversity_new_entities}}</strong></li>
             {% endif %}
 
         </ul></p>
