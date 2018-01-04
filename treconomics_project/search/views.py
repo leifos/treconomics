@@ -146,6 +146,10 @@ def show_saved_documents(request):
     condition = ec['condition']
     uname = ec['username']
     current_search = request.session['queryurl']
+    
+    # Following two lines added by David on 2018-01-04 to ensure the header bar scheme is correct.
+    taskid = request.GET.get('taskid')
+    diversity = request.GET.get('diversity')
 
     user_judgement = -2
     if request.method == 'GET':
@@ -179,7 +183,8 @@ def show_saved_documents(request):
                     'task': taskid,
                     'condition': condition,
                     'current_search': current_search,
-                    'docs': docs}
+                    'docs': docs,
+                    'diversity': diversity}
 
     return render(request, 'trecdo/saved_documents.html', context_dict)
 
