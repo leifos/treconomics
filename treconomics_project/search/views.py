@@ -126,10 +126,10 @@ def show_document(request, whoosh_docid):
                         'rank': rank}
         
         if 'task' in request.session:
-            context_dict['task'] = request.session['task']
+            context_dict['task'] = int(request.session['task'])
     
         if 'diversity' in request.session:
-            context_dict['diversity'] = request.session['diversity']
+            context_dict['diversity'] = int(request.session['diversity'])
 
         if request.GET.get('backtoassessment', False):
             context_dict['backtoassessment'] = True
@@ -153,10 +153,17 @@ def show_saved_documents(request):
     uname = ec['username']
     current_search = request.session['queryurl']
     
-    # Following two lines added by David on 2018-01-04 to ensure the header bar scheme is correct.
-    taskid = request.GET.get('taskid')
-    diversity = request.GET.get('diversity')
-
+    # Following block added by David on 2018-01-04 to ensure the header bar scheme is correct.
+    if 'taskid' in request.GET:
+        taskid = int(request.GET.get('taskid'))
+    elif 'taskid' in request.session:
+        taskid = int(request.session['taskid'])
+    
+    if 'diversity' in request.GET:
+        diversity = int(request.GET.get('diversity'))
+    elif 'diversity' in request.session:
+        diversity = int(request.session['diversity'])
+    
     user_judgement = -2
     if request.method == 'GET':
         getdict = request.GET
@@ -518,7 +525,6 @@ def view_performance(request):
         log_performance(request, perf)
         performances.append(perf)
         avg_wellness += perf["score"]
-
 
     avg_wellness = avg_wellness / float(len(topics))
 

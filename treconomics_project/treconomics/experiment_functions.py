@@ -210,7 +210,12 @@ def assess_performance(topic_num, doc_list):
         else:
             non_rels_found += 1
     
-    performance = {'topicnum': topic_num, 'total_docs_marked': total, 'rels': rels_found, 'nons': non_rels_found, 'percentage_rel': (float(rels_found) / (rels_found + non_rels_found)) * 100}
+    if rels_found + non_rels_found == 0:
+        percentage_rel = 0
+    else:
+        percentage_rel = (float(rels_found) / (rels_found + non_rels_found)) * 100
+    
+    performance = {'topicnum': topic_num, 'total_docs_marked': total, 'rels': rels_found, 'nons': non_rels_found, 'percentage_rel': percentage_rel}
     return performance
 
 def assess_performance_diversity(topic_num, doc_list, diversity_flag):
@@ -229,7 +234,11 @@ def assess_performance_diversity(topic_num, doc_list, diversity_flag):
     
     performance['diversity_new_docs'] = new_doc_count
     performance['diversity_new_entities'] = len(observed_entities)
-    performance['percentage_rel_diversity'] = (float(new_doc_count) / performance['total_docs_marked']) * 100
+    
+    if performance['total_docs_marked'] == 0:
+        performance['percentage_rel_diversity'] = 0
+    else:
+        performance['percentage_rel_diversity'] = (float(new_doc_count) / performance['total_docs_marked']) * 100
     
     return performance
 
