@@ -551,7 +551,8 @@ def view_performance_diversity(request):
         '347': 'species',
         '408': 'tropical storms',
         '435': 'countries',
-        '341': 'airports'
+        '341': 'airports',
+        '367': 'vessels',
     }
     
     for i in range(1, 5):
@@ -597,6 +598,60 @@ def view_performance_diversity(request):
                     'performances': performances,}
     
     return render(request, 'base/performance_experiment_diversity.html', context_dict)
+
+def view_performance_diversity_practice(request):
+    """
+    Renders the performance template for the practice task.
+    Added by David on 2018-01-04.
+    """
+    ec = get_experiment_context(request)
+    uname = ec["username"]
+    rotation = ec["rotation"]
+    condition = ec["condition"]
+    target = ec["target"]  # How many documents do people need to find?
+    
+    entities = {  # Mappings of the different entities that we asked people to find.
+        '347': 'species',
+        '408': 'tropical storms',
+        '435': 'countries',
+        '341': 'airports',
+        '367': 'vessels',
+    }
+    
+    setup = experiment_setups[condition]
+    # Iteration 0 is the practice topic
+    topic_num = setup.get_rotation_topic(ec['rotation'], 0)
+    diversity_num = setup.get_rotation_diversity(ec['rotation'], 0)
+    topic_desc = TaskDescription.objects.get(topic_num=topic_num).title
+    
+    perf = get_performance_diversity(uname, topic_num, diversity_num)
+    perf['num'] = topic_num
+    perf['title'] = topic_desc
+    perf['diversity'] = diversity_num
+    
+    if diversity_num in [1,2]:
+        perf['diversity_entity'] = entities[topic_num]
+        perf['task_description'] = "Find RELEVANT and DIFFERENT"
+    elif diversity_num in [3,4]:
+        perf['task_description'] = "Find RELEVANT"
+    
+    ## Did the searcher pass or fail?
+    perf['status'] = 'fail'
+    perf['status_message'] = 'You would have failed this task.'
+    
+    if perf['total_docs_marked'] >= target:
+        if diversity_num in [1, 2] and perf['percentage_rel_diversity'] >= 50:  # Rel and diff, and meets/exceeds the target?
+            perf['status'] = 'pass'
+            perf['status_message'] = 'You would have passed this task!'
+        elif diversity_num in [3, 4] and perf['percentage_rel'] >= 50:  # Rel only
+            perf['status'] = 'pass'
+            perf['status_message'] = 'You would have passed this task!'
+    
+    context_dict = {'participant': uname,
+                    'condition': condition,
+                    'performance': perf}
+    
+    return render(request, 'base/performance_experiment_diversity_practice.html', context_dict)
 
 
 @login_required

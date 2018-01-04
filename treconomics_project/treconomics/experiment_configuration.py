@@ -15,8 +15,8 @@ work_dir = os.getcwd()
 
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
 if 'local' not in socket.gethostname():
-    #my_whoosh_doc_index_dir = '/home/leifos/test500index'
-    my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint_test500_whoosh'
+    my_whoosh_doc_index_dir = '/home/leifos/test500index'
+    #my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint_test500_whoosh'
 
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
@@ -98,7 +98,7 @@ snippet_flow = [
 diversity_flow = [
     'startexperiment/', 'preexperiment/UK/',
     'demographicssurvey/',
-    'prepracticetask/0/', 'search/0/', 'postpracticetask/0/', 'taskspacer/',
+    'prepracticetask/0/', 'search/0/', 'diversityperformancepractice/', 'postpracticetask/0/', 'taskspacer/',
     'snippetpretask/1/', 'taskspacerwithdetails/1/', 'search/1/', 'diversityposttask/1/','systemdiversityposttask/1/',
         'taskspacer',
     'snippetpretask/2/','taskspacerwithdetails/2/','search/2/', 'diversityposttask/2/','systemdiversityposttask/2/',
