@@ -25,7 +25,8 @@ class ExperimentSetup(object):
                  rotation_type=0,
                  autocomplete=False,
                  tasks=2,
-                 trie=None):
+                 trie=None,
+                 target=5):
         self.timeout = timeout
         self.topics = topics
         self.rpp = rpp
@@ -51,6 +52,10 @@ class ExperimentSetup(object):
         self.autocomplete = autocomplete
         self.trie = trie
         self.tasks = tasks
+        
+        # Target variable -- how many documents should the searcher aim to select?
+        # This is used in calculating the score the searcher gets at the end of the experiment.
+        self.target = target
 
         if self.autocomplete and not self.trie:
             raise ValueError("If you want to use autocomplete, you must also specify the 'trie' parameter.")
@@ -169,7 +174,7 @@ class ExperimentSetup(object):
                'workflow': self.workflow,
                'autocomplete': self.autocomplete,
                'trie': self.trie,
-
+               'target': self.target,
         }
         if t == 0:
             exp['topic'] = self.practice_topic

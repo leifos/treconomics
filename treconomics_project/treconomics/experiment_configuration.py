@@ -199,6 +199,7 @@ exp_sigir2018 = ExperimentSetup(
     description='standard condition bm25 test',
     trie=suggestion_trie,
     autocomplete=True,
+    target=10,
     timeout=[0, 0, 0, 0, 0])  # 300s = 5min; 600s = 10min; 1200s = 20min
 
 

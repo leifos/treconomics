@@ -587,7 +587,6 @@ def view_performance_diversity(request):
                 perf['status'] = 'pass'
                 perf['status_message'] = 'You passed this task!'
             
-        
         performances.append(perf)
     
     for p in performances:

@@ -55,6 +55,7 @@ def get_experiment_context(request):
     ec["diversity"] = esd["diversity"]
     ec["rpp"] = esd["rpp"]
     ec["autocomplete"] = esd["autocomplete"]
+    ec["target"] = esd["target"]
 
     return ec
 
@@ -335,6 +336,8 @@ def populate_context_dict(experiment_context, page_context_dict):
         page_context_dict["rpp"] = experiment_context["rpp"]
     if "diversity" in experiment_context:
         page_context_dict["diversity"] = experiment_context["diversity"]
+    if "target" in experiment_context:
+        page_context_dict["target"] = experiment_context["target"]
     return page_context_dict
 
 
