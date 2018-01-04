@@ -1027,39 +1027,39 @@ class BehaveDiversityPostTaskSurveyForm(ModelForm):
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="I was able to complete the search task successfully.",
-        required=False)
+        required=True)
 
 
     beh_div_speed = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="I was able the complete the search task quickly.",
-        required=False)
+        required=True)
 
     beh_div_queries = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="I issued more queries than I expected.",
-        required=False)
+        required=True)
 
     beh_div_documents= forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="I examined more document than I expected.",
-        required=False)
+        label="I examined more documents than I expected.",
+        required=True)
 
     beh_div_time = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="I spent more time reading documents than I expected.",
-        required=False)
+        required=True)
 
 
     beh_div_marked = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
         label="I marked more documents as relevant than I needed.",
-        required=False)
+        required=True)
 
     def clean(self):
         return clean_to_zero(self)

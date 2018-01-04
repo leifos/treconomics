@@ -275,7 +275,7 @@ def post_practice_task(request, taskid):
     # if participant has completed all the tasks, go to the post experiment view
     # else direct the participant to the pre task view
 
-    context_dict = {'participant': uname, 'condition': condition, 'task': taskid}
+    context_dict = {'participant': uname, 'condition': condition}
 
     populate_context_dict(ec, context_dict)
     print(context_dict)
@@ -513,7 +513,8 @@ def task_spacer_with_details(request, taskid):
     context_dict = {'topic': t.topic_num,
                     'tasktitle': t.title,
                     'taskdescription': t.description,
-                    'diversify': t.diversify}
+                    'diversify': t.diversify,
+                    'task': taskid}
 
     populate_context_dict(ec, context_dict)
 
