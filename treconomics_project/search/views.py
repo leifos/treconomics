@@ -583,6 +583,7 @@ def view_performance_diversity(request):
             perf['task_description'] = "Find RELEVANT"
         
         ## Did the searcher pass or fail?
+        state = 'FAIL'
         perf['status'] = 'fail'
         perf['status_message'] = 'You failed this task.'
         
@@ -590,14 +591,31 @@ def view_performance_diversity(request):
             if diversity_num in [1, 2] and perf['percentage_rel_diversity'] >= 50:  # Rel and diff, and meets/exceeds the target?
                 perf['status'] = 'pass'
                 perf['status_message'] = 'You passed this task!'
+                state = 'PASS'
             elif diversity_num in [3, 4] and perf['percentage_rel'] >= 50:  # Rel only
                 perf['status'] = 'pass'
                 perf['status_message'] = 'You passed this task!'
-            
+                state = 'PASS'
+        
         performances.append(perf)
+        
+        results_str = 'VIEW_RESULTS {topic} {diversity} {rels_marked} {nonrels_marked} {total_marked} {percentage_rel} {doc_unique_entities} {unique_entity_total} {percentage_rel_diversity} {state}'.format(
+            topic=topic_num,
+            diversity=diversity_num,
+            rels_marked=perf['rels'],
+            nonrels_marked=perf['nons'],
+            total_marked=perf['total_docs_marked'],
+            percentage_rel=perf['percentage_rel'],
+            doc_unique_entities=perf['diversity_new_docs'],
+            unique_entity_total=perf['diversity_new_entities'],
+            percentage_rel_diversity=perf['percentage_rel_diversity'],
+            state=state
+        )
+        
+        log_event(request=request, event=results_str)
     
-    for p in performances:
-        logging.debug(p)
+    # for p in performances:
+    #     logging.debug(p)
     
     context_dict = {'participant': uname,
                     'condition': condition,
