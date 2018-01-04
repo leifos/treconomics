@@ -3,7 +3,7 @@
 {% block exp_info_block %}
 
  <p>  <a href="{{current_search}}">Back to Results</a> | 
-      <a href="/treconomics/saved/">View Saved</a> |
+     
       <a href="JavaScript:taskPopup('/treconomics/showtask/');">Show Task</a>
   | <a href="{% url 'next' %}" id="end-task-link"> End Task</a>
 
@@ -32,17 +32,17 @@ You can change your assessment of a given document by clicking the button to the
 <td style="text-align: center;">
     
     {% if doc.judgement  == 0 %}
-           <strong style="color: red;">NOT</strong> Relevant
+           <strong style="color: red;">NOT</strong> SAVED
     {%  else %}
-    Relevant
+    SAVED
          
     {% endif %}
 </td><td style="text-align: center;">
     {% if doc.judgement  == 1 %}
     <a id="link12" class="next_links" href="#" row="row13" nextlink="link13"></a>
-        <a href="/treconomics/saved/?docid={{doc.docid}}&judge=0"><button class="largebutton" type="next" > Change to NOT Relevant </button> </a>
+        <a href="/treconomics/saved/?docid={{doc.docid}}&judge=0"><button class="largebutton" type="next" > Change to UNSAVED </button> </a>
     {% else %}
-        <a href="/treconomics/saved/?docid={{doc.docid}}&judge=1"><button class="largebutton" type="next" > Change to Relevant </button></a>
+        <a href="/treconomics/saved/?docid={{doc.docid}}&judge=1"><button class="largebutton" type="next" > Change to SAVED </button></a>
     {%  endif %}
 </td>    
 
