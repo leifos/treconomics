@@ -501,6 +501,16 @@ class TaskSpacerView(ExperimentContextMixin, TemplateView):
 
 
 @login_required
+def task_spacer_with_details(request):
+    ec = get_experiment_context(request)
+
+    context_dict = {}
+    populate_context_dict(ec, context_dict)
+
+    return render(request, 'base/task_spacer_with_details.html', context_dict)
+
+
+@login_required
 def task_spacer_msg(request, msg_id):
     ec = get_experiment_context(request)
 

@@ -5,7 +5,7 @@ from ifind.search.engines.whooshtrec import Whooshtrec
 from ifind.search import Query
 
 bm25_search_engine = Whooshtrec(
-    whoosh_index_dir='/Users/david/Workspace/indexes/aquaint_test500_whoosh/',
+    whoosh_index_dir='/Users/leif/Code/treconomics/treconomics_project/data/test500index',
     stopwords_file='',
     model=1,
     newschema=True)

@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+
+{% block exp_info_block %}
+    <p> <!-- a href="/treconomics/logout">Logout</a> -->
+    </p>
+{% endblock %}
+
+{% block exp_block %}
+
+
+    <div class="experimentPageTitle">
+
+
+    <p><b>Search System</b></p>
+        <p> For this task you will be using the News Search System called:
+          {% if diversity == 1  %}
+        YoYo
+        {% endif %}
+         {% if diversity == 2  %}
+        Hula
+        {% endif %}
+         {% if diversity == 3  %}
+        YoYo
+        {% endif %}
+ {% if diversity == 4  %}
+        Hula
+        {% endif %}
+        </p>
+
+        <p><b>Task</b></p>
+
+         {% if diversity < 3  %}
+            <p>For this task you must find <strong> RELEVANT and DIFFERENT </strong> documents.</p>
+        {% else %}
+            <p>For this task you must find <strong> RELEVANT </strong> documents.</p>
+    {% endif %}
+
+    <hr/>
+
+
+        <p> When you are ready click the "next" button to continue to the next task: </p>
+    </div>
+
+    <div class="surveySubmitButton">
+        <a href="{% url 'next' %}">
+            <button class="button" type="next"> Next</button>
+        </a>
+
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block exp_footer_block %}
+    Participant: {{ participant }}  - Condition: {{ condition }} - Task: {{ task }}
+{% endblock %}

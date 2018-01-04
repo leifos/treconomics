@@ -36,10 +36,8 @@ urlpatterns = \
              url(r'^showtask/$', views.show_task),
              url(r'^sessioncommence/$', views.commence_session),
              url(r'^taskspacer/$', TaskSpacerView.as_view()),
-
+             url(r'^taskspacerwithdetails/$', views.task_spacer_with_details),
              url(r'^taskspacer2/(?P<msg_id>\d+)/$', views.task_spacer_msg),
-
-
 
              url(r'^sessioncompleted/$', SessionCompletedView.as_view(), name='session-completed'),
              url(r'^postexperiment/$', PostExperimentView.as_view()),

@@ -29,10 +29,10 @@
 
 
         <div id="query">
-            <p>{% autoescape off %} <strong style="color: #3366FF;">{{ taskdescription }}</strong> {% endautoescape %} </p>
+            <p>{% autoescape off %} <strong>{{ taskdescription }}</strong> {% endautoescape %} </p>
 
             {% if diversity < 3 %}
-                <p>{% autoescape off %} <strong style="color: #3366FF;">{{ diversify }}</strong> {% endautoescape %}</p>
+                <p>{% autoescape off %} <strong>{{ diversify }}</strong> {% endautoescape %}</p>
             {% endif %}
 
         </div>

@@ -90,7 +90,7 @@ def get_words_from_snippet(summary):
 
 
 pl2_search_engine = Whooshtrec(
-    whoosh_index_dir='/Users/david/Workspace/indexes/aquaint_test500_whoosh/',
+    whoosh_index_dir='/Users/leif/Code/treconomics/treconomics_project/data/test500index',
     stopwords_file='',
     model=2,
     newschema=True)
