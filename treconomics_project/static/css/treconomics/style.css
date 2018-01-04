@@ -592,3 +592,18 @@ td#search_experience ul li label input, td#search_engagement ul li label input, 
 	height: 15px;
 	margin: 0 25px;
 	}
+
+span.report_header {
+	margin-left: 20px;
+	padding: 5px;
+}
+
+span.report_header.pass {
+	background: #007f00;
+	color: #FFF;
+}
+
+span.report_header.fail {
+	background: #FF0000;
+	color: #FFF;
+}

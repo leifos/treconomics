@@ -10,11 +10,13 @@ from django.conf import settings
 
 from ifind.seeker.trec_qrel_handler import TrecQrelHandler
 from models import DocumentsExamined
-from experiment_configuration import event_logger, qrels_file, experiment_setups
+from experiment_configuration import event_logger, qrels_file, qrels_diversity_file, experiment_setups
 
+from treconomics.diversity_qrels import EntitiesQRELsHolder
 
 settings_timezone = timezone(settings.TIME_ZONE)
 qrels = TrecQrelHandler(qrels_file)
+qrels_diversity = EntitiesQRELsHolder(qrels_diversity_file)
 
 
 def get_experiment_context(request):
@@ -207,7 +209,21 @@ def assess_performance(topic_num, doc_list):
         else:
             non_rels_found += 1
 
-    performance = {'topicnum': topic_num, 'rels': rels_found, 'nons': non_rels_found}
+    performance = {'topicnum': topic_num, 'rels': rels_found, 'nons': non_rels_found, 'percentage_rel': (float(rels_found) / (rels_found + non_rels_found)) * 100}
+    return performance
+
+def assess_performance_diversity(topic_num, doc_list, diversity_flag):
+    performance = assess_performance(topic_num, doc_list)
+    
+    if diversity_flag in [1,2]:  # If the diversity flag is for one of the diversity conditions where RELEVANT and DIFFERENT documents were needed...
+        observed_entities = []
+        
+        for docid in doc_list:
+            doc_entities = qrels_diversity.get_mentioned_entities_for_doc(topic_num, docid)
+            observed_entities = observed_entities + list(set(doc_entities) - set(observed_entities))
+        
+        performance['diversity_new_found'] = len(observed_entities)
+    
     return performance
 
 
@@ -219,10 +235,22 @@ def get_performance(username, topic_num):
     for d in docs:
         if d.judgement > 0:
             doc_list.append(d.doc_num)
-            print str(d.topic_num) + " " + d.doc_num
+            #print str(d.topic_num) + " " + d.doc_num
 
     return assess_performance(str(topic_num), doc_list)
 
+def get_performance_diversity(username, topic_num, diversity_flag):
+    u = User.objects.get(username=username)
+    docs = DocumentsExamined.objects.filter(user=u).filter(topic_num=topic_num)
+    
+    print "Documents to Judge for topic %s " % topic_num
+    doc_list = []
+    for d in docs:
+        if d.judgement > 0:
+            doc_list.append(d.doc_num)
+            #print str(d.topic_num) + " " + d.doc_num
+
+    return assess_performance_diversity(str(topic_num), doc_list, diversity_flag)
 
 def query_result_performance(results, topic_num):
     i = 0

@@ -76,6 +76,7 @@ urlpatterns = \
              url(r'^diversityposttask/(?P<taskid>\d+)/$', snippet.view_diversity_posttask),
              url(r'^systemdiversityposttask/(?P<taskid>\d+)/$', snippet.view_system_diversity_posttask),
              url(r'^diversityexitsurvey/$', snippet.view_diversity_exit_survey, name='diversity-exit-survey'),
+             url(r'^diversityperformance/$', search_views.view_performance_diversity),  # New diversity performance view
 
 
              (r'^anitapretasksurvey/(?P<taskid>\d+)/$', snippet.view_alt_pretask_survey),

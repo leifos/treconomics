@@ -27,7 +27,7 @@ from treconomics.experiment_functions import get_topic_relevant_count
 from treconomics.experiment_functions import get_experiment_context
 from treconomics.experiment_functions import mark_document, log_event
 from treconomics.experiment_functions import time_search_experiment_out
-from treconomics.experiment_functions import get_performance, populate_context_dict
+from treconomics.experiment_functions import get_performance, get_performance_diversity, populate_context_dict
 from treconomics.experiment_functions import query_result_performance, log_performance
 from treconomics.experiment_configuration import my_whoosh_doc_index_dir, data_dir
 from treconomics.experiment_configuration import experiment_setups
@@ -523,6 +523,81 @@ def view_performance(request):
                     'condition': condition,
                     'performances': performances, 'avg_wellness': avg_wellness}
     return render(request, 'base/performance_experiment.html', context_dict)
+
+from treconomics.experiment_configuration import exp_sigir2018
+
+def view_performance_diversity(request):
+    """
+    Renders the performance template for the diversity experiment.
+    Added by David on 2018-01-04.
+    """
+    ec = get_experiment_context(request)
+    uname = ec["username"]
+    condition = ec["condition"]
+    rotation = ec["rotation"]
+
+    def ratio(rels, nonrels):
+        """ expect two floats
+        """
+        dem = rels + nonrels
+        if dem > 0.0:
+            return round((rels * rels) / dem, 2)
+        else:
+            return 0.0
+    
+    performances = []
+    
+    entities = {  # Mappings of the different entities that we asked people to find.
+        '347': 'species',
+        '408': 'tropical storms',
+        '435': 'countries',
+        '341': 'airports'
+    }
+    
+    for i in range(1, 5):
+        topic_num = exp_sigir2018.get_rotation_topic(ec['rotation'], i)
+        diversity_num = exp_sigir2018.get_rotation_diversity(ec['rotation'], i)
+        topic_desc = TaskDescription.objects.get(topic_num=topic_num).title
+        
+        perf = get_performance_diversity(uname, topic_num, diversity_num)
+        perf['num'] = topic_num
+        perf['title'] = topic_desc
+        
+        if diversity_num in [1, 3]:
+            perf['system_name'] = 'YoYo Search'
+        else:
+            perf['system_name'] = 'Hula Search'
+        
+        if diversity_num in [1,2]:
+            perf['diversity_entity'] = entities[topic_num]
+            perf['task_description'] = "Find RELEVANT and DIFFERENT"
+        elif diversity_num in [3,4]:
+            perf['task_description'] = "Find RELEVANT"
+        
+        ## Did the searcher pass or fail?
+        perf['status'] = 'fail'
+        perf['status_message'] = 'You failed this task.'
+        
+        if diversity_num in [1, 2]:  # Rel and diff
+            if perf['diversity_new_found'] >= 5:
+                perf['status'] = 'pass'
+                perf['status_message'] = 'You passed this task!'
+        elif diversity_num in [3, 4]:  # Rel only
+            if perf['percentage_rel'] >= 0.5:
+                perf['status'] = 'pass'
+                perf['status_message'] = 'You passed this task!'
+            
+        
+        performances.append(perf)
+    
+    for p in performances:
+        logging.debug(p)
+    
+    context_dict = {'participant': uname,
+                    'condition': condition,
+                    'performances': performances,}
+    
+    return render(request, 'base/performance_experiment_diversity.html', context_dict)
 
 
 @login_required

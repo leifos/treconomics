@@ -16,11 +16,12 @@ work_dir = os.getcwd()
 my_whoosh_doc_index_dir = os.path.join(work_dir, 'data/fullindex/')
 if 'local' not in socket.gethostname():
     my_whoosh_doc_index_dir = '/home/leifos/test500index'
-    #my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint-whoosh-fullindex'
+    #my_whoosh_doc_index_dir = '/Users/david/Workspace/indexes/aquaint_test500_whoosh'
 
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
 qrels_file = os.path.join(work_dir, "data/TREC2005.qrels.txt")
+qrels_diversity_file = os.path.join(work_dir, "data/SIGIR2018.diversity.qrels")
 stopword_file = os.path.join(work_dir, "data/stopwords.txt")
 data_dir = os.path.join(work_dir, "data")
 
@@ -105,7 +106,7 @@ diversity_flow = [
     'snippetpretask/3/','taskspacerwithdetails/3/', 'search/3/', 'diversityposttask/3/','systemdiversityposttask/3/',
      'taskspacer',
     'snippetpretask/4/','taskspacerwithdetails/4/', 'search/4/', 'diversityposttask/4/','systemdiversityposttask/4/',
-    'taskspacer', 'diversityexitsurvey/', 'performance/', 'endexperiment/',
+    'taskspacer', 'diversityexitsurvey/', 'diversityperformance/', 'endexperiment/',
     'logout/'
 ]
 

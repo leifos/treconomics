@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+
+{% block exp_info_block %}
+    <p> <!-- a href="/treconomics/logout">Logout</a> --> </p>
+{% endblock %}
+
+{% block exp_block %}
+
+    <p>This page shows your performance for each of the search tasks. For each task, the maximum number of
+        <strong>RELEVANT</strong> documents (determined by professional assessors) is shown alongside your score.</p>
+    <p>For tasks where you were asked to identify <strong>RELEVANT</strong> and <strong>DIFFERENT</strong> documents, the number of unique entities you
+        correctly identified is also shown.</p>
+    <p> Your performance with respect to the original assessors of these topic is as follows.</p>
+
+    {% for  topic in performances %}
+        <hr/>
+        <p><span class="report_header" style="margin-left: 0;"><strong>Task</strong></span> {{ topic.task_description }}
+            <span class="report_header"><strong>Topic</strong></span> {{ topic.title }}
+            <span class="report_header"><strong>System</strong></span> <em>{{ topic.system_name }}</em></p>
+
+        <!--<p><em>Total number of relevant documents: <strong style="color: #3366FF;">{{ topic.total }}</strong></em></p>
+        -->
+        <p>
+        <ul>
+            <li>Documents you <em><strong>correctly</strong> identified:</em> <strong
+                    style="color: #007f00;">{{ topic.rels }}</strong></li>
+            <li>Documents <em><strong>incorrectly</strong> identified:</em> <strong
+                    style="color: #800000;">{{ topic.nons }}</strong></li>
+            
+            {% if topic.diversity_new_found %}
+            <li>New <strong><em>{{ topic.diversity_entity }}</em></strong> found: <strong
+                    style="color: #3366FF;">{{ topic.diversity_new_found}}</strong></li>
+            {% endif %}
+
+        </ul></p>
+
+        <p>
+            <strong>Documents correctly identified: <span style="color: #3366FF;">{{ topic.percentage_rel|floatformat:0 }}%</span></strong>
+            <strong style="margin-left: 20px;">Pass/Fail?</strong> <span class="report_header {{ topic.status }}" style="margin-left: 0;">{{ topic.status_message }}</span>
+            
+        </p>
+    {% endfor %}
+    
+    <hr />
+    
+    <!--<hr/>
+        <p><strong>Your average score across all topics: <span style="color: #3366FF;">{{ avg_wellness }}</span></strong></p><-->
+
+
+    <p>When you have examined the results above, please click the <em>Next</em> button below to continue.</p>
+
+    <div class="surveySubmitButton">
+        <a href="{% url 'next' %}">
+            <button class="button" type="next"> Next</button>
+        </a>
+    </div>
+
+{% endblock %}
+
+
+{% block exp_footer_block %}
+    Participant: {{ participant }}  - Condition: {{ condition }}
+{% endblock %}
