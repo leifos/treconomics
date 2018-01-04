@@ -601,6 +601,8 @@ def view_performance_diversity(request):
         
         ## LOGGING STUFF
         order = ['rels', 'nons', 'total_marked', 'accuracy', 'diversity_new_entities', 'diversity_new_docs', 'diversity_accuracy']
+        # topic diversity (order * 3, all, assessed, unassessed) estimated_rels state
+        
         perf_str = 'GET_RESULTS {topic} {diversity}'.format(topic=topic_num, diversity=diversity_num)
         
         mapping = {
@@ -617,6 +619,8 @@ def view_performance_diversity(request):
                     perf_str = '{perf_str} {val:d}'.format(perf_str=perf_str, val=d[key])
                 else:
                     perf_str = '{perf_str} {val:0.2f}'.format(perf_str=perf_str, val=d[key])
+        
+        perf_str = '{perf_str} {estimated_rels} {state}'.format(perf_str=perf_str, estimated_rels=perf['estimated_rels'], state=state)
         
         log_event(request=request, event=perf_str)
         ## END LOGGING STUFF
