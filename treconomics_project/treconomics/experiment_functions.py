@@ -1,7 +1,8 @@
 import logging
 
-__author__ = 'leif'
+__author__ = 'leif and david'
 
+import math
 import datetime
 
 from django.contrib.auth.models import User
@@ -195,6 +196,25 @@ def mark_document(request, whooshid, judgement, title="", trecid="", rank=0, doc
     return judgement
 
 
+def get_trec_assessed_doc_list(lst, topic_num, is_assessed=True):
+    """
+    Filters the given list to the documents that have been assessed for the given document.
+    """
+    ret_lst = []
+    
+    for doc in lst:
+        val = qrels.get_value_if_exists(topic_num, doc)
+        
+        if is_assessed:
+            if val:
+                ret_lst.append(doc)
+        else:
+            if not val:
+                ret_lst.append(doc)
+    
+    return ret_lst
+
+
 def assess_performance(topic_num, doc_list):
     rels_found = 0
     non_rels_found = 0
@@ -210,13 +230,14 @@ def assess_performance(topic_num, doc_list):
         else:
             non_rels_found += 1
     
-    if rels_found + non_rels_found == 0:
-        percentage_rel = 0
-    else:
-        percentage_rel = (float(rels_found) / (rels_found + non_rels_found)) * 100
+    accuracy = 0.0
     
-    performance = {'topicnum': topic_num, 'total_docs_marked': total, 'rels': rels_found, 'nons': non_rels_found, 'percentage_rel': percentage_rel}
+    if total > 0:
+        accuracy = float(rels_found) / total
+    
+    performance = {'topicnum': topic_num, 'total_marked': total, 'rels': rels_found, 'nons': non_rels_found, 'accuracy': accuracy}
     return performance
+
 
 def assess_performance_diversity(topic_num, doc_list, diversity_flag):
     performance = assess_performance(topic_num, doc_list)
@@ -235,10 +256,10 @@ def assess_performance_diversity(topic_num, doc_list, diversity_flag):
     performance['diversity_new_docs'] = new_doc_count
     performance['diversity_new_entities'] = len(observed_entities)
     
-    if performance['total_docs_marked'] == 0:
-        performance['percentage_rel_diversity'] = 0
-    else:
-        performance['percentage_rel_diversity'] = (float(new_doc_count) / performance['total_docs_marked']) * 100
+    performance['diversity_accuracy'] = 0.0
+    
+    if performance['total_marked'] > 0:
+        performance['diversity_accuracy'] = float(new_doc_count) / performance['total_marked']
     
     return performance
 
@@ -251,22 +272,44 @@ def get_performance(username, topic_num):
     for d in docs:
         if d.judgement > 0:
             doc_list.append(d.doc_num)
-            #print str(d.topic_num) + " " + d.doc_num
+            print str(d.topic_num) + " " + d.doc_num
 
     return assess_performance(str(topic_num), doc_list)
 
 def get_performance_diversity(username, topic_num, diversity_flag):
+    """
+    A near duplicate of get_performance(), but this method called assess_performance_diversity twice --
+    one using all marked documents, and one using marked documents that **have been assessed**.
+    The latter is used to formulate a user score; the former will be used in experimental analysis.
+    """
     u = User.objects.get(username=username)
     docs = DocumentsExamined.objects.filter(user=u).filter(topic_num=topic_num)
-    
     print "Documents to Judge for topic %s " % topic_num
+    
     doc_list = []
+    
     for d in docs:
         if d.judgement > 0:
             doc_list.append(d.doc_num)
-            #print str(d.topic_num) + " " + d.doc_num
-
-    return assess_performance_diversity(str(topic_num), doc_list, diversity_flag)
+    
+    doc_list_assessed = get_trec_assessed_doc_list(doc_list, topic_num, is_assessed=True)
+    doc_list_unassessed = get_trec_assessed_doc_list(doc_list, topic_num, is_assessed=False)
+    
+    return_dict = {}
+    results_all = assess_performance_diversity(str(topic_num), doc_list, diversity_flag)
+    results_assessed = assess_performance_diversity(str(topic_num), doc_list_assessed, diversity_flag)
+    results_unassessed = assess_performance_diversity(str(topic_num), doc_list_unassessed, diversity_flag)
+    
+    # Now we need to merge these three dictionaries together.
+    # Return a new dictionary of nested dictionaries!
+    return_dict['all'] = results_all
+    return_dict['assessed'] = results_assessed
+    return_dict['unassessed'] = results_unassessed
+    
+    # Now we can do some calculations -- we can work out the "predicted number of rels" to report to the user.
+    return_dict['estimated_rels'] = math.ceil((return_dict['assessed']['accuracy'] * return_dict['unassessed']['total_marked']) + return_dict['assessed']['rels'])
+    
+    return return_dict
 
 def query_result_performance(results, topic_num):
     i = 0

@@ -23,19 +23,19 @@
         <p>
         <ul>
             <li>Documents you <em><strong>correctly</strong> identified:</em> <strong
-                    style="color: #007f00;">{{ topic.rels }}</strong></li>
+                    style="color: #007f00;">{{ topic.assessed.rels }}</strong></li>
             <li>Documents <em><strong>incorrectly</strong> identified:</em> <strong
-                    style="color: #800000;">{{ topic.nons }}</strong></li>
+                    style="color: #800000;">{{ topic.assessed.nons }}</strong></li>
             
             {% if topic.diversity == 1 or topic.diversity == 2 %}
             <li>New <strong><em>{{ topic.diversity_entity }}</em></strong> found: <strong
-                    style="color: #3366FF;">{{ topic.diversity_new_entities}}</strong></li>
+                    style="color: #3366FF;">{{ topic.assessed.diversity_new_entities }}</strong></li>
             {% endif %}
 
         </ul></p>
 
         <p>
-            <strong>Documents correctly identified: <span style="color: #3366FF;">{{ topic.percentage_rel|floatformat:0 }}%</span></strong>
+            <strong>Number of relevant documents found: <span style="color: #3366FF;">{{ topic.estimated_rels|floatformat:0 }}</span></strong>
             <strong style="margin-left: 20px;">Pass/Fail?</strong> <span class="report_header {{ topic.status }}" style="margin-left: 0;">{{ topic.status_message }}</span>
             
         </p>

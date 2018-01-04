@@ -585,37 +585,41 @@ def view_performance_diversity(request):
         ## Did the searcher pass or fail?
         state = 'FAIL'
         perf['status'] = 'fail'
-        perf['status_message'] = 'You failed this task.'
-        
-        if perf['total_docs_marked'] >= target:
-            if diversity_num in [1, 2] and perf['percentage_rel_diversity'] >= 50:  # Rel and diff, and meets/exceeds the target?
+        perf['status_message'] = 'Fail'
+    
+        if perf['estimated_rels'] >= target:
+            if diversity_num in [1,2] and perf['assessed']['accuracy'] >= 0.5:  # Rel and diff, and meets/exceeds the target threshold:
                 perf['status'] = 'pass'
-                perf['status_message'] = 'You passed this task!'
+                perf['status_message'] = 'Pass!'
                 state = 'PASS'
-            elif diversity_num in [3, 4] and perf['percentage_rel'] >= 50:  # Rel only
+            elif diversity_num in [3, 4] and perf['assessed']['accuracy'] >= 0.5:  # Rel only
                 perf['status'] = 'pass'
-                perf['status_message'] = 'You passed this task!'
+                perf['status_message'] = 'Pass!'
                 state = 'PASS'
         
         performances.append(perf)
         
-        results_str = 'VIEW_RESULTS {topic} {diversity} {rels_marked} {nonrels_marked} {total_marked} {percentage_rel} {doc_unique_entities} {unique_entity_total} {percentage_rel_diversity} {state}'.format(
-            topic=topic_num,
-            diversity=diversity_num,
-            rels_marked=perf['rels'],
-            nonrels_marked=perf['nons'],
-            total_marked=perf['total_docs_marked'],
-            percentage_rel=perf['percentage_rel'],
-            doc_unique_entities=perf['diversity_new_docs'],
-            unique_entity_total=perf['diversity_new_entities'],
-            percentage_rel_diversity=perf['percentage_rel_diversity'],
-            state=state
-        )
+        ## LOGGING STUFF
+        order = ['rels', 'nons', 'total_marked', 'accuracy', 'diversity_new_entities', 'diversity_new_docs', 'diversity_accuracy']
+        perf_str = 'GET_RESULTS {topic} {diversity}'.format(topic=topic_num, diversity=diversity_num)
         
-        log_event(request=request, event=results_str)
-    
-    # for p in performances:
-    #     logging.debug(p)
+        mapping = {
+            0: perf['all'],
+            1: perf['assessed'],
+            2: perf['unassessed']
+        }
+        
+        for i in range(0, 3):
+            d = mapping[i]
+            
+            for key in order:
+                if type(d[key]) == int:
+                    perf_str = '{perf_str} {val:d}'.format(perf_str=perf_str, val=d[key])
+                else:
+                    perf_str = '{perf_str} {val:0.2f}'.format(perf_str=perf_str, val=d[key])
+        
+        log_event(request=request, event=perf_str)
+        ## END LOGGING STUFF
     
     context_dict = {'participant': uname,
                     'condition': condition,
@@ -657,17 +661,16 @@ def view_performance_diversity_practice(request):
         perf['diversity_entity'] = entities[topic_num]
         perf['task_description'] = "Find RELEVANT and DIFFERENT"
     elif diversity_num in [3,4]:
-        perf['task_description'] = "Find RELEVANT"
+        perf['task_description'] = 'FIND RELEVANT'
     
-    ## Did the searcher pass or fail?
     perf['status'] = 'fail'
     perf['status_message'] = 'You would have failed this task.'
     
-    if perf['total_docs_marked'] >= target:
-        if diversity_num in [1, 2] and perf['percentage_rel_diversity'] >= 50:  # Rel and diff, and meets/exceeds the target?
+    if perf['estimated_rels'] >= target:
+        if diversity_num in [1,2] and perf['assessed']['accuracy'] >= 0.5:  # Rel and diff, and meets/exceeds the target threshold:
             perf['status'] = 'pass'
             perf['status_message'] = 'You would have passed this task!'
-        elif diversity_num in [3, 4] and perf['percentage_rel'] >= 50:  # Rel only
+        elif diversity_num in [3, 4] and perf['assessed']['accuracy'] >= 0.5:  # Rel only
             perf['status'] = 'pass'
             perf['status_message'] = 'You would have passed this task!'
     
