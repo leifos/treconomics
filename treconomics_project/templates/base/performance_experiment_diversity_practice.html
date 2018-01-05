@@ -12,7 +12,7 @@
 
     <p><strong>Number of documents saved: <span style="color: #3366FF;">{{ performance.total}}</span></strong></p>
     <p><strong>Number of relevant documents saved: <span style="color: #3366FF;">{{ performance.estimated_rels|floatformat:0 }}</span></strong> (Number required: {{performance.target}}) </p>
-    <p> <strong>Accuracy: <span style="color: #3366FF;">{{performance.trec_acc|floatformat:2}}</span></strong> (Accuracy greater than 0.5 required.)</p>
+    <p> <strong>Accuracy: <span style="color: #3366FF;">{{performance.estimated_acc|floatformat:2}}</span></strong> (Accuracy greater than 0.5 required.)</p>
     <p>
         {% if performance.diversity == 1 or performance.diversity == 2 %}
         <li>New <strong><em>{{ performance.diversity_entity }}</em></strong> found: <strong

@@ -23,7 +23,7 @@
 
         <p><strong>Number of documents saved: <span style="color: #3366FF;">{{ topic.total}}</span></strong></p>
     <p><strong>Number of relevant documents saved: <span style="color: #3366FF;">{{ topic.estimated_rels|floatformat:0 }}</span></strong> (Number required: {{topic.target}}) </p>
-    <p> <strong>Accuracy: <span style="color: #3366FF;">{{topic.trec_acc|floatformat:2}}</span></strong> (Accuracy greater than 0.5 required.)</p>
+    <p> <strong>Accuracy: <span style="color: #3366FF;">{{topic.estimated_acc|floatformat:2}}</span></strong> (Accuracy greater than 0.5 required.)</p>
     <p>
         {% if topic.diversity == 1 or topic.diversity == 2 %}
         <li>New <strong><em>{{ topic.diversity_entity }}</em></strong> found: <strong

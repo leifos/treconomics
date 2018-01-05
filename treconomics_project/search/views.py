@@ -631,6 +631,8 @@ def view_performance_diversity(request):
         perf_str = '{perf_str} {estimated_rels} {state}'.format(perf_str=perf_str, estimated_rels=perf['estimated_rels'], state=state)
         
         log_event(request=request, event=perf_str)
+        log_event(request=request, event = "TPERFORMANCE"+ str(perf))
+
         ## END LOGGING STUFF
     
     context_dict = {'participant': uname,
@@ -663,6 +665,9 @@ def view_performance_diversity_practice(request):
     perf = set_descriptions(diversity_num, topic_num, perf)
     perf = set_status(perf, target)
 
+    log_event(request=request, event = "TPERFORMANCE"+ str(perf))
+
+
     context_dict = {'participant': uname,
                     'condition': condition,
                     'performance': perf}
@@ -678,7 +683,7 @@ def set_status(perf_dict, target):
     perf_dict['status_message'] = 'You did not meet all the specified criteria.'
 
     if perf_dict['estimated_rels'] >= target:
-        if perf_dict['trec_acc'] >= 0.5:
+        if perf_dict['estimated_acc'] >= 0.5:
             perf_dict['status'] = 'pass'
             perf_dict['status_message'] = 'You met the specified criteria.'
 
