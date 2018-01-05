@@ -204,15 +204,47 @@ def get_trec_assessed_doc_list(lst, topic_num, is_assessed=True):
     
     for doc in lst:
         val = qrels.get_value_if_exists(topic_num, doc)
-        
+        """
+        if val is None:
+            if not is_assessed:
+                ret_lst.append(doc)
+
+        else:
+            ret_lst.append(doc)
+        """
         if is_assessed:
-            if val:
+            if val>=0:
                 ret_lst.append(doc)
         else:
             if not val:
                 ret_lst.append(doc)
-    
+
     return ret_lst
+
+
+
+def get_trec_scores(lst, topic_num):
+    """
+
+    :param lst: list of doc nums
+    :param topic_num: integer
+    :return:  returns (total, trec_rels, trec_nonrels, unassessed)
+    """
+    total = len(lst)
+    trec_rels = 0
+    trec_nonrels = 0
+    unassessed = 0
+    for doc in lst:
+        val = qrels.get_value_if_exists(topic_num, doc)
+        if val is None:
+            unassessed += 1
+        else:
+            if int(val) > 0:
+                trec_rels += 1
+            else:
+                trec_nonrels += 1
+    return (total, trec_rels, trec_nonrels, unassessed)
+
 
 
 def assess_performance(topic_num, doc_list):
@@ -305,15 +337,34 @@ def get_performance_diversity(username, topic_num, diversity_flag):
     return_dict['all'] = results_all
     return_dict['assessed'] = results_assessed
     return_dict['unassessed'] = results_unassessed
+
+    #####
+
+    (total, trec_rels, trec_nonrels, unassesed) = get_trec_scores(doc_list, topic_num)
+    return_dict['trec_acc'] = 0.0
+    if (trec_rels + trec_nonrels > 0):
+        return_dict['trec_acc'] = (trec_rels+0.0) / ( trec_rels+trec_nonrels)
+    return_dict['acc'] = 0.0
+    if total >0:
+        return_dict['acc'] = (trec_rels+0.0) / (total)
+    return_dict['trec_rels'] = trec_rels
+    return_dict['trec_nonrels'] = trec_nonrels
+    return_dict['total'] = total
+    return_dict['estimated_rels'] = math.floor(trec_rels + return_dict['trec_acc']  * unassesed)
+
+    print(return_dict['trec_acc'],return_dict['acc'],trec_rels, trec_nonrels, total, unassesed)
+
+    """
     return_dict['trec_acc'] = return_dict['assessed']['accuracy']
     return_dict['acc'] = return_dict['all']['accuracy']
     return_dict['trec_rels'] = return_dict['assessed']['rels']
     return_dict['trec_nonrels'] = return_dict['assessed']['nons']
     return_dict['total'] = return_dict['all']['total_marked']
+   
     
     # Now we can do some calculations -- we can work out the "predicted number of rels" to report to the user.
     return_dict['estimated_rels'] = math.ceil((return_dict['assessed']['accuracy'] * return_dict['unassessed']['total_marked']) + return_dict['assessed']['rels'])
-    
+     """
     return return_dict
 
 def query_result_performance(results, topic_num):
