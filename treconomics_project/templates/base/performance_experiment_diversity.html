@@ -18,15 +18,24 @@
             <span class="report_header"><strong>Topic</strong></span> {{ topic.title }}
             <span class="report_header"><strong>System</strong></span> <em>{{ topic.system_name }}</em></p>
 
-        <!--<p><em>Total number of relevant documents: <strong style="color: #3366FF;">{{ topic.total }}</strong></em></p>
-        -->
-        <p>
+           <p>
+
+
+        <p><strong>Number of documents saved: <span style="color: #3366FF;">{{ topic.total}}</span></strong></p>
+    <p><strong>Number of relevant documents saved: <span style="color: #3366FF;">{{ topic.estimated_rels|floatformat:0 }}</span></strong> (Number required: {{topic.target}}) </p>
+    <p> <strong>Accuracy: <span style="color: #3366FF;">{{topic.trec_acc|floatformat:2}}</span></strong> (Accuracy greater than 0.5 required.)</p>
+    <p>
+        {% if topic.diversity == 1 or topic.diversity == 2 %}
+        <li>New <strong><em>{{ topic.diversity_entity }}</em></strong> found: <strong
+                style="color: #3366FF;">{{ topic.assessed.diversity_new_entities}}</strong></li>
+        {% endif %}
+    </p>
+    <p><strong style="margin-left: 20px;">Success?</strong> <span class="report_header {{ topic.status }}" style="margin-left: 0;">{{ topic.status_message }}</span></p>
+
+
+<!--
         <ul>
-            <!-- <li>Documents you <em><strong>correctly</strong> identified:</em> <strong
-                    style="color: #007f00;">{{ topic.assessed.rels }}</strong></li>
-            <li>Documents <em><strong>incorrectly</strong> identified:</em> <strong
-                    style="color: #800000;">{{ topic.assessed.nons }}</strong></li> -->
-            
+
             {% if topic.diversity == 1 or topic.diversity == 2 %}
             <li>New <strong><em>{{ topic.diversity_entity }}</em></strong> found: <strong
                     style="color: #3366FF;">{{ topic.assessed.diversity_new_entities }}</strong></li>
@@ -39,6 +48,8 @@
             <strong style="margin-left: 20px;">Pass/Fail?</strong> <span class="report_header {{ topic.status }}" style="margin-left: 0;">{{ topic.status_message }}</span>
             
         </p>
+        --->
+
     {% endfor %}
     
     <hr />

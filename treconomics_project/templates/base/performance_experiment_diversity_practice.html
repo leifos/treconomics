@@ -7,34 +7,19 @@
 {% block exp_block %}
 
     <p>This page shows your performance for the practice search task.</p>
-    <p>Remember, these scores won't be counted towards you passing or failing; we provide these as guidance only.</p>
+<p><b>Note, these scores do not count to your HIT, we are providing them as guidance only.</b></p>
+    <hr/>
 
-    <!-- <hr/>
-    <p><span class="report_header" style="margin-left: 0;"><strong>Task</strong></span> {{ topic.task_description }}
-        <span class="report_header"><strong>Topic</strong></span> {{ topic.title }}
-        <span class="report_header"><strong>System</strong></span> <em>{{ topic.system_name }}</em></p>
-
-    <!--<p><em>Total number of relevant documents: <strong style="color: #3366FF;">{{ topic.total }}</strong></em></p>
-    -->
+    <p><strong>Number of documents saved: <span style="color: #3366FF;">{{ performance.total}}</span></strong></p>
+    <p><strong>Number of relevant documents saved: <span style="color: #3366FF;">{{ performance.estimated_rels|floatformat:0 }}</span></strong> (Number required: {{performance.target}}) </p>
+    <p> <strong>Accuracy: <span style="color: #3366FF;">{{performance.trec_acc|floatformat:2}}</span></strong> (Accuracy greater than 0.5 required.)</p>
     <p>
-    <ul>
-        <!-- <li>Documents you <em><strong>correctly</strong> identified:</em> <strong
-                style="color: #007f00;">{{ performance.assessed.rels }}</strong></li>
-        <li>Documents <em><strong>incorrectly</strong> identified:</em> <strong
-                style="color: #800000;">{{ performance.assessed.nons }}</strong></li> -->
-
         {% if performance.diversity == 1 or performance.diversity == 2 %}
         <li>New <strong><em>{{ performance.diversity_entity }}</em></strong> found: <strong
                 style="color: #3366FF;">{{ performance.assessed.diversity_new_entities}}</strong></li>
         {% endif %}
-
-    </ul></p>
-
-    <p>
-        <strong>Number of relevant documents found: <span style="color: #3366FF;">{{ performance.estimated_rels|floatformat:0 }}</span></strong>
-        <strong style="margin-left: 20px;">Pass/Fail?</strong> <span class="report_header {{ performance.status }}" style="margin-left: 0;">{{ performance.status_message }}</span>
-
     </p>
+    <p><strong style="margin-left: 20px;">Success?</strong> <span class="report_header {{ performance.status }}" style="margin-left: 0;">{{ performance.status_message }}</span></p>
     
     <hr />
 

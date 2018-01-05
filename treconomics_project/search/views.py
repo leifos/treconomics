@@ -552,7 +552,7 @@ def view_performance_diversity(request):
     setup = experiment_setups[condition]
     
     performances = []
-    
+    """
     entities = {  # Mappings of the different entities that we asked people to find.
         '347': 'species',
         '408': 'tropical storms',
@@ -560,6 +560,7 @@ def view_performance_diversity(request):
         '341': 'airports',
         '367': 'vessels',
     }
+    """
     
     for i in range(1, 5):
         topic_num = setup.get_rotation_topic(ec['rotation'], i)
@@ -570,19 +571,24 @@ def view_performance_diversity(request):
         perf['num'] = topic_num
         perf['title'] = topic_desc
         perf['diversity'] = diversity_num
+
+        perf = set_descriptions(diversity_num, topic_num, perf)
+        perf = set_status(perf, target)
         
         if diversity_num in [1, 3]:
             perf['system_name'] = 'YoYo Search'
         else:
             perf['system_name'] = 'Hula Search'
-        
+
+        """
         if diversity_num in [1,2]:
             perf['diversity_entity'] = entities[topic_num]
             perf['task_description'] = "Find RELEVANT and DIFFERENT"
         elif diversity_num in [3,4]:
             perf['task_description'] = "Find RELEVANT"
-        
+        """
         ## Did the searcher pass or fail?
+        """
         state = 'FAIL'
         perf['status'] = 'fail'
         perf['status_message'] = 'Fail'
@@ -596,8 +602,10 @@ def view_performance_diversity(request):
                 perf['status'] = 'pass'
                 perf['status_message'] = 'Pass!'
                 state = 'PASS'
-        
+        """
+        state = ''
         performances.append(perf)
+        print(perf)
         
         ## LOGGING STUFF
         order = ['rels', 'nons', 'total_marked', 'accuracy', 'diversity_new_entities', 'diversity_new_docs', 'diversity_accuracy']
@@ -641,15 +649,7 @@ def view_performance_diversity_practice(request):
     rotation = ec["rotation"]
     condition = ec["condition"]
     target = ec["target"]  # How many documents do people need to find?
-    
-    entities = {  # Mappings of the different entities that we asked people to find.
-        '347': 'species',
-        '408': 'tropical storms',
-        '435': 'countries',
-        '341': 'airports',
-        '367': 'vessels',
-    }
-    
+
     setup = experiment_setups[condition]
     # Iteration 0 is the practice topic
     topic_num = setup.get_rotation_topic(ec['rotation'], 0)
@@ -659,30 +659,54 @@ def view_performance_diversity_practice(request):
     perf = get_performance_diversity(uname, topic_num, diversity_num)
     perf['num'] = topic_num
     perf['title'] = topic_desc
-    perf['diversity'] = diversity_num
-    
-    if diversity_num in [1,2]:
-        perf['diversity_entity'] = entities[topic_num]
-        perf['task_description'] = "Find RELEVANT and DIFFERENT"
-    elif diversity_num in [3,4]:
-        perf['task_description'] = 'FIND RELEVANT'
-    
-    perf['status'] = 'fail'
-    perf['status_message'] = 'You would have failed this task.'
-    
-    if perf['estimated_rels'] >= target:
-        if diversity_num in [1,2] and perf['assessed']['accuracy'] >= 0.5:  # Rel and diff, and meets/exceeds the target threshold:
-            perf['status'] = 'pass'
-            perf['status_message'] = 'You would have passed this task!'
-        elif diversity_num in [3, 4] and perf['assessed']['accuracy'] >= 0.5:  # Rel only
-            perf['status'] = 'pass'
-            perf['status_message'] = 'You would have passed this task!'
-    
+
+    perf = set_descriptions(diversity_num, topic_num, perf)
+    perf = set_status(perf, target)
+
     context_dict = {'participant': uname,
                     'condition': condition,
                     'performance': perf}
+
+    print(perf)
     
     return render(request, 'base/performance_experiment_diversity_practice.html', context_dict)
+
+
+def set_status(perf_dict, target):
+    perf_dict['target'] = target
+    perf_dict['status'] = ''
+    perf_dict['status_message'] = 'You did not meet all the specified criteria.'
+
+    if perf_dict['estimated_rels'] >= target:
+        if perf_dict['trec_acc'] >= 0.5:
+            perf_dict['status'] = 'pass'
+            perf_dict['status_message'] = 'You met the specified criteria.'
+
+    return perf_dict
+
+
+def set_descriptions(diversity_num, topic_num, perf_dict):
+    entities = {  # Mappings of the different entities that we asked people to find.
+        '347': 'species',
+        '408': 'tropical storms',
+        '435': 'countries',
+        '341': 'airports',
+        '367': 'vessels',
+    }
+
+    perf_dict['diversity'] = diversity_num
+
+    if diversity_num in [1,2]:
+        perf_dict['diversity_entity'] = entities[topic_num]
+        perf_dict['task_description'] = "Find RELEVANT and DIFFERENT"
+    elif diversity_num in [3,4]:
+        perf_dict['task_description'] = 'Find RELEVANT'
+
+    return perf_dict
+
+
+
+
 
 
 @login_required

@@ -305,6 +305,11 @@ def get_performance_diversity(username, topic_num, diversity_flag):
     return_dict['all'] = results_all
     return_dict['assessed'] = results_assessed
     return_dict['unassessed'] = results_unassessed
+    return_dict['trec_acc'] = return_dict['assessed']['accuracy']
+    return_dict['acc'] = return_dict['all']['accuracy']
+    return_dict['trec_rels'] = return_dict['assessed']['rels']
+    return_dict['trec_nonrels'] = return_dict['assessed']['nons']
+    return_dict['total'] = return_dict['all']['total_marked']
     
     # Now we can do some calculations -- we can work out the "predicted number of rels" to report to the user.
     return_dict['estimated_rels'] = math.ceil((return_dict['assessed']['accuracy'] * return_dict['unassessed']['total_marked']) + return_dict['assessed']['rels'])
