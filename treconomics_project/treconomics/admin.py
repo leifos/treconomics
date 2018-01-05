@@ -12,7 +12,7 @@ from snippets.models import AnitaDemographicsSurvey, SnippetExitSurvey, SnippetD
 from survey.models import PostTaskTopicRatingSurvey
 
 
-
+from snippets.models import DiversityExitSurvey, SystemDiversityPostTaskSurvey, BehaveDiversityPostTaskSurvey
 
 class AnitaPreTaskAdmin(ImportExportModelAdmin):
     list_display = ['user', 'task_id', 'topic_num']
@@ -109,6 +109,9 @@ admin.site.register(DocumentsExamined)
 admin.site.register(SnippetDemographicsSurvey)
 admin.site.register(SnippetPreTaskTopicKnowledgeSurvey)
 #admin.site.register(SystemSnippetPostTaskSurvey)
+admin.site.register(BehaveDiversityPostTaskSurvey)
+admin.site.register(SystemDiversityPostTaskSurvey)
+admin.site.register(DiversityExitSurvey)
 
 
 
