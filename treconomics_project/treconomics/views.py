@@ -26,6 +26,11 @@ from survey.forms import PostTaskTopicRatingSurveyForm
 from experiment_functions import get_experiment_context, print_experiment_context
 from experiment_functions import log_event, populate_context_dict
 
+from search.views import set_descriptions
+from search.views import set_status
+from experiment_functions import get_performance_diversity
+from experiment_configuration import experiment_setups
+
 
 import logging
 
@@ -568,7 +573,40 @@ def show_users(request):
 
 def show_user_performance(request, userid):
 
+
     u = User.objects.get(id=userid)
 
-    context_dict = {'user':u}
+    up = UserProfile.objects.get(user=u)
+    uname = u.username
+    condition = up.condition
+    rotation = up.rotation
+    setup = experiment_setups[condition]
+    target = setup.target
+
+    performances = []
+
+    for i in range(1, 5):
+        topic_num = setup.get_rotation_topic(rotation, i)
+        diversity_num = setup.get_rotation_diversity(rotation, i)
+        topic_desc = TaskDescription.objects.get(topic_num=topic_num).title
+
+        perf = get_performance_diversity(uname, topic_num)
+        perf['num'] = topic_num
+        perf['title'] = topic_desc
+        perf['diversity'] = diversity_num
+
+        perf = set_descriptions(diversity_num, topic_num, perf)
+        perf = set_status(perf, target)
+
+        if diversity_num in [1, 3]:
+            perf['system_name'] = 'YoYo Search'
+        else:
+            perf['system_name'] = 'Hula Search'
+
+        state = ''
+        performances.append(perf)
+
+
+    context_dict = {'user':u,
+                    'performances': performances,}
     return render(request, 'base/show_user_performance.html', context_dict)
