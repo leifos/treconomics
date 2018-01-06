@@ -626,6 +626,9 @@ def view_performance_diversity_practice(request):
     Renders the performance template for the practice task.
     Added by David on 2018-01-04.
     """
+    # This view is called after the task has been completed.
+    log_event(request=request, event="TASK_ENDED")
+    
     ec = get_experiment_context(request)
     uname = ec["username"]
     rotation = ec["rotation"]
@@ -644,7 +647,7 @@ def view_performance_diversity_practice(request):
 
     perf = set_descriptions(diversity_num, topic_num, perf)
     perf = set_status(perf, target)
-
+    
     log_event(request=request, event = "TPERFORMANCE"+ str(perf))
 
 

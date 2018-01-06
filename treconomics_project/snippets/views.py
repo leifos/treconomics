@@ -201,6 +201,9 @@ def view_snippet_pretask(request, taskid):
 
 @login_required
 def view_diversity_posttask(request, taskid):
+    # This view is called after the task has been completed.
+    log_event(request=request, event="TASK_ENDED")
+    
     return handle_task_and_questions_survey(request, taskid, BehaveDiversityPostTaskSurveyForm, 'DIVERSITY_POSTTASK',
                                             '/treconomics/diversityposttask/', 'survey/diversity_posttask_survey.html')
 
