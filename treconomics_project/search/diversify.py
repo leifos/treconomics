@@ -1,6 +1,7 @@
 #
 # Diversification Algorithm with access to the diversity QRELs
 # Mark II -- More complex algorithm, not as rewarding as the first attempt.
+# Updated to work with the ifind search objects.
 #
 # Slightly updated to make it easier to drop into the treconomis environment.
 # 
@@ -11,12 +12,6 @@
 import copy
 from treconomics.experiment_functions import qrels_diversity 
 
-########
-
-DIVERSIFY_TO_RANK = 30  # How far down the returned list should we diversify the results to?
-LAMBDA = 1.0  # The weighting value for the diversity component of the score.
-
-########
 
 # TODO: @leifos
 # - What values do we use above?
@@ -92,7 +87,7 @@ def get_observed_entities_for_list(topic, rankings_list):
     observed_entities = []
     
     for hit in rankings_list:
-        docid = hit['docid']
+        docid = hit.docid
         
         entities = qrels_diversity.get_mentioned_entities_for_doc(topic, docid)
         new_entities = get_new_entities(observed_entities, entities)
@@ -102,13 +97,13 @@ def get_observed_entities_for_list(topic, rankings_list):
     return observed_entities
 
 
-def diversify(results, topic, to_rank=30, lam=1.0):
+def diversify_results(results, topic, to_rank=30, lam=1.0):
     """
     The diversification algorithm.
-    Given a Whoosh results object, returns a re-ranked list, with more diverse content at the top.
+    Given a ifind results object, returns a re-ranked list, with more diverse content at the top.
     By diverse, we mean a selection of documents discussing a wider range of identified entities.
     """
-    results_len = results.scored_length()  # Doing len(results) returns the number of hits, not the top k.
+    results_len = len(results.results)
     
     # Simple sanity check -- no results? Can't diversify anything!
     if results_len == 0:
@@ -134,19 +129,19 @@ def diversify(results, topic, to_rank=30, lam=1.0):
     
     # As the list of results is probably larger than the depth we re-rank to, take a slice.
     # This is our original list of results that we'll be modifiying and popping from.
-    old_rankings = results[:to_rank]
+    old_rankings = results.results[:to_rank]
     
     # For our new rankings, start with the first document -- this won't change.
     # This list will be populated as we iterate through the other rankings list.
     new_rankings = [old_rankings.pop(0)]
     
     for i in range(1, to_rank):
-        observed_entities = get_observed_entities_for_list(topic, new_rankings)
+        observed_entities = get_observed_entities_for_list(qrels_diversity, topic, new_rankings)
         
         for j in range(0, len(old_rankings)):
-            docid = old_rankings[j]['docid']
+            docid = old_rankings[j].docid
             entities = qrels_diversity.get_mentioned_entities_for_doc(topic, docid)
-            new_entities = get_new_entities(observed_entities, entities)
+            new_entities = get_new_entities(qrels_diversity, observed_entities, entities)
             #seen_entities = get_existing_entities(qrels_diversity, observed_entities, entities)
             
             old_rankings[j].score = old_rankings[j].score + (lam * len(new_entities))
@@ -155,7 +150,8 @@ def diversify(results, topic, to_rank=30, lam=1.0):
         old_rankings.sort(key=lambda x: x.score, reverse=True)
         new_rankings.append(old_rankings.pop(0))
     
-    return new_rankings + results[to_rank:]
+    results.results = new_rankings + results.results[to_rank:]
+    return results
     
     # The main algorithm -- only work on the top to_rank documents.
     
