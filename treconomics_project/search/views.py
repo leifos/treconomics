@@ -611,26 +611,6 @@ def view_performance_diversity(request):
         order = ['rels', 'nons', 'total_marked', 'accuracy', 'diversity_new_entities', 'diversity_new_docs', 'diversity_accuracy']
         # topic diversity (order * 3, all, assessed, unassessed) estimated_rels state
         
-        perf_str = 'GET_RESULTS {topic} {diversity}'.format(topic=topic_num, diversity=diversity_num)
-        
-        mapping = {
-            0: perf['all'],
-            1: perf['assessed'],
-            2: perf['unassessed']
-        }
-        
-        for i in range(0, 3):
-            d = mapping[i]
-            
-            for key in order:
-                if type(d[key]) == int:
-                    perf_str = '{perf_str} {val:d}'.format(perf_str=perf_str, val=d[key])
-                else:
-                    perf_str = '{perf_str} {val:0.2f}'.format(perf_str=perf_str, val=d[key])
-        
-        perf_str = '{perf_str} {estimated_rels} {state}'.format(perf_str=perf_str, estimated_rels=perf['estimated_rels'], state=state)
-        
-        log_event(request=request, event=perf_str)
         log_event(request=request, event = "TPERFORMANCE"+ str(perf))
 
         ## END LOGGING STUFF
