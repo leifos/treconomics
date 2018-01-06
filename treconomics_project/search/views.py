@@ -605,16 +605,8 @@ def view_performance_diversity(request):
         """
         state = ''
         performances.append(perf)
-        print(perf)
+        log_user_diversity_performance(request, topic_num, diversity_num, perf)
         
-        ## LOGGING STUFF
-        order = ['rels', 'nons', 'total_marked', 'accuracy', 'diversity_new_entities', 'diversity_new_docs', 'diversity_accuracy']
-        # topic diversity (order * 3, all, assessed, unassessed) estimated_rels state
-        
-        log_event(request=request, event = "TPERFORMANCE"+ str(perf))
-
-        ## END LOGGING STUFF
-    
     context_dict = {'participant': uname,
                     'condition': condition,
                     'performances': performances,}
@@ -654,10 +646,30 @@ def view_performance_diversity_practice(request):
     context_dict = {'participant': uname,
                     'condition': condition,
                     'performance': perf}
-
-    print(perf)
+    
+    log_user_diversity_performance(request, topic_num, diversity_num, perf)
     
     return render(request, 'base/performance_experiment_diversity_practice.html', context_dict)
+
+
+def log_user_diversity_performance(request, topic_num, diversity_num, perf):
+    """
+    Logs a user's performance given a dictionary, perf.
+    """
+    log_str = 'USER_PERFORMANCE {topic} {diversity}'.format(
+        topic=topic_num,
+        diversity=diversity_num)
+    
+    # Key: USER_PERFORMANCE topic diversity target trec_rels trec_nonrels trec_unassessed total trec_acc acc estimated_acc estimated_rels diversity_new_docs diversity_new_entities
+    # What order should the fields be appended to the log string in?
+    order = ['diversity', 'target', 'trec_rels', 'trec_nonrels', 'trec_unassessed', 'total', 'trec_acc', 'acc', 'estimated_acc', 'estimated_rels', 'diversity_new_docs', 'diversity_new_entities']
+    
+    # Build up the log string
+    for key in order:
+        val = perf[key]
+        log_str = '{log_str} {val}'.format(log_str=log_str, val=val)
+    
+    log_event(request=request, event=log_str)
 
 
 def set_status(perf_dict, target):
