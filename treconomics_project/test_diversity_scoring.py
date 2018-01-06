@@ -57,6 +57,51 @@ class TestScoring(unittest.TestCase):
         doc_lst = ['APW20000706.0040', 'XIE19981024.0066', 'XIE19960728.0127', 'APW19991016.0181', 'APW19981005.1108', 'XIE19981106.0268', 'APW19990924.0040', 'APW19981019.0092']
         results = get_performance_diversity(doc_lst, '408')
         self.assertAlmostEquals(results['trec_acc'], 1.0)
+    
+    def test_diversity_works_1(self):
+        # Topic 408
+        # entities = [ georges & georges & (georges, jeanne, ivan, karl) & *not specified* ]
+        doc_lst = ['APW19980922.0712', 'APW19980922.0906', 'APW19980928.0091', 'XIE19981207.0060']
+        results = get_performance_diversity(doc_lst, '408')
+        
+        self.assertEquals(results['diversity_new_entities'], 4)
+        self.assertEquals(results['diversity_new_docs'], 2)
+    
+    def test_diversity_works_2(self):
+        # Topic 408
+        # entities = [ *not specified* ]
+        doc_lst = ['DUD']
+        results = get_performance_diversity(doc_lst, '408')
+        
+        self.assertEquals(results['diversity_new_entities'], 0)
+        self.assertEquals(results['diversity_new_docs'], 0)
+    
+    def test_diversity_works_3(self):
+        # Topic 408
+        # entities = [ orissa & kaemi & maria & maria ]
+        doc_lst = ['XIE20000307.0043', 'XIE20000828.0228', 'XIE20000905.0144', 'XIE20000905.0152']
+        results = get_performance_diversity(doc_lst, '408')
+        
+        self.assertEquals(results['diversity_new_entities'], 3)
+        self.assertEquals(results['diversity_new_docs'], 3)
+    
+    def test_diversity_works_4(self):
+        # Topic 408
+        # entities = [ maria & maria & maria ]
+        doc_lst = ['XIE20000905.0144', 'XIE20000905.0152', 'XIE20000904.0085']
+        results = get_performance_diversity(doc_lst, '408')
+        
+        self.assertEquals(results['diversity_new_entities'], 1)
+        self.assertEquals(results['diversity_new_docs'], 1)
+    
+    def test_diversity_works_5(self):
+        # Topic 408
+        # entities = [ floyd & eline & (edeng, ditang) ]
+        doc_lst = ['XIE19990917.0333', 'XIE20000221.0009', 'XIE20000706.0126']
+        results = get_performance_diversity(doc_lst, '408')
+        
+        self.assertEquals(results['diversity_new_entities'], 4)
+        self.assertEquals(results['diversity_new_docs'], 3)
 
 if __name__ == '__main__':
     unittest.main()
