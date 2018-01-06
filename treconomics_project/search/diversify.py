@@ -136,12 +136,12 @@ def diversify_results(results, topic, to_rank=30, lam=1.0):
     new_rankings = [old_rankings.pop(0)]
     
     for i in range(1, to_rank):
-        observed_entities = get_observed_entities_for_list(qrels_diversity, topic, new_rankings)
+        observed_entities = get_observed_entities_for_list(topic, new_rankings)
         
         for j in range(0, len(old_rankings)):
             docid = old_rankings[j].docid
             entities = qrels_diversity.get_mentioned_entities_for_doc(topic, docid)
-            new_entities = get_new_entities(qrels_diversity, observed_entities, entities)
+            new_entities = get_new_entities(observed_entities, entities)
             #seen_entities = get_existing_entities(qrels_diversity, observed_entities, entities)
             
             old_rankings[j].score = old_rankings[j].score + (lam * len(new_entities))
