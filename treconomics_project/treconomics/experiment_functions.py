@@ -309,30 +309,28 @@ def get_performance(username, topic_num):
     return assess_performance(str(topic_num), doc_list)
 
 
-def get_performance_diversity(username, topic_num, diversity_flag, debug_doc_list=None):
+def get_user_performance_diversity(username, topic_num):
+    """
+    Given a username and a topic number, calls get_performance_diversity(), and return its output.
+    """
+    u = User.objects.get(username=username)
+    docs = DocumentsExamined.objects.filter(user=u).filter(topic_num=topic_num)
+    doc_list = []
+
+    # Select all documents that were marked/saved by the searcher.
+    for d in docs:
+        if d.judgement > 0:
+            doc_list.append(d.doc_num)
+    
+    return get_performance_diversity(doc_list, topic_num)
+    
+
+def get_performance_diversity(doc_list, topic_num):
     """
     A revised get_performance_diversity function.
     For debugging, use debug_doc_list as a list of documents that an imaginary user has saved (list of strings, TREC docnums).
     """
-    print "========="
-    print "Diversity scoring for topic %s" % topic_num
-    
     return_dict = {}  # Return dictionary for all values.
-    doc_list = []
-    
-    # Do we use the debugging list of documents, or pull out a list from the database?
-    if type(debug_doc_list) == list:
-        print "DEBUG"
-        doc_list = debug_doc_list
-    else:
-        u = User.objects.get(username=username)
-        docs = DocumentsExamined.objects.filter(user=u).filter(topic_num=topic_num)
-    
-        # Select all documents that were marked/saved by the searcher.
-        for d in docs:
-            if d.judgement > 0:
-                doc_list.append(d.doc_num)
-    
     (total, trec_rels, trec_nonrels, unassessed) = get_trec_scores(doc_list, topic_num)
     
     # Calculate TREC accuracy -- i.e. accuracy considering only documents that were assessed.
@@ -371,25 +369,6 @@ def get_performance_diversity(username, topic_num, diversity_flag, debug_doc_lis
     
     return_dict['diversity_new_docs'] = new_doc_count
     return_dict['diversity_new_entities'] = len(observed_entities)
-    
-    # Debug print statements
-    print "Marked document list (and QREL judgement)"
-    for doc in doc_list:
-        print doc, qrels.get_value_if_exists(topic_num, doc)
-    
-    print "----"
-    print "trec_rels:", trec_rels
-    print "trec_nonrels:", trec_nonrels
-    print "trec_unassessed:", unassessed
-    print "total:", total
-    print "estimated_acc (trec_acc + acc) / 2.0:", return_dict['estimated_acc']
-    print "estimated_rels floor(trec_rels + estimated_acc * unassessed):", return_dict['estimated_rels']
-    print "trec_acc (trec_rels / (trec_rels + trec_nonrels)):", return_dict['trec_acc']
-    print "acc (trec_rels / total):", return_dict['acc']
-    print "docs with new entities:", return_dict['diversity_new_docs']
-    print "entities found", return_dict['diversity_new_entities']
-    print "========="
-    # End debug print statements
     
     return return_dict
 

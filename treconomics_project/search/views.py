@@ -27,7 +27,7 @@ from treconomics.experiment_functions import get_topic_relevant_count
 from treconomics.experiment_functions import get_experiment_context
 from treconomics.experiment_functions import mark_document, log_event
 from treconomics.experiment_functions import time_search_experiment_out
-from treconomics.experiment_functions import get_performance, get_performance_diversity, populate_context_dict
+from treconomics.experiment_functions import get_performance, get_user_performance_diversity, populate_context_dict
 from treconomics.experiment_functions import query_result_performance, log_performance
 from treconomics.experiment_configuration import my_whoosh_doc_index_dir, data_dir
 from treconomics.experiment_configuration import experiment_setups
@@ -567,7 +567,7 @@ def view_performance_diversity(request):
         diversity_num = setup.get_rotation_diversity(ec['rotation'], i)
         topic_desc = TaskDescription.objects.get(topic_num=topic_num).title
         
-        perf = get_performance_diversity(uname, topic_num, diversity_num)
+        perf = get_user_performance_diversity(uname, topic_num)
         perf['num'] = topic_num
         perf['title'] = topic_desc
         perf['diversity'] = diversity_num
@@ -658,7 +658,7 @@ def view_performance_diversity_practice(request):
     diversity_num = setup.get_rotation_diversity(ec['rotation'], 0)
     topic_desc = TaskDescription.objects.get(topic_num=topic_num).title
     
-    perf = get_performance_diversity(uname, topic_num, diversity_num)
+    perf = get_user_performance_diversity(uname, topic_num)
     perf['num'] = topic_num
     perf['title'] = topic_desc
 
