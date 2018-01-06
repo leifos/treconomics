@@ -43,7 +43,7 @@ class TestScoring(unittest.TestCase):
         results = get_performance_diversity(doc_lst, TOPIC_NUM)
         self.assertAlmostEquals(results['trec_acc'], 2.0/3.0)
 
-    def test_worker(self):
+ def test_worker(self):
         doc_lst = ['XIE19961213.0150','XIE19981227.0061','XIE19980215.0033','DUD']
         results = get_performance_diversity(doc_lst, '341')
         self.assertEquals(results['trec_nonrels'],2)
@@ -51,6 +51,12 @@ class TestScoring(unittest.TestCase):
         self.assertEquals(results['trec_unassessed'],1)
 
 
+    def test_realuser(self):
+        # Topic 408
+        # judgements = [None, None, None, None, None, None, 2, 2]
+        doc_lst = ['APW20000706.0040', 'XIE19981024.0066', 'XIE19960728.0127', 'APW19991016.0181', 'APW19981005.1108', 'XIE19981106.0268', 'APW19990924.0040', 'APW19981019.0092']
+        results = get_performance_diversity(doc_lst, '408')
+        self.assertAlmostEquals(results['trec_acc'], 1.0)
 
 if __name__ == '__main__':
     unittest.main()
