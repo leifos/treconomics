@@ -16,7 +16,7 @@
     <p>
         {% if performance.diversity == 1 or performance.diversity == 2 %}
         <li>New <strong><em>{{ performance.diversity_entity }}</em></strong> found: <strong
-                style="color: #3366FF;">{{ performance.assessed.diversity_new_entities}}</strong></li>
+                style="color: #3366FF;">{{ performance.diversity_new_entities }}</strong></li>
         {% endif %}
     </p>
     <p><strong style="margin-left: 20px;">Success?</strong> <span class="report_header {{ performance.status }}" style="margin-left: 0;">{{ performance.status_message }}</span></p>
