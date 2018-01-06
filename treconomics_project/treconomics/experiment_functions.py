@@ -271,29 +271,29 @@ def assess_performance(topic_num, doc_list):
     return performance
 
 
-def assess_performance_diversity(topic_num, doc_list, diversity_flag):
-    performance = assess_performance(topic_num, doc_list)
-    
-    observed_entities = []
-    new_doc_count = 0
-    
-    for docid in doc_list:
-        doc_entities = qrels_diversity.get_mentioned_entities_for_doc(topic_num, docid)
-        new_in_doc = list(set(doc_entities) - set(observed_entities))
-        observed_entities = observed_entities + list(set(doc_entities) - set(observed_entities))
-        
-        if len(new_in_doc) > 0:
-            new_doc_count = new_doc_count + 1
-    
-    performance['diversity_new_docs'] = new_doc_count
-    performance['diversity_new_entities'] = len(observed_entities)
-    
-    performance['diversity_accuracy'] = 0.0
-    
-    if performance['total_marked'] > 0:
-        performance['diversity_accuracy'] = float(new_doc_count) / performance['total_marked']
-    
-    return performance
+# def assess_performance_diversity(topic_num, doc_list, diversity_flag):
+#     performance = assess_performance(topic_num, doc_list)
+#
+#     observed_entities = []
+#     new_doc_count = 0
+#
+#     for docid in doc_list:
+#         doc_entities = qrels_diversity.get_mentioned_entities_for_doc(topic_num, docid)
+#         new_in_doc = list(set(doc_entities) - set(observed_entities))
+#         observed_entities = observed_entities + list(set(doc_entities) - set(observed_entities))
+#
+#         if len(new_in_doc) > 0:
+#             new_doc_count = new_doc_count + 1
+#
+#     performance['diversity_new_docs'] = new_doc_count
+#     performance['diversity_new_entities'] = len(observed_entities)
+#
+#     performance['diversity_accuracy'] = 0.0
+#
+#     if performance['total_marked'] > 0:
+#         performance['diversity_accuracy'] = float(new_doc_count) / performance['total_marked']
+#
+#     return performance
 
 
 def get_performance(username, topic_num):
@@ -308,66 +308,91 @@ def get_performance(username, topic_num):
 
     return assess_performance(str(topic_num), doc_list)
 
-def get_performance_diversity(username, topic_num, diversity_flag):
+
+def get_performance_diversity(username, topic_num, diversity_flag, debug_doc_list=None):
     """
-    A near duplicate of get_performance(), but this method called assess_performance_diversity twice --
-    one using all marked documents, and one using marked documents that **have been assessed**.
-    The latter is used to formulate a user score; the former will be used in experimental analysis.
+    A revised get_performance_diversity function.
+    For debugging, use debug_doc_list as a list of documents that an imaginary user has saved (list of strings, TREC docnums).
     """
-    u = User.objects.get(username=username)
-    docs = DocumentsExamined.objects.filter(user=u).filter(topic_num=topic_num)
-    print "Documents to Judge for topic %s " % topic_num
+    print "========="
+    print "Diversity scoring for topic %s" % topic_num
     
+    return_dict = {}  # Return dictionary for all values.
     doc_list = []
     
-    for d in docs:
-        if d.judgement > 0:
-            doc_list.append(d.doc_num)
+    # Do we use the debugging list of documents, or pull out a list from the database?
+    if type(debug_doc_list) == list:
+        print "DEBUG"
+        doc_list = debug_doc_list
+    else:
+        u = User.objects.get(username=username)
+        docs = DocumentsExamined.objects.filter(user=u).filter(topic_num=topic_num)
     
-    doc_list_assessed = get_trec_assessed_doc_list(doc_list, topic_num, is_assessed=True)
-    doc_list_unassessed = get_trec_assessed_doc_list(doc_list, topic_num, is_assessed=False)
+        # Select all documents that were marked/saved by the searcher.
+        for d in docs:
+            if d.judgement > 0:
+                doc_list.append(d.doc_num)
     
-    return_dict = {}
-    results_all = assess_performance_diversity(str(topic_num), doc_list, diversity_flag)
-    results_assessed = assess_performance_diversity(str(topic_num), doc_list_assessed, diversity_flag)
-    results_unassessed = assess_performance_diversity(str(topic_num), doc_list_unassessed, diversity_flag)
+    (total, trec_rels, trec_nonrels, unassessed) = get_trec_scores(doc_list, topic_num)
     
-    # Now we need to merge these three dictionaries together.
-    # Return a new dictionary of nested dictionaries!
-    return_dict['all'] = results_all
-    return_dict['assessed'] = results_assessed
-    return_dict['unassessed'] = results_unassessed
-
-    #####
-
-    (total, trec_rels, trec_nonrels, unassesed) = get_trec_scores(doc_list, topic_num)
+    # Calculate TREC accuracy -- i.e. accuracy considering only documents that were assessed.
     return_dict['trec_acc'] = 0.0
-    if (trec_rels + trec_nonrels > 0):
-        return_dict['trec_acc'] = (trec_rels+0.0) / ( trec_rels+trec_nonrels)
+    
+    if (trec_rels + trec_nonrels) > 0:
+        return_dict['trec_acc'] = float(trec_rels) / (trec_rels + trec_nonrels)
+    
+    # Calculate accuracy -- i.e. considering all saved documents.
     return_dict['acc'] = 0.0
-    if total >0:
-        return_dict['acc'] = (trec_rels+0.0) / (total)
+    
+    if total > 0:
+        return_dict['acc'] = float(trec_rels) / total
+    
+    # Assign raw values to the dictionary.
     return_dict['trec_rels'] = trec_rels
     return_dict['trec_nonrels'] = trec_nonrels
-    return_dict['trec_unassessed'] = unassesed
+    return_dict['trec_unassessed'] = unassessed
     return_dict['total'] = total
-    return_dict['estimated_acc'] = (return_dict['trec_acc'] + return_dict['acc']) / 2.0
-    return_dict['estimated_rels'] = math.floor(trec_rels + return_dict['estimated_acc']  * unassesed)
-
-    print(return_dict['trec_acc'],return_dict['acc'], return_dict['estimated_acc'], return_dict['estimated_rels'] , trec_rels, trec_nonrels, total, unassesed)
-
-    """
-    return_dict['trec_acc'] = return_dict['assessed']['accuracy']
-    return_dict['acc'] = return_dict['all']['accuracy']
-    return_dict['trec_rels'] = return_dict['assessed']['rels']
-    return_dict['trec_nonrels'] = return_dict['assessed']['nons']
-    return_dict['total'] = return_dict['all']['total_marked']
-   
     
-    # Now we can do some calculations -- we can work out the "predicted number of rels" to report to the user.
-    return_dict['estimated_rels'] = math.ceil((return_dict['assessed']['accuracy'] * return_dict['unassessed']['total_marked']) + return_dict['assessed']['rels'])
-     """
+    # Estimated accuracy and relevant documents
+    return_dict['estimated_acc'] = (return_dict['trec_acc'] + return_dict['acc']) / 2.0
+    return_dict['estimated_rels'] = math.floor(trec_rels + return_dict['estimated_acc'] * unassessed)
+    
+    # Entity calculations
+    observed_entities = []
+    new_doc_count = 0
+    
+    for docid in doc_list:
+        doc_entities = qrels_diversity.get_mentioned_entities_for_doc(topic_num, docid)
+        new_in_doc = list(set(doc_entities) - set(observed_entities))
+        observed_entities = observed_entities + list(set(doc_entities) - set(observed_entities))
+        
+        if len(new_in_doc) > 0:
+            new_doc_count = new_doc_count + 1
+    
+    return_dict['diversity_new_docs'] = new_doc_count
+    return_dict['diversity_new_entities'] = len(observed_entities)
+    
+    # Debug print statements
+    print "Marked document list (and QREL judgement)"
+    for doc in doc_list:
+        print doc, qrels.get_value_if_exists(topic_num, doc)
+    
+    print "----"
+    print "trec_rels:", trec_rels
+    print "trec_nonrels:", trec_nonrels
+    print "trec_unassessed:", unassessed
+    print "total:", total
+    print "estimated_acc (trec_acc + acc) / 2.0:", return_dict['estimated_acc']
+    print "estimated_rels floor(trec_rels + estimated_acc * unassessed):", return_dict['estimated_rels']
+    print "trec_acc (trec_rels / (trec_rels + trec_nonrels)):", return_dict['trec_acc']
+    print "acc (trec_rels / total):", return_dict['acc']
+    print "docs with new entities:", return_dict['diversity_new_docs']
+    print "entities found", return_dict['diversity_new_entities']
+    print "========="
+    # End debug print statements
+    
     return return_dict
+
 
 def query_result_performance(results, topic_num):
     i = 0
@@ -455,5 +480,3 @@ def populate_context_dict(experiment_context, page_context_dict):
     if "target" in experiment_context:
         page_context_dict["target"] = experiment_context["target"]
     return page_context_dict
-
-
