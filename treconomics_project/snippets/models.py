@@ -1116,7 +1116,7 @@ class SystemDiversityPostTaskSurveyForm(ModelForm):
 
     ae_confident = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I felt confident using the system.", required=True)
+        label="I felt confident in my decisions.", required=True)
 
 
     def clean(self):
