@@ -28,7 +28,7 @@ from experiment_functions import log_event, populate_context_dict
 
 from search.views import set_descriptions
 from search.views import set_status
-from experiment_functions import get_performance_diversity
+from experiment_functions import get_user_performance_diversity
 from experiment_configuration import experiment_setups
 
 
@@ -590,7 +590,7 @@ def show_user_performance(request, userid):
         diversity_num = setup.get_rotation_diversity(rotation, i)
         topic_desc = TaskDescription.objects.get(topic_num=topic_num).title
 
-        perf = get_performance_diversity(uname, topic_num)
+        perf = get_user_performance_diversity(uname, topic_num)
         perf['num'] = topic_num
         perf['title'] = topic_desc
         perf['diversity'] = diversity_num
