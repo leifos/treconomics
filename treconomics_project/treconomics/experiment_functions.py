@@ -352,7 +352,6 @@ def get_performance_diversity(username, topic_num, diversity_flag):
     return_dict['trec_unassessed'] = unassesed
     return_dict['total'] = total
     return_dict['estimated_acc'] = (return_dict['trec_acc'] + return_dict['acc']) / 2.0
-
     return_dict['estimated_rels'] = math.floor(trec_rels + return_dict['estimated_acc']  * unassesed)
 
     print(return_dict['trec_acc'],return_dict['acc'], return_dict['estimated_acc'], return_dict['estimated_rels'] , trec_rels, trec_nonrels, total, unassesed)
