@@ -7,6 +7,14 @@
 
         <p>
 
+            {% for u in users %}
+
+         <p><a href="{% url 'showuserperformance' u.id %}">{{u.username}}</a>
+            </p>
+
+
+            {% endfor %}
+
         </p>
 
     </div>

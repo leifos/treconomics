@@ -558,3 +558,17 @@ class TimeoutView(ExperimentContextMixin, TemplateView):
     def dispatch(self, request, *args, **kwargs):
         log_event(event="SESSION_COMPLETED", request=request)
         log_event(event="EXPERIMENT_TIMEOUT", request=request)
+
+
+def show_users(request):
+    users = User.objects.all()
+
+    context_dict = {'users':users}
+    return render(request, 'base/show_users.html', context_dict)
+
+def show_user_performance(request, userid):
+
+    u = User.objects.get(id=userid)
+
+    context_dict = {'user':u}
+    return render(request, 'base/show_user_performance.html', context_dict)

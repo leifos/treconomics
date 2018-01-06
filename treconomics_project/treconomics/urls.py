@@ -79,6 +79,9 @@ urlpatterns = \
              url(r'^diversityperformance/$', search_views.view_performance_diversity),  # New diversity performance view
              url(r'^diversityperformancepractice/$', search_views.view_performance_diversity_practice),  # New practice performance view
 
+             url(r'^showusers/$', views.show_users, name='showusers'),
+             url(r'^showuserperformance/(?P<userid>\d+)/$', views.show_user_performance, name='showuserperformance'),
+
 
              (r'^anitapretasksurvey/(?P<taskid>\d+)/$', snippet.view_alt_pretask_survey),
              (r'^anitaposttask0survey/(?P<taskid>\d+)/$', snippet.view_alt_posttask0_survey),

@@ -2,8 +2,12 @@
 
 {% block exp_block %}
 
-    <p><h1>Performance for Participant: {{user}}</h1></p>
+    <p><h1>Performance for Participant: {{user.id}}, {{user.username}}</h1></p>
 
+<p> <a href="{% url 'showusers' %}"> Back to participant List</a></p>
+
+
+<!--
     {% for  topic in performances %}
         <hr/>
         <p><span class="report_header" style="margin-left: 0;"><strong>Task</strong></span> {{ topic.task_description }}
@@ -24,43 +28,12 @@
     </p>
     <p><strong style="margin-left: 20px;">Success?</strong> <span class="report_header {{ topic.status }}" style="margin-left: 0;">{{ topic.status_message }}</span></p>
 
-
-<!--
-        <ul>
-
-            {% if topic.diversity == 1 or topic.diversity == 2 %}
-            <li>New <strong><em>{{ topic.diversity_entity }}</em></strong> found: <strong
-                    style="color: #3366FF;">{{ topic.assessed.diversity_new_entities }}</strong></li>
-            {% endif %}
-
-        </ul></p>
-
-        <p>
-            <strong>Number of relevant documents found: <span style="color: #3366FF;">{{ topic.estimated_rels|floatformat:0 }}</span></strong>
-            <strong style="margin-left: 20px;">Pass/Fail?</strong> <span class="report_header {{ topic.status }}" style="margin-left: 0;">{{ topic.status_message }}</span>
-            
-        </p>
-        --->
-
     {% endfor %}
+
+    -->
     
     <hr />
     
-    <!--<hr/>
-        <p><strong>Your average score across all topics: <span style="color: #3366FF;">{{ avg_wellness }}</span></strong></p><-->
 
 
-    <p>When you have examined the results above, please click the <em>Next</em> button below to continue.</p>
-
-    <div class="surveySubmitButton">
-        <a href="{% url 'next' %}">
-            <button class="button" type="next"> Next</button>
-        </a>
-    </div>
-
-{% endblock %}
-
-
-{% block exp_footer_block %}
-    Participant: {{ participant }}  - Condition: {{ condition }}
 {% endblock %}
