@@ -252,7 +252,8 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
     response = None
     if (diversity in [1,3]):
         # we need to diversify the results
-        print("enact diversification :-)")
+        print("Do Diversification :-)")
+        log_event(event="QUERY_DIVERSIFIED", request=request, query=query_terms)
         kdiv = 30
         lam = 1.0
         if ((page * page_len) <= (kdiv+1)):
@@ -260,7 +261,13 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
             query.skip = 1
             query.top = kdiv
             response = search_engine.search(query)
+            #print("Normal")
+            #for r in response.results:
+            #    print(r.docid, r.title)
             response = diversify_results(response, topic_num, kdiv, lam)
+            #print("Diversified")
+            #for r in response.results:
+            #    print(r.docid, r.title)
             start = (page-1)*page_len
             end = min((page*page_len), len(response.results))
             response.results = response.results[start:end]
