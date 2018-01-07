@@ -103,10 +103,17 @@ def diversify_results(results, topic, to_rank=30, lam=1.0):
     Given a ifind results object, returns a re-ranked list, with more diverse content at the top.
     By diverse, we mean a selection of documents discussing a wider range of identified entities.
     """
+<<<<<<< Updated upstream
     results_len = len(results.results)
     #results_len = results.scored_length()  # Doing len(results) returns the number of hits, not the top k.
     print(results)
 
+=======
+    #results_len = results.scored_length()  # Doing len(results) returns the number of hits, not the top k.
+
+    print(results)
+    results_len = len(results)
+>>>>>>> Stashed changes
     # Simple sanity check -- no results? Can't diversify anything!
     if results_len == 0:
         return []
