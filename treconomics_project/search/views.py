@@ -5,6 +5,7 @@ import sys
 import datetime
 import logging
 # Django
+import math
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseBadRequest
 from treconomics.models import DocumentsExamined
@@ -32,6 +33,7 @@ from treconomics.experiment_functions import query_result_performance, log_perfo
 from treconomics.experiment_configuration import my_whoosh_doc_index_dir, data_dir
 from treconomics.experiment_configuration import experiment_setups
 import json
+from search.diversify import diversify
 
 from .snippets import entity_snippet
 
@@ -214,7 +216,7 @@ def task(request, taskid):
 
 
 
-def run_query(request, result_dict, query_terms='', page=1, page_len=10, condition=0, interface=1):
+def run_query(request, result_dict, query_terms='', page=1, page_len=10, condition=0, interface=1, diversity=0, topic_num=None):
     """
     Helper method which populates the results dictionary, and send the user to the right interface.
     :param result_dict: dictionary with query terms
@@ -247,7 +249,25 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
     search_engine.snippet_size = snippet_sizes[pos]
     search_engine.set_fragmenter(frag_type=2, surround=snippet_surround[pos])
 
-    response = search_engine.search(query)
+    response = None
+    if (diversity in [1,3]):
+        # we need to diversify the results
+        print("enact diversification :-)")
+        kdiv = 30
+        lam = 1.0
+        if ((page * page_len) < kdiv):
+            # we are only diversifying the top kdiv
+            query.skip = 1
+            query.top = kdiv
+            response = search_engine.search(query)
+            response.results = diversify(response.results, topic_num, kdiv, lam)
+            start = (page-1)*page_len
+            end = math.min((page*page_len), len(response.result))
+            response.results = response.result[start:end]
+        else:
+            response = search_engine.search(query)
+    else:
+        response = search_engine.search(query)
 
     log_event(event="QUERY_END", request=request, query=query_terms)
     num_pages = response.total_pages
@@ -278,7 +298,7 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
             result_dict['next_page_link'] = "?query=" + query_terms.replace(' ', '+') + '&page=' + str(page + 1)
 
 
-def get_results(request, result_dict, page, page_len, condition, user_query, interface):
+def get_results(request, result_dict, page, page_len, condition, user_query, interface, diversity=0, topic_num=None):
     """
     Returns a results dictionary object for the given parameters above.
     If the combinations have been previously used, we return a cached version (if it still exists).
@@ -291,7 +311,7 @@ def get_results(request, result_dict, page, page_len, condition, user_query, int
     # if not prevent_performance_logging and page == 1:
     # print "Performance should be measured - but it's disabled as it's too costly!"
 
-    run_query(request, result_dict, user_query, page, page_len, condition, interface)
+    run_query(request, result_dict, user_query, page, page_len, condition, interface, diversity, topic_num)
     result_dict['query_time'] = timeit.default_timer() - start_time
 
 
@@ -362,8 +382,10 @@ def search(request, taskid=-1):
         condition = ec["condition"]
         rotation = ec["rotation"]
         interface = ec["interface"]
+        topic_num = ec["topicnum"]
+        diversity = ec["diversity"]
 
-        print taskid, rotation, interface
+        print taskid, rotation, interface, topic_num, diversity
         print '--------'
 
         page_len = ec["rpp"]
@@ -431,7 +453,7 @@ def search(request, taskid=-1):
                             page_len,
                             condition,
                             user_query,
-                            interface)
+                            interface, diversity, topic_num)
                 log_event(event="QUERY_COMPLETE", request=request, query=user_query)
 
                 result_dict['page'] = page
