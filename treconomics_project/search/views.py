@@ -33,7 +33,7 @@ from treconomics.experiment_functions import query_result_performance, log_perfo
 from treconomics.experiment_configuration import my_whoosh_doc_index_dir, data_dir
 from treconomics.experiment_configuration import experiment_setups
 import json
-from search.diversify import diversify
+from search.diversify import diversify_results
 
 from .snippets import entity_snippet
 
@@ -255,15 +255,16 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
         print("enact diversification :-)")
         kdiv = 30
         lam = 1.0
-        if ((page * page_len) < kdiv):
+        if ((page * page_len) <= (kdiv+1)):
             # we are only diversifying the top kdiv
             query.skip = 1
             query.top = kdiv
             response = search_engine.search(query)
-            response.results = diversify(response.results, topic_num, kdiv, lam)
+            response = diversify_results(response, topic_num, kdiv, lam)
             start = (page-1)*page_len
-            end = math.min((page*page_len), len(response.result))
-            response.results = response.result[start:end]
+            end = min((page*page_len), len(response.results))
+            response.results = response.results[start:end]
+            response.actual_page = page
         else:
             response = search_engine.search(query)
     else:
