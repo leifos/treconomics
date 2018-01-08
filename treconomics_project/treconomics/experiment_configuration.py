@@ -21,7 +21,7 @@ if 'local' not in socket.gethostname():
 my_whoosh_query_index_dir = os.path.join(work_dir, "/trec_query_index/index")
 my_experiment_log_dir = work_dir
 qrels_file = os.path.join(work_dir, "data/TREC2005.qrels.txt")
-qrels_diversity_file = os.path.join(work_dir, "data/SIGIR2018.diversity.qrels")
+qrels_diversity_file = os.path.join(work_dir, "data/sigir-combined.diversity.qrels")
 stopword_file = os.path.join(work_dir, "data/stopwords.txt")
 data_dir = os.path.join(work_dir, "data")
 
