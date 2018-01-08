@@ -13,7 +13,7 @@ from ifind.seeker.trec_qrel_handler import TrecQrelHandler
 from models import DocumentsExamined
 from experiment_configuration import event_logger, qrels_file, qrels_diversity_file, experiment_setups
 
-from treconomics.diversity_qrels import EntitiesQRELsHolder
+from ifind.seeker.trec_diversity_qrel_handler import EntityQrelHandler
 
 settings_timezone = timezone(settings.TIME_ZONE)
 qrels = TrecQrelHandler(qrels_file)
