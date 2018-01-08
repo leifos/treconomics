@@ -17,7 +17,7 @@ from ifind.seeker.trec_diversity_qrel_handler import EntityQrelHandler
 
 settings_timezone = timezone(settings.TIME_ZONE)
 qrels = TrecQrelHandler(qrels_file)
-qrels_diversity = EntitiesQRELsHolder(qrels_diversity_file)
+qrels_diversity = EntityQrelHandler(qrels_diversity_file)
 
 
 def get_experiment_context(request):
