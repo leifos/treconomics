@@ -1039,19 +1039,19 @@ class BehaveDiversityPostTaskSurveyForm(ModelForm):
     beh_div_queries = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="I issued more queries than I expected.",
+        label="I tried to explore the topic with different queries.",
         required=True)
 
     beh_div_documents= forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="I examined more documents than I expected.",
+        label="I only examined a few documents per query.",
         required=True)
 
     beh_div_time = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="I spent more time reading documents than I expected.",
+        label="I checked each document carefully before saving.",
         required=True)
 
 
