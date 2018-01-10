@@ -1058,7 +1058,7 @@ class BehaveDiversityPostTaskSurveyForm(ModelForm):
     beh_div_marked = forms.ChoiceField(
         widget=RadioSelect,
         choices=LIKERT_CHOICES,
-        label="I marked more documents as relevant than I needed.",
+        label="I saved more documents than I needed.",
         required=True)
 
     def clean(self):
@@ -1098,7 +1098,7 @@ class SystemDiversityPostTaskSurveyForm(ModelForm):
 
     apt_search_diff = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I thought it was difficult to search for information on this topic.",
+        label="I thought the system made it difficult to find useful information.",
         required=True)
 
     apt_time = forms.ChoiceField(
