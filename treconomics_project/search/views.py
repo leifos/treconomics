@@ -255,7 +255,7 @@ def run_query(request, result_dict, query_terms='', page=1, page_len=10, conditi
         print("Do Diversification :-)")
         log_event(event="QUERY_DIVERSIFIED", request=request, query=query_terms)
         kdiv = 30
-        lam = 1.0
+        lam = 0.7
         if ((page * page_len) <= (kdiv+1)):
             # we are only diversifying the top kdiv
             query.skip = 1
