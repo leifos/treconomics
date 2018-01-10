@@ -15,7 +15,29 @@ from models import AnitaDemographicsSurveyForm, AnitaExit1SurveyForm, AnitaExit2
 from models import AnitaConsentForm
 from models import MickeyPostTaskSurveyForm, SnippetDemographicsSurveyForm, SnippetExitSurveyForm
 from models import BehaveDiversityPostTaskSurveyForm, SystemDiversityPostTaskSurveyForm, DiversityExitSurveyForm
-from treconomics.models import TaskDescription
+from treconomics.models import TaskDescription, DocumentsExamined
+
+from django.http import JsonResponse
+
+def diversity_end_stats(request, taskid):
+    """
+    
+    """
+    ec = get_experiment_context(request)
+    uname = ec['username']
+    resp = {}
+    
+    if 'target' in ec:
+        resp['target'] = ec['target']
+        
+        u = User.objects.get(username=uname)
+        docs = DocumentsExamined.objects.filter(user=u).filter(task=taskid)
+        
+        resp['marked'] = len(docs)
+        
+        
+    print resp
+    return JsonResponse(resp)
 
 
 def handle_task_and_questions_survey(request, taskid, SurveyForm, survey_name, action, template, show_topic=True):

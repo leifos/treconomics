@@ -73,6 +73,7 @@ urlpatterns = \
              url(r'^snippetexitsurvey/$', snippet.view_snippet_exit_survey, name='snippet-exit-survey'),
 
             # new surveys added for diversity study
+             url(r'^diversityendstats/(?P<taskid>\d+)/$', snippet.diversity_end_stats),
              url(r'^diversityposttask/(?P<taskid>\d+)/$', snippet.view_diversity_posttask),
              url(r'^systemdiversityposttask/(?P<taskid>\d+)/$', snippet.view_system_diversity_posttask),
              url(r'^diversityexitsurvey/$', snippet.view_diversity_exit_survey, name='diversity-exit-survey'),
