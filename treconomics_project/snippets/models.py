@@ -1107,7 +1107,7 @@ class SystemDiversityPostTaskSurveyForm(ModelForm):
 
     apt_satisfied_systems = forms.ChoiceField(
         widget=RadioSelect, choices=LIKERT_CHOICES,
-        label="I am satisfied with how the system performed for this task.",
+        label="I am happy with how the system performed for this task.",
         required=True)
 
     ae_cumbersome = forms.ChoiceField(
