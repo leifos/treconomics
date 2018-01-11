@@ -109,7 +109,7 @@ def diversify_results(results, topic, to_rank=30, lam=1.0):
     #print(results)
     # Simple sanity check -- no results? Can't diversify anything!
     if results_len == 0:
-        return []
+        return results
     
     # Before diversifying, check -- are there enough results to go to to_rank?
     # If not, change to_rank to the length of the results we have.
