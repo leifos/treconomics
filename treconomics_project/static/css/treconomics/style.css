@@ -270,6 +270,14 @@ h1.document_title {
 	line-height: 35px;
 	color: #6699ff;
 	}
+	
+	h1.document_title.yoyo {
+		color: #6BB39D;
+	}
+	
+	h1.document_title.hula {
+		color: #A36ABD;
+	}
 
 table {
 	margin: 0 auto;

@@ -165,6 +165,8 @@ def show_saved_documents(request):
         diversity = int(request.GET.get('diversity'))
     elif 'diversity' in request.session:
         diversity = int(request.session['diversity'])
+    else:
+        diversity = None
     
     user_judgement = -2
     if request.method == 'GET':
@@ -193,6 +195,15 @@ def show_saved_documents(request):
     # Get documents that are for this task, and for this user
     u = User.objects.get(username=uname)
     docs = DocumentsExamined.objects.filter(user=u).filter(task=taskid)
+    
+    for doc in docs:
+        if doc.title:
+            doc.title = doc.title.strip()
+        else:
+            doc.title = 'Untitled'
+        
+        if doc.title == '':
+            doc.title = 'Untitled'
 
     context_dict = {'participant': uname,
                     'task': taskid,
