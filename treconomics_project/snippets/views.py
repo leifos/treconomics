@@ -31,12 +31,10 @@ def diversity_end_stats(request, taskid):
         resp['target'] = ec['target']
         
         u = User.objects.get(username=uname)
-        docs = DocumentsExamined.objects.filter(user=u).filter(task=taskid)
+        docs = DocumentsExamined.objects.filter(user=u).filter(task=taskid).filter(judgement=1)
         
         resp['marked'] = len(docs)
         
-        
-    print resp
     return JsonResponse(resp)
 
 

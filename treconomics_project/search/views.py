@@ -681,7 +681,7 @@ def view_performance_diversity_practice(request):
     perf = set_descriptions(diversity_num, topic_num, perf)
     perf = set_status(perf, target)
     
-    log_event(request=request, event = "TPERFORMANCE"+ str(perf))
+    #log_event(request=request, event = "TPERFORMANCE"+ str(perf))
 
 
     context_dict = {'participant': uname,
