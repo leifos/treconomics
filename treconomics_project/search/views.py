@@ -687,7 +687,7 @@ def view_performance_diversity_practice(request):
     context_dict = {'participant': uname,
                     'condition': condition,
                     'performance': perf}
-    
+                    
     log_user_diversity_performance(request, topic_num, diversity_num, perf)
     
     return render(request, 'base/performance_experiment_diversity_practice.html', context_dict)
@@ -708,7 +708,16 @@ def log_user_diversity_performance(request, topic_num, diversity_num, perf):
     # Build up the log string
     for key in order:
         val = perf[key]
+        
+        if type(val) == str:
+            val = val.upper()
+        
         log_str = '{log_str} {val}'.format(log_str=log_str, val=val)
+    
+    if perf['status'] == 'pass':
+        log_str = '{log_str} PASS'.format(log_str=log_str)
+    else:
+        log_str = '{log_str} FAIL'.format(log_str=log_str)
     
     log_event(request=request, event=log_str)
 
