@@ -272,10 +272,11 @@ def post_practice_task(request, taskid):
     profile = u.profile
     profile.tasks_completed = int(taskid)
     profile.save()
-
+    
+    
     # write_to_log
-    logging.debug('PRACTICE SEARCH TASK COMPLETED')
-    log_event(event="PRACTICE_SEARCH_TASK_COMPLETED", request=request)
+    #logging.debug('PRACTICE SEARCH TASK COMPLETED')
+    #log_event(event="PRACTICE_SEARCH_TASK_COMPLETED", request=request)
 
     # if participant has completed all the tasks, go to the post experiment view
     # else direct the participant to the pre task view

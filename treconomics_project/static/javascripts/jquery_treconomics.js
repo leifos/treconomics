@@ -36,13 +36,11 @@ $(document).ready(function()
 			}
 		});
 		
-		if (target > 0) {
-			if (marked < target) {
-				if (marked == 1)
-					return confirm("You have saved only 1 document, but you are required to save at least " + target + ". Continue?");
-				else
-					return confirm("You have saved " + marked + " documents, but you are required to save at least " + target + ". Continue?");
-			}
+		if (target) {
+			if (marked == 1)
+				return confirm("You have saved only 1 document. The target for you to reach is " + target + ". Continue?");
+			else
+				return confirm("You have saved " + marked + " documents. The target for you to reach is " + target + ". Continue?");
 		}
 		
 		return confirm("Clicking OK will take you to the next stage of the experiment. If you clicked the 'End Task' link by accident, you can push the Cancel button below.");
