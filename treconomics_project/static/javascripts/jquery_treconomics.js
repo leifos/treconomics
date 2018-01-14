@@ -38,12 +38,12 @@ $(document).ready(function()
 		
 		if (target) {
 			if (marked == 1)
-				return confirm("You have saved only 1 document. The target for you to reach is " + target + ". Continue?");
+				return confirm("You have saved only 1 document. The target for you to reach is " + target + ". Press CANCEL to continue searching, or OK to end the task.");
 			else
-				return confirm("You have saved " + marked + " documents. The target for you to reach is " + target + ". Continue?");
+				return confirm("You have saved " + marked + " documents. The target for you to reach is " + target + ". Press CANCEL to continue searching, or OK to end the task.");
 		}
 		
-		return confirm("Clicking OK will take you to the next stage of the experiment. If you clicked the 'End Task' link by accident, you can push the Cancel button below.");
+		return confirm("Clicking OK will take you to the next stage of the experiment. If you clicked the 'End Task' link by accident, you can push the CANCEL button below.");
     })
 
 }); 
