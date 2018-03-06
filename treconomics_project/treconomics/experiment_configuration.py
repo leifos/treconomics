@@ -155,6 +155,25 @@ search_engine = Whooshtrec(
 search_engine.key_name = 'bm25'
 search_engine.set_fragmenter(frag_type=2, surround=30)
 
+
+exp_chiir2016 = ExperimentSetup(
+    workflow= exp_work_flows[1],
+    engine=search_engine,
+    practice_topic='408',
+    topics=['347', '367', '435','354'],
+    rpp=10,
+    practice_interface=1,
+    interface=[1, 1, 1, 1],
+    rotation_type=1,
+    description='standard condition bm25 test',
+    trie=suggestion_trie,
+    autocomplete=True,
+    timeout=[150,600,600,600, 600],
+    delay_results = [0,5,0,5,0]
+    )
+
+
+
 exp_sigir2017 = ExperimentSetup(
     workflow=snippet_flow,
     engine=search_engine,
@@ -205,4 +224,4 @@ exp_sigir2018 = ExperimentSetup(
 
 
 # these correspond to conditions
-experiment_setups = [exp_sigir2018, exp_jaana]
+experiment_setups = [exp_sigir2018, exp_jaana, exp_chiir2016]

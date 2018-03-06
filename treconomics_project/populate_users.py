@@ -7,7 +7,7 @@ def populate():
 
     for i in range(0,20):
         uname = 'fin'+str(i)
-        add_user(uname,uname,0,0,i)
+        add_user(uname,uname,0,2,i)
 
 def add_user(username, password, condition, experiment, rotation, data=None):
     u = User.objects.get_or_create(username=username)[0]
