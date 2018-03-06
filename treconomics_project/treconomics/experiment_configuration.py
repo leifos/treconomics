@@ -157,7 +157,7 @@ search_engine.set_fragmenter(frag_type=2, surround=30)
 
 
 exp_chiir2016 = ExperimentSetup(
-    workflow= exp_work_flows,
+    workflow= exp_work_flows[0],
     engine=search_engine,
     practice_topic='408',
     topics=['347', '367', '435','354'],
